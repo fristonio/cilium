@@ -430,9 +430,10 @@ var eniLimits = map[string]limit{
 func (n *ciliumNode) canAllocate(enis []*v2.ENI, limits limit, neededAddresses int) (*v2.ENI, *subnet, int) {
 	for _, e := range enis {
 		if e.Number >= n.resource.Spec.ENI.FirstInterfaceIndex && len(e.Addresses) < limits.IPv4 {
+			availableOnENI := min(limits.IPv4-len(e.Addresses), neededAddresses)
 			if subnet := instances.getSubnet(e.Subnet.ID); subnet != nil {
 				if subnet.AvailableAddresses > 0 {
-					return e, subnet, min(subnet.AvailableAddresses, neededAddresses)
+					return e, subnet, min(subnet.AvailableAddresses, availableOnENI)
 				}
 			}
 		}
@@ -615,6 +616,10 @@ func (n *nodeManager) Update(resource *v2.CiliumNode) {
 	availableIPs := len(resource.Spec.IPAM.Available)
 	usedIPs := len(resource.Status.IPAM.InUse)
 	node.neededAddresses = requiredAddresses - (availableIPs - usedIPs)
+	if node.neededAddresses < 0 {
+		node.neededAddresses = 0
+	}
+
 	if node.neededAddresses > 0 {
 		if allocationTrigger != nil {
 			allocationTrigger.TriggerWithReason(node.name)
@@ -622,6 +627,9 @@ func (n *nodeManager) Update(resource *v2.CiliumNode) {
 	}
 
 	log.WithFields(logrus.Fields{
+		"available":       availableIPs,
+		"used":            usedIPs,
+		"required":        requiredAddresses,
 		"instanceID":      resource.Spec.ENI.InstanceID,
 		"addressesNeeded": node.neededAddresses,
 	}).Infof("Updated node %s", resource.Name)
