@@ -367,7 +367,6 @@ func InstallAndValidateCiliumUpgrades(kubectl *helpers.Kubectl, oldVersion, newV
 		}
 
 		validateEndpointsConnection()
-		checkNoInteruptsInMigratedSVCFlows()
 	}
 	return testfunc, cleanupCallback
 }
