@@ -542,6 +542,11 @@ const (
 	// ProxyConnectTimeout specifies the time in seconds after which a TCP connection attempt
 	// is considered timed out
 	ProxyConnectTimeout = "proxy-connect-timeout"
+
+	// ReadCNIConfiguration reads the CNI configuration file and extracts
+	// Cilium relevant information. This can be used to pass per node
+	// configuration to Cilium.
+	ReadCNIConfiguration = "read-cni-conf"
 )
 
 // GetTunnelModes returns the list of all tunnel modes
@@ -960,6 +965,11 @@ type DaemonConfig struct {
 
 	// EnableEndpointRoutes enables use of per endpoint routes
 	EnableEndpointRoutes bool
+
+	// ReadCNIConfiguration reads the CNI configuration file and extracts
+	// Cilium relevant information. This can be used to pass per node
+	// configuration to Cilium.
+	ReadCNIConfiguration string
 }
 
 var (
@@ -1273,6 +1283,7 @@ func (c *DaemonConfig) Populate() {
 	c.PrometheusServeAddr = getPrometheusServerAddr()
 	c.ProxyConnectTimeout = viper.GetInt(ProxyConnectTimeout)
 	c.BlacklistConflictingRoutes = viper.GetBool(BlacklistConflictingRoutes)
+	c.ReadCNIConfiguration = viper.GetString(ReadCNIConfiguration)
 	c.RestoreState = viper.GetBool(Restore)
 	c.RunDir = viper.GetString(StateDir)
 	c.SidecarIstioProxyImage = viper.GetString(SidecarIstioProxyImage)
