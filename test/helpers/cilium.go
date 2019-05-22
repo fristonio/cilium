@@ -424,7 +424,6 @@ func (s *SSHMeta) MonitorStart() func() error {
 			return err
 		}
 
-		log.Warningf("XXXX: %s", res.CombineOutput().Bytes())
 		err = ioutil.WriteFile(
 			filepath.Join(testPath, MonitorLogFileName),
 			res.CombineOutput().Bytes(),
