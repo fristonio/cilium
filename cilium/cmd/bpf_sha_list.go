@@ -34,6 +34,8 @@ const (
 
 	noSHA     = "<No template used>"
 	brokenSHA = "<Template path invalid>"
+
+	stateDirEnvVar = "CILIUM_STATE_DIR"
 )
 
 var (
@@ -61,11 +63,21 @@ func isEndpointID(name string) bool {
 	return err == nil
 }
 
+// Cilium state directory can be overridden using the environment variable
+// CILIUM_STATE_DIR, if the environment variable is not specified then the
+// returned path is the default state directory.
+func getStateDirPath() string {
+	if value, ok := os.LookupEnv(stateDirEnvVar); ok {
+		return value
+	}
+	return stateDir
+}
+
 // getTemplateSHA returns the SHA that should be reported to the user for
 // the specified endpoint ID.
 func getTemplateSHA(epID string) string {
 	// Get symlink from endpointDir
-	templateSymlink := filepath.Join(stateDir, epID, defaults.TemplatePath)
+	templateSymlink := filepath.Join(getStateDirPath(), epID, defaults.TemplatePath)
 	f, err := os.Lstat(templateSymlink)
 	if err != nil {
 		return noSHA
