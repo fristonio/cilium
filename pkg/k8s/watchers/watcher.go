@@ -483,6 +483,7 @@ func (k *K8sWatcher) EnableK8sWatcher(queueSize uint) error {
 }
 
 func (k *K8sWatcher) k8sServiceHandler() {
+	log.Info("zzzzzz INSIDE K8S SERVICE CACHE EVENT HANDLER")
 	eventHandler := func(event k8s.ServiceEvent) {
 		defer event.SWG.Done()
 

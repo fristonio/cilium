@@ -132,10 +132,13 @@ func (s *ServiceCache) GetNodeAddressing() datapath.NodeAddressing {
 // be parsed and a bool to indicate whether the service was changed in the
 // cache or not.
 func (s *ServiceCache) UpdateService(k8sSvc *slim_corev1.Service, swg *lock.StoppableWaitGroup) ServiceID {
+	log.Info("yyyyyyy INSIDE UPDATE SERVICE CACHE: PARSING SERVICE")
 	svcID, newService := ParseService(k8sSvc, s.nodeAddressing)
 	if newService == nil {
 		return svcID
 	}
+
+	log.Info("yyyyyyy NEW SERVICE IS NOT NIL")
 
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
@@ -147,11 +150,14 @@ func (s *ServiceCache) UpdateService(k8sSvc *slim_corev1.Service, swg *lock.Stop
 		}
 	}
 
+	log.Info("yyyyyyy NEW SERIVCE IS DIFFERENT FROM OLD SERVICE")
+
 	s.services[svcID] = newService
 
 	// Check if the corresponding Endpoints resource is already available
 	endpoints, serviceReady := s.correlateEndpoints(svcID)
 	if serviceReady {
+		log.Info("yyyyyyy NEW SERIVCE READY, CREATING AN EVENT")
 		swg.Add()
 		s.Events <- ServiceEvent{
 			Action:     UpdateService,
@@ -169,6 +175,7 @@ func (s *ServiceCache) UpdateService(k8sSvc *slim_corev1.Service, swg *lock.Stop
 // DeleteService parses a Kubernetes service and removes it from the
 // ServiceCache
 func (s *ServiceCache) DeleteService(k8sSvc *slim_corev1.Service, swg *lock.StoppableWaitGroup) {
+	log.Info("yyyyyyy INSIDE DELETE SERVICE CACHE")
 	svcID := ParseServiceID(k8sSvc)
 
 	s.mutex.Lock()
@@ -351,6 +358,7 @@ func (s *ServiceCache) UniqueServiceFrontends() FrontendList {
 func (s *ServiceCache) correlateEndpoints(id ServiceID) (*Endpoints, bool) {
 	endpoints := newEndpoints()
 
+	log.Info("zzzzzzz POPULATING EPs WITH LOCAL ENDPOINTS FROM CACHE")
 	localEndpoints := s.endpoints[id].GetEndpoints()
 	hasLocalEndpoints := localEndpoints != nil
 	if hasLocalEndpoints {

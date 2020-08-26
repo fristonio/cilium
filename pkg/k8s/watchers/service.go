@@ -38,8 +38,10 @@ func (k *K8sWatcher) servicesInit(k8sClient kubernetes.Interface, swgSvcs *lock.
 			AddFunc: func(obj interface{}) {
 				var valid, equal bool
 				defer func() { k.K8sEventReceived(metricService, metricCreate, valid, equal) }()
+				log.Info("xxxxxxx GOT ADD")
 				if k8sSvc := k8s.ObjToV1Services(obj); k8sSvc != nil {
 					valid = true
+					log.Info("xxxxxxx PROCESSING ADD")
 					err := k.addK8sServiceV1(k8sSvc, swgSvcs)
 					k.K8sEventProcessed(metricService, metricCreate, err == nil)
 				}
@@ -47,14 +49,18 @@ func (k *K8sWatcher) servicesInit(k8sClient kubernetes.Interface, swgSvcs *lock.
 			UpdateFunc: func(oldObj, newObj interface{}) {
 				var valid, equal bool
 				defer func() { k.K8sEventReceived(metricService, metricUpdate, valid, equal) }()
+				log.Info("xxxxxxx GOT UPDATE")
 				if oldk8sSvc := k8s.ObjToV1Services(oldObj); oldk8sSvc != nil {
 					if newk8sSvc := k8s.ObjToV1Services(newObj); newk8sSvc != nil {
 						valid = true
+
+						log.Info("xxxxxxx VALIDATING UPDATE")
 						if k8s.EqualV1Services(oldk8sSvc, newk8sSvc, k.datapath.LocalNodeAddressing()) {
 							equal = true
 							return
 						}
 
+						log.Infof("xxxxxxx PROCESSING UPDATE")
 						err := k.updateK8sServiceV1(oldk8sSvc, newk8sSvc, swgSvcs)
 						k.K8sEventProcessed(metricService, metricUpdate, err == nil)
 					}
@@ -63,12 +69,14 @@ func (k *K8sWatcher) servicesInit(k8sClient kubernetes.Interface, swgSvcs *lock.
 			DeleteFunc: func(obj interface{}) {
 				var valid, equal bool
 				defer func() { k.K8sEventReceived(metricService, metricDelete, valid, equal) }()
+				log.Info("xxxxxxx GOT DELETE")
 				k8sSvc := k8s.ObjToV1Services(obj)
 				if k8sSvc == nil {
 					return
 				}
 
 				valid = true
+				log.Info("xxxxxxx PROCESSING UPDATE")
 				err := k.deleteK8sServiceV1(k8sSvc, swgSvcs)
 				k.K8sEventProcessed(metricService, metricDelete, err == nil)
 			},
