@@ -29,7 +29,7 @@ import (
 )
 
 func (k *K8sWatcher) endpointsInit(k8sClient kubernetes.Interface, swgEps *lock.StoppableWaitGroup) {
-
+	log.Info("pppppp Initializing ENDPOINT INFORMER")
 	_, endpointController := informer.NewInformer(
 		cache.NewListWatchFromClient(k8sClient.CoreV1().RESTClient(),
 			"endpoints", v1.NamespaceAll,
@@ -39,19 +39,23 @@ func (k *K8sWatcher) endpointsInit(k8sClient kubernetes.Interface, swgEps *lock.
 		0,
 		cache.ResourceEventHandlerFuncs{
 			AddFunc: func(obj interface{}) {
+				log.Info("pppppp ENDPOINT ADD")
 				var valid, equal bool
 				defer func() { k.K8sEventReceived(metricEndpoint, metricCreate, valid, equal) }()
 				if k8sEP := k8s.ObjToV1Endpoints(obj); k8sEP != nil {
+					log.Infof("pppppppp ENDPOINT ADDED: %s", k8sEP.ObjectMeta.GetName())
 					valid = true
 					err := k.addK8sEndpointV1(k8sEP, swgEps)
 					k.K8sEventProcessed(metricEndpoint, metricCreate, err == nil)
 				}
 			},
 			UpdateFunc: func(oldObj, newObj interface{}) {
+				log.Info("pppppp ENDPOINT UPDATE")
 				var valid, equal bool
 				defer func() { k.K8sEventReceived(metricEndpoint, metricUpdate, valid, equal) }()
 				if oldk8sEP := k8s.ObjToV1Endpoints(oldObj); oldk8sEP != nil {
 					if newk8sEP := k8s.ObjToV1Endpoints(newObj); newk8sEP != nil {
+						log.Infof("pppppppp ENDPOINT UPDATED: %s", newk8sEP.ObjectMeta.GetName())
 						valid = true
 						if oldk8sEP.DeepEqual(newk8sEP) {
 							equal = true
@@ -64,12 +68,15 @@ func (k *K8sWatcher) endpointsInit(k8sClient kubernetes.Interface, swgEps *lock.
 				}
 			},
 			DeleteFunc: func(obj interface{}) {
+				log.Info("pppppp ENDPOINT DELETE")
 				var valid, equal bool
 				defer func() { k.K8sEventReceived(metricEndpoint, metricDelete, valid, equal) }()
 				k8sEP := k8s.ObjToV1Endpoints(obj)
 				if k8sEP == nil {
 					return
 				}
+
+				log.Infof("pppppppp ENDPOINT DELETED: %s", k8sEP.ObjectMeta.GetName())
 				valid = true
 				err := k.deleteK8sEndpointV1(k8sEP, swgEps)
 				k.K8sEventProcessed(metricEndpoint, metricDelete, err == nil)
