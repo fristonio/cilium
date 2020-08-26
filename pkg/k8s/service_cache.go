@@ -132,13 +132,13 @@ func (s *ServiceCache) GetNodeAddressing() datapath.NodeAddressing {
 // be parsed and a bool to indicate whether the service was changed in the
 // cache or not.
 func (s *ServiceCache) UpdateService(k8sSvc *slim_corev1.Service, swg *lock.StoppableWaitGroup) ServiceID {
-	log.Info("yyyyyyy INSIDE UPDATE SERVICE CACHE: PARSING SERVICE")
+	log.Infof("yyyyyyy INSIDE UPDATE SERVICE CACHE: PARSING SERVICE: %s", k8sSvc.ObjectMeta.GetName())
 	svcID, newService := ParseService(k8sSvc, s.nodeAddressing)
 	if newService == nil {
 		return svcID
 	}
 
-	log.Info("yyyyyyy NEW SERVICE IS NOT NIL")
+	log.Infof("yyyyyyy NEW SERVICE IS NOT NIL: %s", k8sSvc.ObjectMeta.GetName())
 
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
@@ -150,14 +150,14 @@ func (s *ServiceCache) UpdateService(k8sSvc *slim_corev1.Service, swg *lock.Stop
 		}
 	}
 
-	log.Info("yyyyyyy NEW SERIVCE IS DIFFERENT FROM OLD SERVICE")
+	log.Infof("yyyyyyy NEW SERIVCE IS DIFFERENT FROM OLD SERVICE: %s", k8sSvc.ObjectMeta.GetName())
 
 	s.services[svcID] = newService
 
 	// Check if the corresponding Endpoints resource is already available
 	endpoints, serviceReady := s.correlateEndpoints(svcID)
 	if serviceReady {
-		log.Info("yyyyyyy NEW SERIVCE READY, CREATING AN EVENT")
+		log.Infof("yyyyyyy NEW SERIVCE READY, CREATING AN EVENT: %s", k8sSvc.ObjectMeta.GetName())
 		swg.Add()
 		s.Events <- ServiceEvent{
 			Action:     UpdateService,
@@ -203,20 +203,25 @@ func (s *ServiceCache) updateEndpoints(esID EndpointSliceID, newEndpoints *Endpo
 
 	eps, ok := s.endpoints[esID.ServiceID]
 	if ok {
+		log.Info("kkkkkkk ENDPOINT EXISTS IN THE PROVIDED SERVICE")
 		if eps.epSlices[esID.EndpointSliceName].DeepEquals(newEndpoints) {
+			log.Info("kkkkkkk NO CHANGE IN ENDPOINTS")
 			return esID.ServiceID, newEndpoints
 		}
 	} else {
+		log.Info("kkkkkkk ENDPOINT DOES NOT EXISTS IN THE PROVIDED SERVICE")
 		eps = newEndpointsSlices()
 		s.endpoints[esID.ServiceID] = eps
 	}
 
+	log.Info("kkkkkkk UPSERTING NEW ENDPOINTS IN OBJECT")
 	eps.Upsert(esID.EndpointSliceName, newEndpoints)
 
 	// Check if the corresponding Endpoints resource is already available
 	svc, ok := s.services[esID.ServiceID]
 	endpoints, serviceReady := s.correlateEndpoints(esID.ServiceID)
 	if ok && serviceReady {
+		log.Info("kkkkkkk SERVICE READY WITH BACKEND ENDPOINTS")
 		swg.Add()
 		s.Events <- ServiceEvent{
 			Action:    UpdateService,
@@ -235,6 +240,7 @@ func (s *ServiceCache) updateEndpoints(esID EndpointSliceID, newEndpoints *Endpo
 // be parsed and a bool to indicate whether the endpoints was changed in the
 // cache or not.
 func (s *ServiceCache) UpdateEndpoints(k8sEndpoints *slim_corev1.Endpoints, swg *lock.StoppableWaitGroup) (ServiceID, *Endpoints) {
+	log.Info("kkkkkkk UPDATING ENDPOINTS K8S OBJECTS")
 	svcID, newEndpoints := ParseEndpoints(k8sEndpoints)
 	epSliceID := EndpointSliceID{
 		ServiceID:         svcID,
@@ -358,8 +364,10 @@ func (s *ServiceCache) UniqueServiceFrontends() FrontendList {
 func (s *ServiceCache) correlateEndpoints(id ServiceID) (*Endpoints, bool) {
 	endpoints := newEndpoints()
 
-	log.Info("zzzzzzz POPULATING EPs WITH LOCAL ENDPOINTS FROM CACHE")
+	log.Info("zzzzzzz POPULATING EPs WITH LOCAL ENDPOINTS FROM CACHE: %+v", id)
 	localEndpoints := s.endpoints[id].GetEndpoints()
+
+	log.Infof("zzzzzzz LOCAL ENDPOINT FOR SERVICE: %+v", localEndpoints)
 	hasLocalEndpoints := localEndpoints != nil
 	if hasLocalEndpoints {
 		for ip, e := range localEndpoints.Backends {
