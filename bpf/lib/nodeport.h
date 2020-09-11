@@ -703,6 +703,8 @@ static __always_inline int rev_nodeport_lb6(struct __ctx_buff *ctx, int *ifindex
 
 		cilium_dbg(ctx, DBG_GENERIC, 1017, 1017);
 		bpf_mark_snat_done(ctx);
+
+		*ifindex = ct_state.ifindex;
 #ifdef ENCAP_IFINDEX
 		{
 			union v6addr *dst = (union v6addr *)&ip6->daddr;
