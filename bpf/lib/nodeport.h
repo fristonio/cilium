@@ -705,10 +705,10 @@ static __always_inline int rev_nodeport_lb6(struct __ctx_buff *ctx, int *ifindex
 		bpf_mark_snat_done(ctx);
 #ifdef ENCAP_IFINDEX
 		{
-			cilium_dbg(ctx, DBG_GENERIC, 1018, 1018);
 			union v6addr *dst = (union v6addr *)&ip6->daddr;
 			struct remote_endpoint_info *info;
 
+			cilium_dbg(ctx, DBG_GENERIC, 1018, 1018);
 			info = ipcache_lookup6(&IPCACHE_MAP, dst, V6_CACHE_KEY_LEN);
 			if (info != NULL && info->tunnel_endpoint != 0) {
 				ret = __encap_with_nodeid(ctx, info->tunnel_endpoint,
@@ -731,9 +731,9 @@ static __always_inline int rev_nodeport_lb6(struct __ctx_buff *ctx, int *ifindex
 		cilium_dbg(ctx, DBG_GENERIC, 1019, *ifindex);
 		dmac = map_lookup_elem(&NODEPORT_NEIGH6, &tuple.daddr);
 		if (dmac) {
-			cilium_dbg(ctx, DBG_GENERIC, 1020, *ifindex);
 			union macaddr mac = NATIVE_DEV_MAC_BY_IFINDEX(*ifindex);
 
+			cilium_dbg(ctx, DBG_GENERIC, 1020, *ifindex);
 			if (eth_store_daddr_aligned(ctx, dmac->addr, 0) < 0)
 				return DROP_WRITE_ERROR;
 			if (eth_store_saddr_aligned(ctx, mac.addr, 0) < 0)
