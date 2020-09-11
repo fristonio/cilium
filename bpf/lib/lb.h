@@ -392,34 +392,44 @@ static __always_inline int __lb6_rev_nat(struct __ctx_buff *ctx, int l4_off,
 	__be32 sum;
 	int ret;
 
+	cilium_dbg(ctx, DBG_GENERIC, 1015, 1015);
 	cilium_dbg_lb(ctx, DBG_LB6_REVERSE_NAT, nat->address.p4, nat->port);
 
 	if (nat->port) {
+		cilium_dbg(ctx, DBG_GENERIC, 2000, tuple->nexthdr);
 		ret = reverse_map_l4_port(ctx, tuple->nexthdr, nat->port, l4_off, csum_off);
 		if (IS_ERR(ret))
 			return ret;
+
+		cilium_dbg(ctx, DBG_GENERIC, 2001, 2001);
 	}
 
 	if (flags & REV_NAT_F_TUPLE_SADDR) {
+		cilium_dbg(ctx, DBG_GENERIC, 2002, 2002);
 		ipv6_addr_copy(&old_saddr, &tuple->saddr);
 		ipv6_addr_copy(&tuple->saddr, &nat->address);
 		new_saddr = tuple->saddr.addr;
 	} else {
+		cilium_dbg(ctx, DBG_GENERIC, 2003, 2003);
 		if (ipv6_load_saddr(ctx, ETH_HLEN, &old_saddr) < 0)
 			return DROP_INVALID;
 
+		cilium_dbg(ctx, DBG_GENERIC, 2004, 2004);
 		ipv6_addr_copy(&tmp, &nat->address);
 		new_saddr = tmp.addr;
 	}
 
+	cilium_dbg(ctx, DBG_GENERIC, 2005, 2005);
 	ret = ipv6_store_saddr(ctx, new_saddr, ETH_HLEN);
 	if (IS_ERR(ret))
 		return DROP_WRITE_ERROR;
+	cilium_dbg(ctx, DBG_GENERIC, 2006, 2006);
 
 	sum = csum_diff(old_saddr.addr, 16, new_saddr, 16, 0);
 	if (csum_l4_replace(ctx, l4_off, csum_off, 0, sum, BPF_F_PSEUDO_HDR) < 0)
 		return DROP_CSUM_L4;
 
+	cilium_dbg(ctx, DBG_GENERIC, 2007, 2007);
 	return 0;
 }
 
@@ -438,6 +448,7 @@ static __always_inline int lb6_rev_nat(struct __ctx_buff *ctx, int l4_off,
 {
 	struct lb6_reverse_nat *nat;
 
+	cilium_dbg(ctx, DBG_GENERIC, 1014, 1014);
 	cilium_dbg_lb(ctx, DBG_LB6_REVERSE_NAT_LOOKUP, index, 0);
 	nat = map_lookup_elem(&LB6_REVERSE_NAT_MAP, &index);
 	if (nat == NULL)

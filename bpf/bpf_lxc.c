@@ -73,6 +73,7 @@ static __always_inline int ipv6_l3_from_lxc(struct __ctx_buff *ctx,
 	__u8 policy_match_type = POLICY_MATCH_NONE;
 	__u8 audited = 0;
 
+	cilium_dbg(ctx, DBG_GENERIC, 1004, 1004);
 	if (unlikely(!is_valid_lxc_src_ip(ip6)))
 		return DROP_INVALID_SIP;
 
@@ -90,6 +91,7 @@ static __always_inline int ipv6_l3_from_lxc(struct __ctx_buff *ctx,
 		struct lb6_service *svc;
 		struct lb6_key key = {};
 
+		cilium_dbg(ctx, DBG_GENERIC, 1005, 1005);
 		ret = lb6_extract_key(ctx, tuple, l4_off, &key, &csum_off,
 				      CT_EGRESS);
 		if (IS_ERR(ret)) {
@@ -106,8 +108,10 @@ static __always_inline int ipv6_l3_from_lxc(struct __ctx_buff *ctx,
 		 * the CT entry for destination endpoints where we can't encode the
 		 * state in the address.
 		 */
+		cilium_dbg(ctx, DBG_GENERIC, 1006, 1006);
 		svc = lb6_lookup_service(&key, true);
 		if (svc) {
+			cilium_dbg(ctx, DBG_GENERIC, 1007, 1007);
 			ret = lb6_local(get_ct_map6(tuple), ctx, l3_off, l4_off,
 					&csum_off, &key, tuple, svc, &ct_state_new);
 			if (IS_ERR(ret))
@@ -141,10 +145,12 @@ skip_service_lookup:
 	if (ret < 0)
 		return ret;
 
+
 	reason = ret;
 
 	/* Check it this is return traffic to an ingress proxy. */
 	if ((ret == CT_REPLY || ret == CT_RELATED) && ct_state.proxy_redirect) {
+		cilium_dbg(ctx, DBG_GENERIC, 1008, 1008);
 		/* Stack will do a socket match and deliver locally. */
 		return ctx_redirect_to_proxy6(ctx, tuple, 0, false);
 	}
@@ -209,10 +215,12 @@ ct_recreate6:
 
 	case CT_RELATED:
 	case CT_REPLY:
+		cilium_dbg(ctx, DBG_GENERIC, 1009, 1009);
 		policy_mark_skip(ctx);
 
 #ifdef ENABLE_NODEPORT
 		/* See comment in handle_ipv4_from_lxc(). */
+		cilium_dbg(ctx, DBG_GENERIC, 1010, 1010);
 		if (ct_state.node_port) {
 			ctx->tc_index |= TC_INDEX_F_SKIP_RECIRCULATION;
 			ep_tail_call(ctx, CILIUM_CALL_IPV6_NODEPORT_REVNAT);
@@ -393,6 +401,7 @@ static __always_inline int handle_ipv6(struct __ctx_buff *ctx, __u32 *dstID)
 	struct ipv6hdr *ip6;
 	int ret;
 
+	cilium_dbg(ctx, DBG_GENERIC, 1003, 1003);
 	if (!revalidate_data(ctx, &data, &data_end, &ip6))
 		return DROP_INVALID;
 
@@ -419,7 +428,9 @@ declare_tailcall_if(__or(__and(is_defined(ENABLE_IPV4), is_defined(ENABLE_IPV6))
 int tail_handle_ipv6(struct __ctx_buff *ctx)
 {
 	__u32 dstID = 0;
-	int ret = handle_ipv6(ctx, &dstID);
+	int ret;
+	cilium_dbg(ctx, DBG_GENERIC, 1002, 1002);
+	ret = handle_ipv6(ctx, &dstID);
 
 	if (IS_ERR(ret)) {
 		return send_drop_notify(ctx, SECLABEL, dstID, 0, ret,
@@ -801,6 +812,7 @@ int handle_xgress(struct __ctx_buff *ctx)
 	__u16 proto;
 	int ret;
 
+    cilium_dbg(ctx, DBG_GENERIC, 1000, 1000);
 	bpf_clear_meta(ctx);
 	edt_set_aggregate(ctx, LXC_ID);
 
@@ -815,6 +827,7 @@ int handle_xgress(struct __ctx_buff *ctx)
 	switch (proto) {
 #ifdef ENABLE_IPV6
 	case bpf_htons(ETH_P_IPV6):
+        cilium_dbg(ctx, DBG_GENERIC, 1001, 1001);
 		invoke_tailcall_if(__or(__and(is_defined(ENABLE_IPV4), is_defined(ENABLE_IPV6)),
 					is_defined(DEBUG)),
 				   CILIUM_CALL_IPV6_FROM_LXC, tail_handle_ipv6);

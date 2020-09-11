@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+
 	// NOTE: syscall is deprecated, but it is replaced by golang.org/x/sys
 	//       which reuses syscall.Errno similarly to how we do below.
 	"syscall"
@@ -255,7 +256,7 @@ func (n *DebugMsg) Dump(prefix string) {
 func (n *DebugMsg) subTypeString() string {
 	switch n.SubType {
 	case DbgGeneric:
-		return fmt.Sprintf("No message, arg1=%d (%#x) arg2=%d (%#x)", n.Arg1, n.Arg1, n.Arg2, n.Arg2)
+		return fmt.Sprintf("xxxxx No message, arg1=%d (%#x) arg2=%d (%#x)", n.Arg1, n.Arg1, n.Arg2, n.Arg2)
 	case DbgLocalDelivery:
 		return fmt.Sprintf("Attempting local delivery for container id %d from seclabel %d", n.Arg1, n.Arg2)
 	case DbgEncap:

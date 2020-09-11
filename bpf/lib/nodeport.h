@@ -522,6 +522,7 @@ static __always_inline int nodeport_lb6(struct __ctx_buff *ctx,
 	bool backend_local;
 	__u32 monitor = 0;
 
+    cilium_dbg(ctx, DBG_GENERIC, 1004, 1004);
 	if (!revalidate_data(ctx, &data, &data_end, &ip6))
 		return DROP_INVALID;
 
@@ -671,6 +672,7 @@ static __always_inline int rev_nodeport_lb6(struct __ctx_buff *ctx, int *ifindex
 	union macaddr *dmac;
 	__u32 monitor = 0;
 
+	cilium_dbg(ctx, DBG_GENERIC, 1012, 1012);
 	if (!revalidate_data(ctx, &data, &data_end, &ip6))
 		return DROP_INVALID;
 
@@ -689,10 +691,12 @@ static __always_inline int rev_nodeport_lb6(struct __ctx_buff *ctx, int *ifindex
 			 &monitor);
 
 	if (ret == CT_REPLY && ct_state.node_port == 1 && ct_state.rev_nat_index != 0) {
+		cilium_dbg_capture2(ctx, DBG_GENERIC, 1013, 1013);
 		ret2 = lb6_rev_nat(ctx, l4_off, &csum_off, ct_state.rev_nat_index,
 				   &tuple, REV_NAT_F_TUPLE_SADDR);
 		if (IS_ERR(ret2))
 			return ret2;
+		cilium_dbg_capture2(ctx, DBG_GENERIC, 1016, 1016);
 
 		if (!revalidate_data(ctx, &data, &data_end, &ip6))
 			return DROP_INVALID;
@@ -779,9 +783,12 @@ int tail_rev_nodeport_lb6(struct __ctx_buff *ctx)
 	 */
 	ctx_skip_host_fw_set(ctx);
 #endif
+	cilium_dbg(ctx, DBG_GENERIC, 1011, 1011);
 	ret = rev_nodeport_lb6(ctx, &ifindex);
 	if (IS_ERR(ret))
 		return send_drop_notify_error(ctx, 0, ret, CTX_ACT_DROP, METRIC_EGRESS);
+
+	cilium_dbg_capture2(ctx, DBG_GENERIC, 1017, ifindex);
 	edt_set_aggregate(ctx, 0);
 	return ctx_redirect(ctx, ifindex, 0);
 }
