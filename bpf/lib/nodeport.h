@@ -691,19 +691,21 @@ static __always_inline int rev_nodeport_lb6(struct __ctx_buff *ctx, int *ifindex
 			 &monitor);
 
 	if (ret == CT_REPLY && ct_state.node_port == 1 && ct_state.rev_nat_index != 0) {
-		cilium_dbg_capture2(ctx, DBG_GENERIC, 1013, 1013);
+		cilium_dbg(ctx, DBG_GENERIC, 1013, 1013);
 		ret2 = lb6_rev_nat(ctx, l4_off, &csum_off, ct_state.rev_nat_index,
 				   &tuple, REV_NAT_F_TUPLE_SADDR);
 		if (IS_ERR(ret2))
 			return ret2;
-		cilium_dbg_capture2(ctx, DBG_GENERIC, 1016, 1016);
+		cilium_dbg(ctx, DBG_GENERIC, 1016, 1016);
 
 		if (!revalidate_data(ctx, &data, &data_end, &ip6))
 			return DROP_INVALID;
 
+		cilium_dbg(ctx, DBG_GENERIC, 1017, 1017);
 		bpf_mark_snat_done(ctx);
 #ifdef ENCAP_IFINDEX
 		{
+			cilium_dbg(ctx, DBG_GENERIC, 1018, 1018);
 			union v6addr *dst = (union v6addr *)&ip6->daddr;
 			struct remote_endpoint_info *info;
 
@@ -726,9 +728,10 @@ static __always_inline int rev_nodeport_lb6(struct __ctx_buff *ctx, int *ifindex
 			}
 		}
 #endif
-
+		cilium_dbg(ctx, DBG_GENERIC, 1019, *ifindex);
 		dmac = map_lookup_elem(&NODEPORT_NEIGH6, &tuple.daddr);
 		if (dmac) {
+			cilium_dbg(ctx, DBG_GENERIC, 1020, *ifindex);
 			union macaddr mac = NATIVE_DEV_MAC_BY_IFINDEX(*ifindex);
 
 			if (eth_store_daddr_aligned(ctx, dmac->addr, 0) < 0)
@@ -736,6 +739,7 @@ static __always_inline int rev_nodeport_lb6(struct __ctx_buff *ctx, int *ifindex
 			if (eth_store_saddr_aligned(ctx, mac.addr, 0) < 0)
 				return DROP_WRITE_ERROR;
 		} else {
+			cilium_dbg(ctx, DBG_GENERIC, 1021, *ifindex);
 			fib_params.family = AF_INET6;
 			fib_params.ifindex = *ifindex;
 
@@ -760,6 +764,7 @@ static __always_inline int rev_nodeport_lb6(struct __ctx_buff *ctx, int *ifindex
 		}
 	}
 
+	cilium_dbg(ctx, DBG_GENERIC, 1022, *ifindex);
 	return CTX_ACT_OK;
 }
 
@@ -788,7 +793,7 @@ int tail_rev_nodeport_lb6(struct __ctx_buff *ctx)
 	if (IS_ERR(ret))
 		return send_drop_notify_error(ctx, 0, ret, CTX_ACT_DROP, METRIC_EGRESS);
 
-	cilium_dbg_capture2(ctx, DBG_GENERIC, 1017, ifindex);
+	cilium_dbg(ctx, DBG_GENERIC, 1023, ifindex);
 	edt_set_aggregate(ctx, 0);
 	return ctx_redirect(ctx, ifindex, 0);
 }
