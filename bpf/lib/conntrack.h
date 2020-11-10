@@ -758,6 +758,38 @@ static __always_inline int ct_create6(const void *map_main, const void *map_rela
 		return DROP_CT_CREATE_FAILED;
 	}
 
+#if defined(IPV6_LOOPBACK) && !defined(DISABLE_LOOPBACK_LB)
+	if (ct_state->loopback) {
+		struct ipv6_ct_tuple new_tuple = {
+			.sport = tuple->sport,
+			.dport = tuple->dport,
+			.flags = TUPLE_F_IN
+		};
+		union v6addr loopback_addr = IPV6_LOOPBACK;
+
+		ipv6_addr_copy(&new_tuple.saddr, &tuple->saddr);
+		ipv6_addr_copy(&new_tuple.daddr, &tuple->daddr);
+
+		/* We are looping back into the origin endpoint through a
+		 * service, set up a conntrack tuple for the reply to ensure we
+		 * do rev NAT before attempting to route the destination
+		 * address which will not point back to the right source.
+		 */
+		if (dir == CT_INGRESS) {
+			ipv6_addr_copy(&new_tuple.saddr, &loopback_addr);
+			ipv6_addr_copy(&new_tuple.daddr, &tuple->daddr);
+		} else {
+			ipv6_addr_copy(&new_tuple.saddr, &tuple->saddr);
+			ipv6_addr_copy(&new_tuple.daddr, &loopback_addr);
+		}
+
+		if (map_update_elem(map_main, tuple, &entry, 0) < 0) {
+			send_signal_ct_fill_up(ctx, SIGNAL_PROTO_V6);
+			return DROP_CT_CREATE_FAILED;
+		}
+	}
+#endif
+
 	if (map_related != NULL) {
 		/* Create an ICMPv6 entry to relate errors */
 		struct ipv6_ct_tuple icmp_tuple = {
