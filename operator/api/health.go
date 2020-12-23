@@ -15,8 +15,11 @@
 package api
 
 import (
+	"io"
+
 	"github.com/cilium/cilium/api/v1/operator/server/restapi/operator"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/swag"
 )
 
 type getHealthz struct {
@@ -42,4 +45,15 @@ func (h *getHealthz) Handle(params operator.GetHealthzParams) middleware.Respond
 	}
 
 	return operator.NewGetHealthzOK().WithPayload("ok")
+}
+
+// Produce implements producer for the middleware responder.
+func (h *getHealthz) Produce(rw io.Writer, payload interface{}) error {
+	data, err := swag.WriteJSON(payload)
+	if err != nil {
+		return err
+	}
+
+	_, err = rw.Write(data)
+	return err
 }
