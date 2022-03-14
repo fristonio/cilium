@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-// Classification the log entry's classification name
+// Classification is the type of the log entry's classification name.
 type Classification string
 
 // Set of standard classifications that can be used by clients and middleware
@@ -19,6 +19,14 @@ const (
 type Logger interface {
 	// Logf is expected to support the standard fmt package "verbs".
 	Logf(classification Classification, format string, v ...interface{})
+}
+
+// LoggerFunc is a wrapper around a function to satisfy the Logger interface.
+type LoggerFunc func(classification Classification, format string, v ...interface{})
+
+// Logf delegates the logging request to the wrapped function.
+func (f LoggerFunc) Logf(classification Classification, format string, v ...interface{}) {
+	f(classification, format, v...)
 }
 
 // ContextLogger is an optional interface a Logger implementation may expose that provides
