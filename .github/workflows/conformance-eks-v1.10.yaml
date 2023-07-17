@@ -187,7 +187,7 @@ jobs:
           rm eksctl_$(uname -s)_amd64.tar.gz
 
       - name: Install helm
-        uses: azure/setup-helm@18bc76811624f360dbd7f18c2d4ecb32c7b87bab
+        uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78
         with:
           # Due to the below issue, v3.8.2 is pinned currently to avoid
           # exec plugin: invalid apiVersion "client.authentication.k8s.io/v1alpha1"
