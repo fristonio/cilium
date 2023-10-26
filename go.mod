@@ -27,7 +27,7 @@ require (
 	github.com/containernetworking/plugins v1.1.1
 	github.com/coreos/go-systemd/v22 v22.3.2
 	github.com/davecgh/go-spew v1.1.1
-	github.com/docker/docker v20.10.17+incompatible
+	github.com/docker/docker v24.0.7+incompatible
 	github.com/docker/libnetwork v0.8.0-dev.2.0.20210525090646-64b7a4574d14
 	github.com/fsnotify/fsnotify v1.5.4
 	github.com/go-openapi/errors v0.20.2
@@ -40,7 +40,7 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
 	github.com/golang/protobuf v1.5.2
-	github.com/google/go-cmp v0.5.8
+	github.com/google/go-cmp v0.5.9
 	github.com/google/gopacket v1.1.19
 	github.com/google/gops v0.3.23
 	github.com/google/renameio v1.0.1
@@ -66,7 +66,7 @@ require (
 	github.com/sasha-s/go-deadlock v0.3.1
 	github.com/servak/go-fastping v0.0.0-20160802140958-5718d12e20a0
 	github.com/shirou/gopsutil/v3 v3.22.5
-	github.com/sirupsen/logrus v1.8.1
+	github.com/sirupsen/logrus v1.9.2
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
@@ -81,11 +81,11 @@ require (
 	go.uber.org/multierr v1.8.0
 	go.universe.tf/metallb v0.11.0
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
-	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a
+	golang.org/x/net v0.10.0
+	golang.org/x/sync v0.1.0
+	golang.org/x/sys v0.8.0
 	golang.org/x/time v0.0.0-20220210224613-90d013bbcef8
-	golang.org/x/tools v0.1.11
+	golang.org/x/tools v0.6.0
 	golang.zx2c4.com/wireguard v0.0.0-20211017052713-f87e87af0d9a
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20211027115401-c9b1ec1aa6d8
 	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd
@@ -164,7 +164,7 @@ require (
 	github.com/ishidawataru/sctp v0.0.0-20210707070123-9a39160e9062 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/josharian/native v0.0.0-20200817173448-b6b71def0850 // indirect
+	github.com/josharian/native v1.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/k-sone/critbitgo v1.4.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
@@ -200,6 +200,7 @@ require (
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
+	github.com/rootless-containers/rootlesskit v1.1.1 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/subosito/gotenv v1.3.0 // indirect
@@ -210,10 +211,10 @@ require (
 	go.mongodb.org/mongo-driver v1.8.3 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/zap v1.19.1 // indirect
-	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
+	golang.org/x/mod v0.8.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
-	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/term v0.8.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
