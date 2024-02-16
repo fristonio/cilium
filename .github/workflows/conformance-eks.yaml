@@ -101,7 +101,7 @@ jobs:
           echo "::set-output name=head::$(jq -r '.head.sha' pr.json)"
       - name: Check code changes
         if: ${{ github.event.issue.pull_request }}
-        uses: dorny/paths-filter@b2feaf19c27470162a626bd6fa8438ae5b263721
+        uses: dorny/paths-filter@ebc4d7e9ebcb0b1eb21480bb8f43113e996ac77a
         id: tested-tree
         with:
           base: ${{ steps.pr.outputs.base }}
