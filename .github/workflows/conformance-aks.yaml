@@ -186,7 +186,7 @@ jobs:
           cilium version
 
       - name: Login to Azure
-        uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
+        uses: azure/login@6b2456866fc08b011acb422a92a4aa20e2c4de32
         with:
           creds: ${{ secrets.AZURE_PR_SP_CREDS }}
 
