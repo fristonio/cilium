@@ -81,7 +81,7 @@ jobs:
       # paths-filter to work.
       - name: Checkout code
         if: ${{ github.event.issue.pull_request }}
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
         with:
           ref: ${{ steps.vars.outputs.sha }}
           persist-credentials: false
@@ -157,14 +157,14 @@ jobs:
           rm -r docker docker-20.10.9.tgz
 
       - name: Checkout upstream for Vagrantfile
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
         with:
           # This is intentionally set to stable branch to avoid using Vagrantfile from pull requests.
           ref: v1.10
           persist-credentials: false
 
       - name: Checkout pull request for Helm chart
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
         with:
           ref: ${{ steps.vars.outputs.sha }}
           persist-credentials: false

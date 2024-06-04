@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Checkout code
         if: ${{ !github.event.pull_request }}
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
         with:
           persist-credentials: false
       - name: Check code changes
@@ -46,7 +46,7 @@ jobs:
   preflight-clusterrole:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
         with:
           persist-credentials: false
 
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
         with:
           persist-credentials: false
 
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
         with:
           persist-credentials: false
 
