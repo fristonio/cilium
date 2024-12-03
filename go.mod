@@ -44,7 +44,7 @@ require (
 	github.com/google/gopacket v1.1.19
 	github.com/google/gops v0.3.23
 	github.com/google/renameio v1.0.1
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/consul/api v1.13.0
 	github.com/hashicorp/go-immutable-radix v1.3.1
