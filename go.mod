@@ -1,6 +1,7 @@
 module github.com/cilium/cilium
 
 go 1.18
+toolchain go1.24.1
 
 require (
 	github.com/Azure/azure-sdk-for-go v65.0.0+incompatible
@@ -90,7 +91,7 @@ require (
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20211027115401-c9b1ec1aa6d8
 	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd
 	google.golang.org/grpc v1.47.0
-	google.golang.org/protobuf v1.28.0
+	google.golang.org/protobuf v1.36.6
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
 	gopkg.in/ini.v1 v1.66.6
 	gopkg.in/yaml.v2 v2.4.0
