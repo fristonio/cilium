@@ -78,7 +78,7 @@ require (
 	go.etcd.io/etcd/client/pkg/v3 v3.5.4
 	go.etcd.io/etcd/client/v3 v3.5.4
 	go.uber.org/goleak v1.1.12
-	go.uber.org/multierr v1.8.0
+	go.uber.org/multierr v1.11.0
 	go.universe.tf/metallb v0.11.0
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2
