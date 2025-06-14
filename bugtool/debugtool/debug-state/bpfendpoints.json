@@ -1,0 +1,50 @@
+[
+  {
+    "key": "10.244.1.131:0",
+    "value": [
+      "id=1276  sec_id=4     flags=0x0000 ifindex=16  mac=D6:CC:CE:4F:E3:0F nodemac=06:C9:1B:9B:F8:14 parent_ifindex=0  "
+    ]
+  },
+  {
+    "key": "10.244.1.141:0",
+    "value": [
+      "(localhost)"
+    ]
+  },
+  {
+    "key": "10.244.1.163:0",
+    "value": [
+      "id=1032  sec_id=3222  flags=0x0000 ifindex=8   mac=7E:CA:5D:59:B3:3E nodemac=CA:0E:6C:12:C2:FF parent_ifindex=0  "
+    ]
+  },
+  {
+    "key": "192.168.208.2:0",
+    "value": [
+      "(localhost)"
+    ]
+  },
+  {
+    "key": "fc00:c111::2:0",
+    "value": [
+      "(localhost)"
+    ]
+  },
+  {
+    "key": "fd00:10:244:1::142:0",
+    "value": [
+      "id=1032  sec_id=3222  flags=0x0000 ifindex=8   mac=7E:CA:5D:59:B3:3E nodemac=CA:0E:6C:12:C2:FF parent_ifindex=0  "
+    ]
+  },
+  {
+    "key": "fd00:10:244:1::5b16:0",
+    "value": [
+      "id=1276  sec_id=4     flags=0x0000 ifindex=16  mac=D6:CC:CE:4F:E3:0F nodemac=06:C9:1B:9B:F8:14 parent_ifindex=0  "
+    ]
+  },
+  {
+    "key": "fd00:10:244:1::8324:0",
+    "value": [
+      "(localhost)"
+    ]
+  }
+]

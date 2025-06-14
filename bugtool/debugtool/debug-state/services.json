@@ -1,0 +1,935 @@
+[
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "fc00:c111::2",
+          "port": 4244,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "cilium-xt92s:host-port:4244:0c1d3d7e-1635-4b35-8e59-e13a361f8367",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "HostPort"
+      },
+      "frontend-address": {
+        "ip": "::",
+        "port": 4244,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 14
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "fc00:c111::2",
+            "port": 4244,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "cilium-xt92s:host-port:4244:0c1d3d7e-1635-4b35-8e59-e13a361f8367",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "HostPort"
+        },
+        "frontend-address": {
+          "ip": "::",
+          "port": 4244,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 14
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "fc00:c111::2",
+          "port": 9962,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "cilium-xt92s:host-port:9962:0c1d3d7e-1635-4b35-8e59-e13a361f8367",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "HostPort"
+      },
+      "frontend-address": {
+        "ip": "::",
+        "port": 9962,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 18
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "fc00:c111::2",
+            "port": 9962,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "cilium-xt92s:host-port:9962:0c1d3d7e-1635-4b35-8e59-e13a361f8367",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "HostPort"
+        },
+        "frontend-address": {
+          "ip": "::",
+          "port": 9962,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 18
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "fc00:c111::2",
+          "port": 9963,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "cilium-operator-6bb659f776-6v2gr:host-port:9963:de8a2871-5746-46c2-9446-c3ff5a98d986",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "HostPort"
+      },
+      "frontend-address": {
+        "ip": "::",
+        "port": 9963,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 10
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "fc00:c111::2",
+            "port": 9963,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "cilium-operator-6bb659f776-6v2gr:host-port:9963:de8a2871-5746-46c2-9446-c3ff5a98d986",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "HostPort"
+        },
+        "frontend-address": {
+          "ip": "::",
+          "port": 9963,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 10
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "fc00:c111::2",
+          "port": 9964,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "cilium-envoy-m597v:host-port:9964:22a595af-6b66-43be-9f7c-dba3754e148e",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "HostPort"
+      },
+      "frontend-address": {
+        "ip": "::",
+        "port": 9964,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 6
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "fc00:c111::2",
+            "port": 9964,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "cilium-envoy-m597v:host-port:9964:22a595af-6b66-43be-9f7c-dba3754e148e",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "HostPort"
+        },
+        "frontend-address": {
+          "ip": "::",
+          "port": 9964,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 6
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "fc00:c111::2",
+          "port": 9967,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "cilium-dnsproxy-lzgd8:host-port:9967:bc5738c6-3374-437c-a4ab-a1e980b8cc62",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "HostPort"
+      },
+      "frontend-address": {
+        "ip": "::",
+        "port": 9967,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 22
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "fc00:c111::2",
+            "port": 9967,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "cilium-dnsproxy-lzgd8:host-port:9967:bc5738c6-3374-437c-a4ab-a1e980b8cc62",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "HostPort"
+        },
+        "frontend-address": {
+          "ip": "::",
+          "port": 9967,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 22
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "192.168.208.2",
+          "port": 4244,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "cilium-xt92s:host-port:4244:0c1d3d7e-1635-4b35-8e59-e13a361f8367",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "HostPort"
+      },
+      "frontend-address": {
+        "ip": "0.0.0.0",
+        "port": 4244,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 16
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "192.168.208.2",
+            "port": 4244,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "cilium-xt92s:host-port:4244:0c1d3d7e-1635-4b35-8e59-e13a361f8367",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "HostPort"
+        },
+        "frontend-address": {
+          "ip": "0.0.0.0",
+          "port": 4244,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 16
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "192.168.208.2",
+          "port": 9962,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "cilium-xt92s:host-port:9962:0c1d3d7e-1635-4b35-8e59-e13a361f8367",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "HostPort"
+      },
+      "frontend-address": {
+        "ip": "0.0.0.0",
+        "port": 9962,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 20
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "192.168.208.2",
+            "port": 9962,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "cilium-xt92s:host-port:9962:0c1d3d7e-1635-4b35-8e59-e13a361f8367",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "HostPort"
+        },
+        "frontend-address": {
+          "ip": "0.0.0.0",
+          "port": 9962,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 20
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "192.168.208.2",
+          "port": 9963,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "cilium-operator-6bb659f776-6v2gr:host-port:9963:de8a2871-5746-46c2-9446-c3ff5a98d986",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "HostPort"
+      },
+      "frontend-address": {
+        "ip": "0.0.0.0",
+        "port": 9963,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 12
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "192.168.208.2",
+            "port": 9963,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "cilium-operator-6bb659f776-6v2gr:host-port:9963:de8a2871-5746-46c2-9446-c3ff5a98d986",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "HostPort"
+        },
+        "frontend-address": {
+          "ip": "0.0.0.0",
+          "port": 9963,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 12
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "192.168.208.2",
+          "port": 9964,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "cilium-envoy-m597v:host-port:9964:22a595af-6b66-43be-9f7c-dba3754e148e",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "HostPort"
+      },
+      "frontend-address": {
+        "ip": "0.0.0.0",
+        "port": 9964,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 8
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "192.168.208.2",
+            "port": 9964,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "cilium-envoy-m597v:host-port:9964:22a595af-6b66-43be-9f7c-dba3754e148e",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "HostPort"
+        },
+        "frontend-address": {
+          "ip": "0.0.0.0",
+          "port": 9964,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 8
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "192.168.208.2",
+          "port": 9967,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "cilium-dnsproxy-lzgd8:host-port:9967:bc5738c6-3374-437c-a4ab-a1e980b8cc62",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "HostPort"
+      },
+      "frontend-address": {
+        "ip": "0.0.0.0",
+        "port": 9967,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 24
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "192.168.208.2",
+            "port": 9967,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "cilium-dnsproxy-lzgd8:host-port:9967:bc5738c6-3374-437c-a4ab-a1e980b8cc62",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "HostPort"
+        },
+        "frontend-address": {
+          "ip": "0.0.0.0",
+          "port": 9967,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 24
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "192.168.208.3",
+          "port": 6443,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "kubernetes",
+        "namespace": "default",
+        "trafficPolicy": "Cluster",
+        "type": "ClusterIP"
+      },
+      "frontend-address": {
+        "ip": "10.96.0.1",
+        "port": 443,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 5
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "192.168.208.3",
+            "port": 6443,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "kubernetes",
+          "namespace": "default",
+          "trafficPolicy": "Cluster",
+          "type": "ClusterIP"
+        },
+        "frontend-address": {
+          "ip": "10.96.0.1",
+          "port": 443,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 5
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "10.244.0.202",
+          "nodeName": "kind-control-plane",
+          "port": 53,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        },
+        {
+          "ip": "10.244.0.218",
+          "nodeName": "kind-control-plane",
+          "port": 53,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "kube-dns",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "ClusterIP"
+      },
+      "frontend-address": {
+        "ip": "10.96.0.10",
+        "port": 53,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 2
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "10.244.0.202",
+            "nodeName": "kind-control-plane",
+            "port": 53,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          },
+          {
+            "ip": "10.244.0.218",
+            "nodeName": "kind-control-plane",
+            "port": 53,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "kube-dns",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "ClusterIP"
+        },
+        "frontend-address": {
+          "ip": "10.96.0.10",
+          "port": 53,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 2
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "10.244.0.202",
+          "nodeName": "kind-control-plane",
+          "port": 53,
+          "preferred": true,
+          "protocol": "UDP",
+          "state": "active",
+          "weight": 100
+        },
+        {
+          "ip": "10.244.0.218",
+          "nodeName": "kind-control-plane",
+          "port": 53,
+          "preferred": true,
+          "protocol": "UDP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "kube-dns",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "ClusterIP"
+      },
+      "frontend-address": {
+        "ip": "10.96.0.10",
+        "port": 53,
+        "protocol": "UDP",
+        "scope": "external"
+      },
+      "id": 3
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "10.244.0.202",
+            "nodeName": "kind-control-plane",
+            "port": 53,
+            "preferred": true,
+            "protocol": "UDP",
+            "state": "active",
+            "weight": 100
+          },
+          {
+            "ip": "10.244.0.218",
+            "nodeName": "kind-control-plane",
+            "port": 53,
+            "preferred": true,
+            "protocol": "UDP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "kube-dns",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "ClusterIP"
+        },
+        "frontend-address": {
+          "ip": "10.96.0.10",
+          "port": 53,
+          "protocol": "UDP",
+          "scope": "external"
+        },
+        "id": 3
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "10.244.0.202",
+          "nodeName": "kind-control-plane",
+          "port": 9153,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        },
+        {
+          "ip": "10.244.0.218",
+          "nodeName": "kind-control-plane",
+          "port": 9153,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Cluster",
+        "name": "kube-dns",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "ClusterIP"
+      },
+      "frontend-address": {
+        "ip": "10.96.0.10",
+        "port": 9153,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 4
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "10.244.0.202",
+            "nodeName": "kind-control-plane",
+            "port": 9153,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          },
+          {
+            "ip": "10.244.0.218",
+            "nodeName": "kind-control-plane",
+            "port": 9153,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Cluster",
+          "name": "kube-dns",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "ClusterIP"
+        },
+        "frontend-address": {
+          "ip": "10.96.0.10",
+          "port": 9153,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 4
+      }
+    }
+  },
+  {
+    "spec": {
+      "backend-addresses": [
+        {
+          "ip": "192.168.208.2",
+          "nodeName": "kind-worker",
+          "port": 4244,
+          "preferred": true,
+          "protocol": "TCP",
+          "state": "active",
+          "weight": 100
+        }
+      ],
+      "flags": {
+        "extTrafficPolicy": "Cluster",
+        "intTrafficPolicy": "Local",
+        "name": "hubble-peer",
+        "namespace": "kube-system",
+        "trafficPolicy": "Cluster",
+        "type": "ClusterIP"
+      },
+      "frontend-address": {
+        "ip": "10.96.225.127",
+        "port": 443,
+        "protocol": "TCP",
+        "scope": "external"
+      },
+      "id": 1
+    },
+    "status": {
+      "realized": {
+        "backend-addresses": [
+          {
+            "ip": "192.168.208.2",
+            "nodeName": "kind-worker",
+            "port": 4244,
+            "preferred": true,
+            "protocol": "TCP",
+            "state": "active",
+            "weight": 100
+          }
+        ],
+        "flags": {
+          "extTrafficPolicy": "Cluster",
+          "intTrafficPolicy": "Local",
+          "name": "hubble-peer",
+          "namespace": "kube-system",
+          "trafficPolicy": "Cluster",
+          "type": "ClusterIP"
+        },
+        "frontend-address": {
+          "ip": "10.96.225.127",
+          "port": 443,
+          "protocol": "TCP",
+          "scope": "external"
+        },
+        "id": 1
+      }
+    }
+  }
+]
+

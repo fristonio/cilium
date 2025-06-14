@@ -1,0 +1,186 @@
+[
+  {
+    "identities": [
+      16777222
+    ],
+    "labels": [
+      {
+        "key": "io.cilium.k8s.policy.derived-from",
+        "source": "k8s",
+        "value": "CiliumNetworkPolicy"
+      },
+      {
+        "key": "io.cilium.k8s.policy.name",
+        "source": "k8s",
+        "value": "fqdn-test"
+      },
+      {
+        "key": "io.cilium.k8s.policy.namespace",
+        "source": "k8s",
+        "value": "default"
+      },
+      {
+        "key": "io.cilium.k8s.policy.uid",
+        "source": "k8s",
+        "value": "6e7872af-faf6-4e62-b43c-a079deef95ca"
+      }
+    ],
+    "selector": "MatchName: , MatchPattern: *.example.com",
+    "users": 1
+  },
+  {
+    "identities": [
+      3222
+    ],
+    "labels": [
+      {
+        "key": "io.cilium.k8s.policy.derived-from",
+        "source": "k8s",
+        "value": "CiliumNetworkPolicy"
+      },
+      {
+        "key": "io.cilium.k8s.policy.name",
+        "source": "k8s",
+        "value": "fqdn-test"
+      },
+      {
+        "key": "io.cilium.k8s.policy.namespace",
+        "source": "k8s",
+        "value": "default"
+      },
+      {
+        "key": "io.cilium.k8s.policy.uid",
+        "source": "k8s",
+        "value": "6e7872af-faf6-4e62-b43c-a079deef95ca"
+      }
+    ],
+    "selector": "\u0026LabelSelector{MatchLabels:map[string]string{k8s.io.kubernetes.pod.namespace: default,},MatchExpressions:[]LabelSelectorRequirement{},}",
+    "users": 1
+  },
+  {
+    "identities": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      3222,
+      3590,
+      36139,
+      16777222
+    ],
+    "labels": [
+      {
+        "key": "io.cilium.k8s.policy.derived-from",
+        "source": "k8s",
+        "value": "CiliumNetworkPolicy"
+      },
+      {
+        "key": "io.cilium.k8s.policy.name",
+        "source": "k8s",
+        "value": "fqdn-test"
+      },
+      {
+        "key": "io.cilium.k8s.policy.namespace",
+        "source": "k8s",
+        "value": "default"
+      },
+      {
+        "key": "io.cilium.k8s.policy.uid",
+        "source": "k8s",
+        "value": "6e7872af-faf6-4e62-b43c-a079deef95ca"
+      }
+    ],
+    "selector": "\u0026LabelSelector{MatchLabels:map[string]string{},MatchExpressions:[]LabelSelectorRequirement{},}",
+    "users": 3
+  },
+  {
+    "identities": [],
+    "labels": [
+      {
+        "key": "io.cilium.k8s.policy.derived-from",
+        "source": "k8s",
+        "value": "CiliumNetworkPolicy"
+      },
+      {
+        "key": "io.cilium.k8s.policy.name",
+        "source": "k8s",
+        "value": "fqdn-test"
+      },
+      {
+        "key": "io.cilium.k8s.policy.namespace",
+        "source": "k8s",
+        "value": "default"
+      },
+      {
+        "key": "io.cilium.k8s.policy.uid",
+        "source": "k8s",
+        "value": "6e7872af-faf6-4e62-b43c-a079deef95ca"
+      }
+    ],
+    "selector": "\u0026LabelSelector{MatchLabels:map[string]string{reserved.none: ,},MatchExpressions:[]LabelSelectorRequirement{},}",
+    "users": 1
+  },
+  {
+    "identities": [],
+    "labels": [
+      {
+        "key": "io.cilium.k8s.policy.derived-from",
+        "source": "k8s",
+        "value": "CiliumNetworkPolicy"
+      },
+      {
+        "key": "io.cilium.k8s.policy.name",
+        "source": "k8s",
+        "value": "fqdn-test"
+      },
+      {
+        "key": "io.cilium.k8s.policy.namespace",
+        "source": "k8s",
+        "value": "default"
+      },
+      {
+        "key": "io.cilium.k8s.policy.uid",
+        "source": "k8s",
+        "value": "6e7872af-faf6-4e62-b43c-a079deef95ca"
+      }
+    ],
+    "selector": "MatchName: cilium.io, MatchPattern: ",
+    "users": 1
+  },
+  {
+    "identities": [
+      16777222
+    ],
+    "labels": [
+      {
+        "key": "io.cilium.k8s.policy.derived-from",
+        "source": "k8s",
+        "value": "CiliumNetworkPolicy"
+      },
+      {
+        "key": "io.cilium.k8s.policy.name",
+        "source": "k8s",
+        "value": "fqdn-test"
+      },
+      {
+        "key": "io.cilium.k8s.policy.namespace",
+        "source": "k8s",
+        "value": "default"
+      },
+      {
+        "key": "io.cilium.k8s.policy.uid",
+        "source": "k8s",
+        "value": "6e7872af-faf6-4e62-b43c-a079deef95ca"
+      }
+    ],
+    "selector": "MatchName: , MatchPattern: *",
+    "users": 1
+  }
+]
+

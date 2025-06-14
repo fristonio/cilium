@@ -1,0 +1,158 @@
+[
+  {
+    "key": "0.0.0.0/0",
+    "value": [
+      "identity=9 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "10.244.0.0/24",
+    "value": [
+      "identity=9 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "10.244.0.202/32",
+    "value": [
+      "identity=3590 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "10.244.0.213/32",
+    "value": [
+      "identity=4 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "10.244.0.214/32",
+    "value": [
+      "identity=36139 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "10.244.0.218/32",
+    "value": [
+      "identity=3590 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "10.244.0.253/32",
+    "value": [
+      "identity=6 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "10.244.1.131/32",
+    "value": [
+      "identity=4 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "10.244.1.141/32",
+    "value": [
+      "identity=1 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "10.244.1.163/32",
+    "value": [
+      "identity=3222 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "172.20.10.1/32",
+    "value": [
+      "identity=16777222 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "172.20.10.2/32",
+    "value": [
+      "identity=16777222 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "192.168.208.2/32",
+    "value": [
+      "identity=1 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "192.168.208.3/32",
+    "value": [
+      "identity=7 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "::/0",
+    "value": [
+      "identity=10 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "fc00:c111::2/128",
+    "value": [
+      "identity=1 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "fc00:c111::3/128",
+    "value": [
+      "identity=6 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "fd00:10:244:1::142/128",
+    "value": [
+      "identity=3222 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "fd00:10:244:1::5b16/128",
+    "value": [
+      "identity=4 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "fd00:10:244:1::8324/128",
+    "value": [
+      "identity=1 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+    ]
+  },
+  {
+    "key": "fd00:10:244::/64",
+    "value": [
+      "identity=10 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "fd00:10:244::75dd/128",
+    "value": [
+      "identity=4 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "fd00:10:244::7c84/128",
+    "value": [
+      "identity=36139 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "fd00:10:244::a1e3/128",
+    "value": [
+      "identity=3590 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "fd00:10:244::b3a1/128",
+    "value": [
+      "identity=3590 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  },
+  {
+    "key": "fd00:10:244::dade/128",
+    "value": [
+      "identity=6 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+    ]
+  }
+]

@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "labels": [
+      "reserved:host"
+    ]
+  },
+  {
+    "id": 2,
+    "labels": [
+      "reserved:world"
+    ]
+  },
+  {
+    "id": 3,
+    "labels": [
+      "reserved:unmanaged"
+    ]
+  },
+  {
+    "id": 4,
+    "labels": [
+      "reserved:health"
+    ]
+  },
+  {
+    "id": 5,
+    "labels": [
+      "reserved:init"
+    ]
+  },
+  {
+    "id": 6,
+    "labels": [
+      "reserved:remote-node"
+    ]
+  },
+  {
+    "id": 7,
+    "labels": [
+      "reserved:kube-apiserver",
+      "reserved:remote-node"
+    ]
+  },
+  {
+    "id": 8,
+    "labels": [
+      "reserved:ingress"
+    ]
+  },
+  {
+    "id": 9,
+    "labels": [
+      "reserved:world-ipv4"
+    ]
+  },
+  {
+    "id": 10,
+    "labels": [
+      "reserved:world-ipv6"
+    ]
+  },
+  {
+    "id": 3222,
+    "labels": [
+      "k8s:app=netshoot",
+      "k8s:io.cilium.k8s.namespace.labels.kubernetes.io/metadata.name=default",
+      "k8s:io.cilium.k8s.policy.cluster=kind-kind",
+      "k8s:io.cilium.k8s.policy.serviceaccount=default",
+      "k8s:io.kubernetes.pod.namespace=default"
+    ]
+  },
+  {
+    "id": 3590,
+    "labels": [
+      "k8s:io.cilium.k8s.namespace.labels.kubernetes.io/metadata.name=kube-system",
+      "k8s:io.cilium.k8s.policy.cluster=kind-kind",
+      "k8s:io.cilium.k8s.policy.serviceaccount=coredns",
+      "k8s:io.kubernetes.pod.namespace=kube-system",
+      "k8s:k8s-app=kube-dns"
+    ]
+  },
+  {
+    "id": 36139,
+    "labels": [
+      "k8s:app=local-path-provisioner",
+      "k8s:io.cilium.k8s.namespace.labels.kubernetes.io/metadata.name=local-path-storage",
+      "k8s:io.cilium.k8s.policy.cluster=kind-kind",
+      "k8s:io.cilium.k8s.policy.serviceaccount=local-path-provisioner-service-account",
+      "k8s:io.kubernetes.pod.namespace=local-path-storage"
+    ]
+  },
+  {
+    "id": 16777222,
+    "labels": [
+      "fqdn:*",
+      "fqdn:*.example.com",
+      "reserved:world-ipv4"
+    ]
+  }
+]
+

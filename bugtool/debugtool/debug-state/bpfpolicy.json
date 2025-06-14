@@ -1,0 +1,208 @@
+[
+  {
+    "EndpointID": "468",
+    "Path": "/sys/fs/bpf/tc/globals/cilium_policy_v2_00468",
+    "Content": [
+      {
+        "ProxyPortNetwork": 0,
+        "Flags": 0,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 0,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 0,
+        "Bytes": 0,
+        "Key": {
+          "Prefixlen": 40,
+          "Identity": 0,
+          "TrafficDirection": 0,
+          "Nexthdr": 0,
+          "DestPortNetwork": 0
+        }
+      },
+      {
+        "ProxyPortNetwork": 0,
+        "Flags": 0,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 0,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 0,
+        "Bytes": 0,
+        "Key": {
+          "Prefixlen": 40,
+          "Identity": 0,
+          "TrafficDirection": 1,
+          "Nexthdr": 0,
+          "DestPortNetwork": 0
+        }
+      }
+    ]
+  },
+  {
+    "EndpointID": "1032",
+    "Path": "/sys/fs/bpf/tc/globals/cilium_policy_v2_01032",
+    "Content": [
+      {
+        "ProxyPortNetwork": 0,
+        "Flags": 0,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 0,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 0,
+        "Bytes": 0,
+        "Key": {
+          "Prefixlen": 40,
+          "Identity": 0,
+          "TrafficDirection": 0,
+          "Nexthdr": 0,
+          "DestPortNetwork": 0
+        }
+      },
+      {
+        "ProxyPortNetwork": 0,
+        "Flags": 0,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 0,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 0,
+        "Bytes": 0,
+        "Key": {
+          "Prefixlen": 40,
+          "Identity": 1,
+          "TrafficDirection": 0,
+          "Nexthdr": 0,
+          "DestPortNetwork": 0
+        }
+      },
+      {
+        "ProxyPortNetwork": 4391,
+        "Flags": 192,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 7,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 0,
+        "Bytes": 0,
+        "Key": {
+          "Prefixlen": 64,
+          "Identity": 0,
+          "TrafficDirection": 1,
+          "Nexthdr": 6,
+          "DestPortNetwork": 13568
+        }
+      },
+      {
+        "ProxyPortNetwork": 4391,
+        "Flags": 192,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 7,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 72,
+        "Bytes": 6804,
+        "Key": {
+          "Prefixlen": 64,
+          "Identity": 0,
+          "TrafficDirection": 1,
+          "Nexthdr": 17,
+          "DestPortNetwork": 13568
+        }
+      },
+      {
+        "ProxyPortNetwork": 4391,
+        "Flags": 192,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 7,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 0,
+        "Bytes": 0,
+        "Key": {
+          "Prefixlen": 64,
+          "Identity": 0,
+          "TrafficDirection": 1,
+          "Nexthdr": 132,
+          "DestPortNetwork": 13568
+        }
+      },
+      {
+        "ProxyPortNetwork": 0,
+        "Flags": 0,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 0,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 2,
+        "Bytes": 148,
+        "Key": {
+          "Prefixlen": 40,
+          "Identity": 16777222,
+          "TrafficDirection": 1,
+          "Nexthdr": 0,
+          "DestPortNetwork": 0
+        }
+      }
+    ]
+  },
+  {
+    "EndpointID": "1276",
+    "Path": "/sys/fs/bpf/tc/globals/cilium_policy_v2_01276",
+    "Content": [
+      {
+        "ProxyPortNetwork": 0,
+        "Flags": 0,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 0,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 9257,
+        "Bytes": 784910,
+        "Key": {
+          "Prefixlen": 40,
+          "Identity": 0,
+          "TrafficDirection": 0,
+          "Nexthdr": 0,
+          "DestPortNetwork": 0
+        }
+      },
+      {
+        "ProxyPortNetwork": 0,
+        "Flags": 0,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 0,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 10385,
+        "Bytes": 938228,
+        "Key": {
+          "Prefixlen": 40,
+          "Identity": 1,
+          "TrafficDirection": 0,
+          "Nexthdr": 0,
+          "DestPortNetwork": 0
+        }
+      },
+      {
+        "ProxyPortNetwork": 0,
+        "Flags": 0,
+        "AuthRequirement": 0,
+        "ProxyPortPriority": 0,
+        "Pad1": 0,
+        "Pad2": 0,
+        "Packets": 0,
+        "Bytes": 0,
+        "Key": {
+          "Prefixlen": 40,
+          "Identity": 0,
+          "TrafficDirection": 1,
+          "Nexthdr": 0,
+          "DestPortNetwork": 0
+        }
+      }
+    ]
+  }
+]
+

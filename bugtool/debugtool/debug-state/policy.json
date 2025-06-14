@@ -1,0 +1,72 @@
+[
+  {
+    "endpointSelector": {
+      "matchLabels": {
+        "k8s:io.kubernetes.pod.namespace": "default"
+      }
+    },
+    "egress": [
+      {
+        "toEntities": [
+          "all"
+        ],
+        "toPorts": [
+          {
+            "ports": [
+              {
+                "port": "53",
+                "protocol": "ANY"
+              }
+            ],
+            "rules": {
+              "dns": [
+                {
+                  "matchPattern": "*"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "toFQDNs": [
+          {
+            "matchName": "cilium.io"
+          },
+          {
+            "matchPattern": "*.example.com"
+          },
+          {
+            "matchPattern": "*"
+          }
+        ]
+      }
+    ],
+    "labels": [
+      {
+        "key": "io.cilium.k8s.policy.derived-from",
+        "value": "CiliumNetworkPolicy",
+        "source": "k8s"
+      },
+      {
+        "key": "io.cilium.k8s.policy.name",
+        "value": "fqdn-test",
+        "source": "k8s"
+      },
+      {
+        "key": "io.cilium.k8s.policy.namespace",
+        "value": "default",
+        "source": "k8s"
+      },
+      {
+        "key": "io.cilium.k8s.policy.uid",
+        "value": "6e7872af-faf6-4e62-b43c-a079deef95ca",
+        "source": "k8s"
+      }
+    ],
+    "enableDefaultDeny": {
+      "ingress": false,
+      "egress": true
+    }
+  }
+]

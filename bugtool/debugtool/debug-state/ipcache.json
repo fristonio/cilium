@@ -1,0 +1,165 @@
+[
+  {
+    "cidr": "0.0.0.0/0",
+    "identity": 9
+  },
+  {
+    "cidr": "::/0",
+    "identity": 10
+  },
+  {
+    "cidr": "10.244.0.0/24",
+    "hostIP": "192.168.208.3",
+    "identity": 9
+  },
+  {
+    "cidr": "10.244.0.202/32",
+    "hostIP": "192.168.208.3",
+    "identity": 3590,
+    "metadata": {
+      "name": "coredns-57db58596b-hdqrh",
+      "namespace": "kube-system",
+      "source": "custom-resource"
+    }
+  },
+  {
+    "cidr": "10.244.0.213/32",
+    "hostIP": "192.168.208.3",
+    "identity": 4
+  },
+  {
+    "cidr": "10.244.0.214/32",
+    "hostIP": "192.168.208.3",
+    "identity": 36139,
+    "metadata": {
+      "name": "local-path-provisioner-7dc846544d-v2c2j",
+      "namespace": "local-path-storage",
+      "source": "custom-resource"
+    }
+  },
+  {
+    "cidr": "10.244.0.218/32",
+    "hostIP": "192.168.208.3",
+    "identity": 3590,
+    "metadata": {
+      "name": "coredns-57db58596b-c462x",
+      "namespace": "kube-system",
+      "source": "custom-resource"
+    }
+  },
+  {
+    "cidr": "10.244.0.253/32",
+    "hostIP": "192.168.208.3",
+    "identity": 6
+  },
+  {
+    "cidr": "10.244.1.131/32",
+    "hostIP": "192.168.208.2",
+    "identity": 4
+  },
+  {
+    "cidr": "10.244.1.141/32",
+    "hostIP": "192.168.208.2",
+    "identity": 1
+  },
+  {
+    "cidr": "10.244.1.163/32",
+    "hostIP": "192.168.208.2",
+    "identity": 3222,
+    "metadata": {
+      "name": "netshoot",
+      "namespace": "default",
+      "source": "custom-resource"
+    }
+  },
+  {
+    "cidr": "172.20.10.1/32",
+    "identity": 16777222
+  },
+  {
+    "cidr": "172.20.10.2/32",
+    "identity": 16777222
+  },
+  {
+    "cidr": "192.168.208.2/32",
+    "identity": 1
+  },
+  {
+    "cidr": "192.168.208.3/32",
+    "identity": 7
+  },
+  {
+    "cidr": "fd00:10:244::/64",
+    "hostIP": "192.168.208.3",
+    "identity": 10
+  },
+  {
+    "cidr": "fc00:c111::2/128",
+    "identity": 1
+  },
+  {
+    "cidr": "fc00:c111::3/128",
+    "identity": 6
+  },
+  {
+    "cidr": "fd00:10:244::75dd/128",
+    "hostIP": "192.168.208.3",
+    "identity": 4
+  },
+  {
+    "cidr": "fd00:10:244::7c84/128",
+    "hostIP": "192.168.208.3",
+    "identity": 36139,
+    "metadata": {
+      "name": "local-path-provisioner-7dc846544d-v2c2j",
+      "namespace": "local-path-storage",
+      "source": "custom-resource"
+    }
+  },
+  {
+    "cidr": "fd00:10:244::a1e3/128",
+    "hostIP": "192.168.208.3",
+    "identity": 3590,
+    "metadata": {
+      "name": "coredns-57db58596b-hdqrh",
+      "namespace": "kube-system",
+      "source": "custom-resource"
+    }
+  },
+  {
+    "cidr": "fd00:10:244::b3a1/128",
+    "hostIP": "192.168.208.3",
+    "identity": 3590,
+    "metadata": {
+      "name": "coredns-57db58596b-c462x",
+      "namespace": "kube-system",
+      "source": "custom-resource"
+    }
+  },
+  {
+    "cidr": "fd00:10:244::dade/128",
+    "hostIP": "192.168.208.3",
+    "identity": 6
+  },
+  {
+    "cidr": "fd00:10:244:1::142/128",
+    "hostIP": "192.168.208.2",
+    "identity": 3222,
+    "metadata": {
+      "name": "netshoot",
+      "namespace": "default",
+      "source": "custom-resource"
+    }
+  },
+  {
+    "cidr": "fd00:10:244:1::5b16/128",
+    "hostIP": "192.168.208.2",
+    "identity": 4
+  },
+  {
+    "cidr": "fd00:10:244:1::8324/128",
+    "hostIP": "192.168.208.2",
+    "identity": 1
+  }
+]
+

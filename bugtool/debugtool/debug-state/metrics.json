@@ -1,0 +1,2950 @@
+[
+  {
+    "name": "cilium_act_processing_time_seconds"
+  },
+  {
+    "labels": {
+      "method": "DELETE",
+      "path": "/v1/fqdn",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/cluster",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.00450370981038747
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/config",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/debuginfo",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.019000000000000003
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/endpoint",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.005583333333333335
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/fqdn",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/fqdn",
+      "return_code": "404"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/healthz",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.004522724881641242
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/identity",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/ip",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.004634328358208955
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/map",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.016600000000000004
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/map",
+      "return_code": "404"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/node",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/policy",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.004649006622516556
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/v1/service",
+      "return_code": "200"
+    },
+    "name": "cilium_agent_api_process_time_seconds",
+    "value": 0.004714285714285714
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "bpfBase"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.000335721
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "cleanup"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.000144113
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "daemonInit"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.003876494
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "earlyInit"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.114954419
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "enableConntrack"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.000021873
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "fqdn"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.013681968
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "healthCheck"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.006731075
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "ipam"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.07029378
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "k8sInit"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.240481375
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "mapsInit"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.000728603
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "overall"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 2.317820761
+  },
+  {
+    "labels": {
+      "outcome": "success",
+      "scope": "restore"
+    },
+    "name": "cilium_agent_bootstrap_seconds",
+    "value": 0.001439582
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get"
+    },
+    "name": "cilium_api_limiter_adjustment_factor",
+    "value": 100
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list"
+    },
+    "name": "cilium_api_limiter_adjustment_factor",
+    "value": 100
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get",
+      "outcome": "success",
+      "return_code": "200"
+    },
+    "name": "cilium_api_limiter_processed_requests_total",
+    "value": 18
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list",
+      "outcome": "success",
+      "return_code": "200"
+    },
+    "name": "cilium_api_limiter_processed_requests_total",
+    "value": 65
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get",
+      "value": "estimated"
+    },
+    "name": "cilium_api_limiter_processing_duration_seconds",
+    "value": 0.2
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get",
+      "value": "mean"
+    },
+    "name": "cilium_api_limiter_processing_duration_seconds",
+    "value": 0.0000691545
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list",
+      "value": "estimated"
+    },
+    "name": "cilium_api_limiter_processing_duration_seconds",
+    "value": 0.3
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list",
+      "value": "mean"
+    },
+    "name": "cilium_api_limiter_processing_duration_seconds",
+    "value": 0.0025784636
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get",
+      "value": "burst"
+    },
+    "name": "cilium_api_limiter_rate_limit",
+    "value": 202
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get",
+      "value": "limit"
+    },
+    "name": "cilium_api_limiter_rate_limit",
+    "value": 400
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list",
+      "value": "burst"
+    },
+    "name": "cilium_api_limiter_rate_limit",
+    "value": 202
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list",
+      "value": "limit"
+    },
+    "name": "cilium_api_limiter_rate_limit",
+    "value": 100
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get",
+      "value": "in-flight"
+    },
+    "name": "cilium_api_limiter_requests_in_flight"
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get",
+      "value": "limit"
+    },
+    "name": "cilium_api_limiter_requests_in_flight",
+    "value": 202
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list",
+      "value": "in-flight"
+    },
+    "name": "cilium_api_limiter_requests_in_flight"
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list",
+      "value": "limit"
+    },
+    "name": "cilium_api_limiter_requests_in_flight",
+    "value": 101
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get",
+      "value": "max"
+    },
+    "name": "cilium_api_limiter_wait_duration_seconds",
+    "value": 10
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get",
+      "value": "mean"
+    },
+    "name": "cilium_api_limiter_wait_duration_seconds",
+    "value": 0.0001620927
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-get",
+      "value": "min"
+    },
+    "name": "cilium_api_limiter_wait_duration_seconds"
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list",
+      "value": "max"
+    },
+    "name": "cilium_api_limiter_wait_duration_seconds"
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list",
+      "value": "mean"
+    },
+    "name": "cilium_api_limiter_wait_duration_seconds",
+    "value": 0.0007890147
+  },
+  {
+    "labels": {
+      "api_call": "endpoint-list",
+      "value": "min"
+    },
+    "name": "cilium_api_limiter_wait_duration_seconds"
+  },
+  {
+    "labels": {
+      "map_group": "cilium_auth_map"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 524288
+  },
+  {
+    "labels": {
+      "map_group": "cilium_call_policy"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 65535
+  },
+  {
+    "labels": {
+      "map_group": "cilium_ct4_global"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 131072
+  },
+  {
+    "labels": {
+      "map_group": "cilium_ct6_global"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 131072
+  },
+  {
+    "labels": {
+      "map_group": "cilium_egresscall_policy"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 65535
+  },
+  {
+    "labels": {
+      "map_group": "cilium_events"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 6
+  },
+  {
+    "labels": {
+      "map_group": "cilium_ipcache_v2"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 512000
+  },
+  {
+    "labels": {
+      "map_group": "cilium_ipv4_frag_datagrams"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 8192
+  },
+  {
+    "labels": {
+      "map_group": "cilium_ipv6_frag_datagrams"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 8192
+  },
+  {
+    "labels": {
+      "map_group": "cilium_lxc"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 65535
+  },
+  {
+    "labels": {
+      "map_group": "cilium_metrics"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 1024
+  },
+  {
+    "labels": {
+      "map_group": "cilium_node_map_v2"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 16384
+  },
+  {
+    "labels": {
+      "map_group": "cilium_policystats"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 65532
+  },
+  {
+    "labels": {
+      "map_group": "cilium_ratelimit"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 1024
+  },
+  {
+    "labels": {
+      "map_group": "cilium_ratelimit_metrics"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 64
+  },
+  {
+    "labels": {
+      "map_group": "cilium_runtime_config"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 256
+  },
+  {
+    "labels": {
+      "map_group": "cilium_signals"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 6
+  },
+  {
+    "labels": {
+      "map_group": "cilium_skip_lb4"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 100
+  },
+  {
+    "labels": {
+      "map_group": "cilium_skip_lb6"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 100
+  },
+  {
+    "labels": {
+      "map_group": "default"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 65536
+  },
+  {
+    "labels": {
+      "map_group": "endpoint_policy"
+    },
+    "name": "cilium_bpf_map_capacity",
+    "value": 16384
+  },
+  {
+    "labels": {
+      "map_name": "ct4_global",
+      "operation": "delete",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 2315
+  },
+  {
+    "labels": {
+      "map_name": "ct6_global",
+      "operation": "delete",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 401
+  },
+  {
+    "labels": {
+      "map_name": "ct_any4_global",
+      "operation": "delete",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 573
+  },
+  {
+    "labels": {
+      "map_name": "ct_any6_global",
+      "operation": "delete",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 515
+  },
+  {
+    "labels": {
+      "map_name": "ipcache_v2",
+      "operation": "delete",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 10
+  },
+  {
+    "labels": {
+      "map_name": "ipcache_v2",
+      "operation": "update",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 43
+  },
+  {
+    "labels": {
+      "map_name": "lb4_backends_v3",
+      "operation": "update",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 18
+  },
+  {
+    "labels": {
+      "map_name": "lb4_reverse_nat",
+      "operation": "update",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 420
+  },
+  {
+    "labels": {
+      "map_name": "lb4_services_v2",
+      "operation": "delete",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 1
+  },
+  {
+    "labels": {
+      "map_name": "lb4_services_v2",
+      "operation": "update",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 920
+  },
+  {
+    "labels": {
+      "map_name": "lb6_backends_v3",
+      "operation": "update",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 9
+  },
+  {
+    "labels": {
+      "map_name": "lb6_reverse_nat",
+      "operation": "update",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 282
+  },
+  {
+    "labels": {
+      "map_name": "lb6_services_v2",
+      "operation": "update",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 564
+  },
+  {
+    "labels": {
+      "map_name": "lb_affinity_match",
+      "operation": "delete",
+      "outcome": "fail"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 782
+  },
+  {
+    "labels": {
+      "map_name": "lxc",
+      "operation": "update",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 1590
+  },
+  {
+    "labels": {
+      "map_name": "policy",
+      "operation": "delete",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 7
+  },
+  {
+    "labels": {
+      "map_name": "policy",
+      "operation": "update",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 9
+  },
+  {
+    "labels": {
+      "map_name": "runtime_config",
+      "operation": "update",
+      "outcome": "success"
+    },
+    "name": "cilium_bpf_map_ops_total",
+    "value": 47721
+  },
+  {
+    "labels": {
+      "map_name": "ct4_global"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.00067901611328125
+  },
+  {
+    "labels": {
+      "map_name": "ct6_global"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.0012359619140625
+  },
+  {
+    "labels": {
+      "map_name": "ct_any4_global"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.0032806396484375
+  },
+  {
+    "labels": {
+      "map_name": "ct_any6_global"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.0032196044921875
+  },
+  {
+    "labels": {
+      "map_name": "ipcache_v2"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.00005078125
+  },
+  {
+    "labels": {
+      "map_name": "lb4_backends_v3"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.00018310546875
+  },
+  {
+    "labels": {
+      "map_name": "lb4_reverse_nat"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.0002288818359375
+  },
+  {
+    "labels": {
+      "map_name": "lb4_services_v2"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.0005035400390625
+  },
+  {
+    "labels": {
+      "map_name": "lb6_backends_v3"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.0000762939453125
+  },
+  {
+    "labels": {
+      "map_name": "lb6_reverse_nat"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.000152587890625
+  },
+  {
+    "labels": {
+      "map_name": "lb6_services_v2"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.00030517578125
+  },
+  {
+    "labels": {
+      "map_name": "lxc"
+    },
+    "name": "cilium_bpf_map_pressure",
+    "value": 0.00006103608758678569
+  },
+  {
+    "name": "cilium_bpf_maps",
+    "value": 100
+  },
+  {
+    "name": "cilium_bpf_maps_virtual_memory_max_bytes",
+    "value": 205563120
+  },
+  {
+    "name": "cilium_bpf_progs",
+    "value": 202
+  },
+  {
+    "name": "cilium_bpf_progs_virtual_memory_max_bytes",
+    "value": 1789952
+  },
+  {
+    "name": "cilium_controllers_failing"
+  },
+  {
+    "labels": {
+      "group_name": "sync-lb-maps-with-k8s-services",
+      "status": "success"
+    },
+    "name": "cilium_controllers_group_runs_total",
+    "value": 1
+  },
+  {
+    "labels": {
+      "group_name": "write-cni-file",
+      "status": "success"
+    },
+    "name": "cilium_controllers_group_runs_total",
+    "value": 1
+  },
+  {
+    "labels": {
+      "status": "success"
+    },
+    "name": "cilium_controllers_runs_duration_seconds",
+    "value": 0.004804511278195488
+  },
+  {
+    "labels": {
+      "status": "success"
+    },
+    "name": "cilium_controllers_runs_total",
+    "value": 18602
+  },
+  {
+    "labels": {
+      "area": "conntrack",
+      "family": "ipv4",
+      "name": "dump_interrupts"
+    },
+    "name": "cilium_datapath_conntrack_dump_resets_total"
+  },
+  {
+    "labels": {
+      "area": "conntrack",
+      "family": "ipv6",
+      "name": "dump_interrupts"
+    },
+    "name": "cilium_datapath_conntrack_dump_resets_total"
+  },
+  {
+    "labels": {
+      "family": "ipv4",
+      "protocol": "TCP",
+      "status": "completed"
+    },
+    "name": "cilium_datapath_conntrack_gc_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "family": "ipv4",
+      "protocol": "non-TCP",
+      "status": "completed"
+    },
+    "name": "cilium_datapath_conntrack_gc_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "family": "ipv6",
+      "protocol": "TCP",
+      "status": "completed"
+    },
+    "name": "cilium_datapath_conntrack_gc_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "family": "ipv6",
+      "protocol": "non-TCP",
+      "status": "completed"
+    },
+    "name": "cilium_datapath_conntrack_gc_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "family": "ipv4",
+      "protocol": "TCP",
+      "status": "alive"
+    },
+    "name": "cilium_datapath_conntrack_gc_entries",
+    "value": 2
+  },
+  {
+    "labels": {
+      "family": "ipv4",
+      "protocol": "TCP",
+      "status": "deleted"
+    },
+    "name": "cilium_datapath_conntrack_gc_entries",
+    "value": 69
+  },
+  {
+    "labels": {
+      "family": "ipv4",
+      "protocol": "non-TCP",
+      "status": "alive"
+    },
+    "name": "cilium_datapath_conntrack_gc_entries"
+  },
+  {
+    "labels": {
+      "family": "ipv4",
+      "protocol": "non-TCP",
+      "status": "deleted"
+    },
+    "name": "cilium_datapath_conntrack_gc_entries",
+    "value": 178
+  },
+  {
+    "labels": {
+      "family": "ipv6",
+      "protocol": "TCP",
+      "status": "alive"
+    },
+    "name": "cilium_datapath_conntrack_gc_entries",
+    "value": 2
+  },
+  {
+    "labels": {
+      "family": "ipv6",
+      "protocol": "TCP",
+      "status": "deleted"
+    },
+    "name": "cilium_datapath_conntrack_gc_entries",
+    "value": 136
+  },
+  {
+    "labels": {
+      "family": "ipv6",
+      "protocol": "non-TCP",
+      "status": "alive"
+    },
+    "name": "cilium_datapath_conntrack_gc_entries",
+    "value": 4
+  },
+  {
+    "labels": {
+      "family": "ipv6",
+      "protocol": "non-TCP",
+      "status": "deleted"
+    },
+    "name": "cilium_datapath_conntrack_gc_entries",
+    "value": 174
+  },
+  {
+    "labels": {
+      "global": "global"
+    },
+    "name": "cilium_datapath_conntrack_gc_interval_seconds",
+    "value": 17315
+  },
+  {
+    "labels": {
+      "family": "ipv4",
+      "protocol": "TCP"
+    },
+    "name": "cilium_datapath_conntrack_gc_key_fallbacks_total"
+  },
+  {
+    "labels": {
+      "family": "ipv4",
+      "protocol": "non-TCP"
+    },
+    "name": "cilium_datapath_conntrack_gc_key_fallbacks_total"
+  },
+  {
+    "labels": {
+      "family": "ipv6",
+      "protocol": "TCP"
+    },
+    "name": "cilium_datapath_conntrack_gc_key_fallbacks_total"
+  },
+  {
+    "labels": {
+      "family": "ipv6",
+      "protocol": "non-TCP"
+    },
+    "name": "cilium_datapath_conntrack_gc_key_fallbacks_total"
+  },
+  {
+    "labels": {
+      "family": "ipv4",
+      "protocol": "TCP",
+      "status": "completed"
+    },
+    "name": "cilium_datapath_conntrack_gc_runs_total",
+    "value": 11
+  },
+  {
+    "labels": {
+      "family": "ipv4",
+      "protocol": "non-TCP",
+      "status": "completed"
+    },
+    "name": "cilium_datapath_conntrack_gc_runs_total",
+    "value": 11
+  },
+  {
+    "labels": {
+      "family": "ipv6",
+      "protocol": "TCP",
+      "status": "completed"
+    },
+    "name": "cilium_datapath_conntrack_gc_runs_total",
+    "value": 11
+  },
+  {
+    "labels": {
+      "family": "ipv6",
+      "protocol": "non-TCP",
+      "status": "completed"
+    },
+    "name": "cilium_datapath_conntrack_gc_runs_total",
+    "value": 11
+  },
+  {
+    "name": "cilium_drift_checker_config_delta"
+  },
+  {
+    "labels": {
+      "direction": "EGRESS",
+      "reason": "Invalid source ip"
+    },
+    "name": "cilium_drop_bytes_total",
+    "value": 6280
+  },
+  {
+    "labels": {
+      "direction": "EGRESS",
+      "reason": "Unknown L3 target address"
+    },
+    "name": "cilium_drop_bytes_total",
+    "value": 258
+  },
+  {
+    "labels": {
+      "direction": "INGRESS",
+      "reason": "Stale or unroutable IP"
+    },
+    "name": "cilium_drop_bytes_total",
+    "value": 660
+  },
+  {
+    "labels": {
+      "direction": "EGRESS",
+      "reason": "Invalid source ip"
+    },
+    "name": "cilium_drop_count_total",
+    "value": 84
+  },
+  {
+    "labels": {
+      "direction": "EGRESS",
+      "reason": "Unknown L3 target address"
+    },
+    "name": "cilium_drop_count_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "direction": "INGRESS",
+      "reason": "Stale or unroutable IP"
+    },
+    "name": "cilium_drop_count_total",
+    "value": 6
+  },
+  {
+    "name": "cilium_encryption_policy_rules"
+  },
+  {
+    "name": "cilium_endpoint",
+    "value": 3
+  },
+  {
+    "labels": {
+      "scope": "bpfCompilation",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 2.2
+  },
+  {
+    "labels": {
+      "scope": "bpfLoadProg",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.08750000000000001
+  },
+  {
+    "labels": {
+      "scope": "bpfWaitForELF",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 1.7500000000000002
+  },
+  {
+    "labels": {
+      "scope": "endpointPolicyCalculation",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "scope": "mapSync",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.004511363636363637
+  },
+  {
+    "labels": {
+      "scope": "policyCalculation",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.004511354079058032
+  },
+  {
+    "labels": {
+      "scope": "prepareBuild",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.004522765598650927
+  },
+  {
+    "labels": {
+      "scope": "proxyConfiguration",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "scope": "proxyPolicyCalculation",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.0045
+  },
+  {
+    "labels": {
+      "scope": "proxyWaitForAck",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.0045
+  },
+  {
+    "labels": {
+      "scope": "selectorPolicyCalculation",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "scope": "total",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.008933070866141733
+  },
+  {
+    "labels": {
+      "scope": "waitingForCTClean",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.0045
+  },
+  {
+    "labels": {
+      "scope": "waitingForLock",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.0045151515151515146
+  },
+  {
+    "labels": {
+      "scope": "waitingForPolicyRepository",
+      "status": "success"
+    },
+    "name": "cilium_endpoint_regeneration_time_stats_seconds",
+    "value": 0.0045
+  },
+  {
+    "labels": {
+      "outcome": "fail"
+    },
+    "name": "cilium_endpoint_regenerations_total"
+  },
+  {
+    "labels": {
+      "outcome": "success"
+    },
+    "name": "cilium_endpoint_regenerations_total",
+    "value": 1192
+  },
+  {
+    "labels": {
+      "endpoint_state": "ready"
+    },
+    "name": "cilium_endpoint_state",
+    "value": 3
+  },
+  {
+    "labels": {
+      "endpoint_state": "regenerating"
+    },
+    "name": "cilium_endpoint_state"
+  },
+  {
+    "labels": {
+      "endpoint_state": "restoring"
+    },
+    "name": "cilium_endpoint_state"
+  },
+  {
+    "labels": {
+      "endpoint_state": "waiting-for-identity"
+    },
+    "name": "cilium_endpoint_state"
+  },
+  {
+    "labels": {
+      "endpoint_state": "waiting-to-regenerate"
+    },
+    "name": "cilium_endpoint_state"
+  },
+  {
+    "labels": {
+      "level": "error",
+      "subsystem": "init"
+    },
+    "name": "cilium_errors_warnings_total"
+  },
+  {
+    "labels": {
+      "level": "warning",
+      "subsystem": "init"
+    },
+    "name": "cilium_errors_warnings_total"
+  },
+  {
+    "labels": {
+      "action": "DELETE",
+      "scope": "/v1/fqdn",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749839286.0171268
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/cluster",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749881199.3060265
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/config",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749872763.320966
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/debuginfo",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749872240.8893428
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/endpoint",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749880681.0432408
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/fqdn",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749880681.1838162
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/healthz",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749881250.2322574
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/identity",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749880680.8892305
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/ip",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749881250.2250514
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/map",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749880681.0164185
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/node",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749881250.227211
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/policy",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749881250.2246213
+  },
+  {
+    "labels": {
+      "action": "GET",
+      "scope": "/v1/service",
+      "source": "api"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749880680.977225
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "CiliumEndpoint",
+      "source": "k8s"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749833457.0563247
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "CiliumNetworkPolicy",
+      "source": "k8s"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749839597.587583
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "CiliumNode",
+      "source": "k8s"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749833457.0556295
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "Endpoint",
+      "source": "k8s"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749833462.876663
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "Namespace",
+      "source": "k8s"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749833457.0556853
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "Node",
+      "source": "k8s"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749881221.97495
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "Service",
+      "source": "k8s"
+    },
+    "name": "cilium_event_ts",
+    "value": 1749833457.0010426
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_bandwidth_manager_enabled"
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_bgp_enabled"
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_cilium_envoy_config_enabled"
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_cilium_node_config_enabled"
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_egress_gateway_enabled"
+  },
+  {
+    "labels": {
+      "mode": "standalone"
+    },
+    "name": "cilium_feature_adv_connect_and_lb_envoy_proxy_enabled",
+    "value": 1
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_k8s_internal_traffic_policy_enabled",
+    "value": 1
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_kube_proxy_replacement_enabled"
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_l2_lb_enabled"
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_l2_pod_announcement_enabled"
+  },
+  {
+    "labels": {
+      "acceleration": "disabled",
+      "algorithm": "random",
+      "mode": "snat"
+    },
+    "name": "cilium_feature_adv_connect_and_lb_node_port_configuration",
+    "value": 1
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_sctp_enabled"
+  },
+  {
+    "name": "cilium_feature_adv_connect_and_lb_vtep_enabled"
+  },
+  {
+    "name": "cilium_feature_controlplane_cilium_endpoint_slices_enabled"
+  },
+  {
+    "labels": {
+      "mode": "crd"
+    },
+    "name": "cilium_feature_controlplane_identity_allocation",
+    "value": 1
+  },
+  {
+    "labels": {
+      "mode": "kubernetes"
+    },
+    "name": "cilium_feature_controlplane_ipam",
+    "value": 1
+  },
+  {
+    "labels": {
+      "mode": "none"
+    },
+    "name": "cilium_feature_datapath_chaining_enabled",
+    "value": 1
+  },
+  {
+    "labels": {
+      "mode": "veth"
+    },
+    "name": "cilium_feature_datapath_config",
+    "value": 1
+  },
+  {
+    "labels": {
+      "address_family": "ipv4-ipv6-dual-stack"
+    },
+    "name": "cilium_feature_datapath_internet_protocol",
+    "value": 1
+  },
+  {
+    "labels": {
+      "mode": "overlay-vxlan"
+    },
+    "name": "cilium_feature_datapath_network",
+    "value": 1
+  },
+  {
+    "labels": {
+      "action": "add"
+    },
+    "name": "cilium_feature_network_policies_cilium_network_policies_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "action": "add"
+    },
+    "name": "cilium_feature_network_policies_dns_policies_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "action": "delete"
+    },
+    "name": "cilium_feature_network_policies_dns_policies_total",
+    "value": 2
+  },
+  {
+    "labels": {
+      "action": "add"
+    },
+    "name": "cilium_feature_network_policies_fqdn_policies_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "action": "delete"
+    },
+    "name": "cilium_feature_network_policies_fqdn_policies_total",
+    "value": 2
+  },
+  {
+    "name": "cilium_feature_network_policies_host_firewall_enabled"
+  },
+  {
+    "labels": {
+      "action": "add"
+    },
+    "name": "cilium_feature_network_policies_l3_policies_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "action": "delete"
+    },
+    "name": "cilium_feature_network_policies_l3_policies_total",
+    "value": 2
+  },
+  {
+    "name": "cilium_feature_network_policies_local_redirect_policy_enabled"
+  },
+  {
+    "name": "cilium_feature_network_policies_mutual_auth_enabled",
+    "value": 1
+  },
+  {
+    "name": "cilium_feature_network_policies_non_defaultdeny_policies_enabled",
+    "value": 1
+  },
+  {
+    "labels": {
+      "action": "add"
+    },
+    "name": "cilium_feature_network_policies_non_defaultdeny_policies_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "action": "delete"
+    },
+    "name": "cilium_feature_network_policies_non_defaultdeny_policies_total",
+    "value": 2
+  },
+  {
+    "labels": {
+      "direction": "EGRESS"
+    },
+    "name": "cilium_forward_bytes_total",
+    "value": 4661054
+  },
+  {
+    "labels": {
+      "direction": "INGRESS"
+    },
+    "name": "cilium_forward_bytes_total",
+    "value": 748123992
+  },
+  {
+    "labels": {
+      "direction": "EGRESS"
+    },
+    "name": "cilium_forward_count_total",
+    "value": 55724
+  },
+  {
+    "labels": {
+      "direction": "INGRESS"
+    },
+    "name": "cilium_forward_count_total",
+    "value": 780556
+  },
+  {
+    "name": "cilium_fqdn_gc_deletions_total",
+    "value": 258
+  },
+  {
+    "name": "cilium_fqdn_selectors",
+    "value": 3
+  },
+  {
+    "labels": {
+      "status": "ok"
+    },
+    "name": "cilium_hive_status",
+    "value": 75
+  },
+  {
+    "labels": {
+      "status": "stopped"
+    },
+    "name": "cilium_hive_status",
+    "value": 10
+  },
+  {
+    "labels": {
+      "type": "cluster_local"
+    },
+    "name": "cilium_identity",
+    "value": 1
+  },
+  {
+    "labels": {
+      "type": "node_local"
+    },
+    "name": "cilium_identity",
+    "value": 1
+  },
+  {
+    "labels": {
+      "type": "reserved"
+    },
+    "name": "cilium_identity",
+    "value": 10
+  },
+  {
+    "labels": {
+      "name": "id-alloc-update-policy-maps"
+    },
+    "name": "cilium_identity_cache_timer_duration",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "name": "id-alloc-update-policy-maps"
+    },
+    "name": "cilium_identity_cache_timer_trigger_folds",
+    "value": 0.95
+  },
+  {
+    "labels": {
+      "name": "id-alloc-update-policy-maps"
+    },
+    "name": "cilium_identity_cache_timer_trigger_latency",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "source": "fqdn"
+    },
+    "name": "cilium_identity_label_sources",
+    "value": 1
+  },
+  {
+    "labels": {
+      "source": "k8s"
+    },
+    "name": "cilium_identity_label_sources",
+    "value": 1
+  },
+  {
+    "labels": {
+      "source": "reserved"
+    },
+    "name": "cilium_identity_label_sources",
+    "value": 11
+  },
+  {
+    "labels": {
+      "family": "ipv4"
+    },
+    "name": "cilium_ip_addresses",
+    "value": 3
+  },
+  {
+    "labels": {
+      "family": "ipv6"
+    },
+    "name": "cilium_ip_addresses",
+    "value": 3
+  },
+  {
+    "labels": {
+      "family": "ipv4"
+    },
+    "name": "cilium_ipam_capacity",
+    "value": 254
+  },
+  {
+    "labels": {
+      "family": "ipv6"
+    },
+    "name": "cilium_ipam_capacity",
+    "value": 18446744073709552000
+  },
+  {
+    "labels": {
+      "action": "allocate",
+      "family": "ipv4"
+    },
+    "name": "cilium_ipam_events_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "action": "allocate",
+      "family": "ipv6"
+    },
+    "name": "cilium_ipam_events_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "error": "cannot_overwrite_by_source",
+      "type": "upsert"
+    },
+    "name": "cilium_ipcache_errors_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "host": "10.96.0.1:443",
+      "method": "GET",
+      "return_code": "200"
+    },
+    "name": "cilium_k8s_client_api_calls_total",
+    "value": 2386
+  },
+  {
+    "labels": {
+      "host": "10.96.0.1:443",
+      "method": "GET",
+      "return_code": "403"
+    },
+    "name": "cilium_k8s_client_api_calls_total",
+    "value": 1
+  },
+  {
+    "labels": {
+      "host": "10.96.0.1:443",
+      "method": "PUT",
+      "return_code": "200"
+    },
+    "name": "cilium_k8s_client_api_calls_total",
+    "value": 1
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/namespaces"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/namespaces/{namespace}/configmaps"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/namespaces/{namespace}/secrets"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/namespaces/{name}"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/nodes"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/pods"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/services"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/apiextensions.k8s.io/v1/customresourcedefinitions"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumcidrgroups"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumclusterwidenetworkpolicies"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumendpoints"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumidentities"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumnetworkpolicies"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumnodes"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/namespaces/{namespace}/ciliumendpoints/{name}"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/coordination.k8s.io/v1/namespaces/{namespace}/leases"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/discovery.k8s.io/v1/endpointslices"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/isovalent.com/v1alpha1/isovalentclusterwidenetworkpolicies"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/isovalent.com/v1alpha1/isovalentnetworkpolicies"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/networking.k8s.io/v1/networkpolicies"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/healthz"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.00898941798941799
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/version"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.007923076923076923
+  },
+  {
+    "labels": {
+      "method": "PUT",
+      "path": "/apis/cilium.io/v2/ciliumnodes/{name}"
+    },
+    "name": "cilium_k8s_client_api_latency_time_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/namespaces"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/namespaces/{namespace}/configmaps"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/namespaces/{namespace}/secrets"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/namespaces/{name}"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/nodes"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/pods"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/api/v1/services"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/apiextensions.k8s.io/v1/customresourcedefinitions"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumcidrgroups"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumclusterwidenetworkpolicies"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumendpoints"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumidentities"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumnetworkpolicies"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/ciliumnodes"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/cilium.io/v2/namespaces/{namespace}/ciliumendpoints/{name}"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/coordination.k8s.io/v1/namespaces/{namespace}/leases"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/discovery.k8s.io/v1/endpointslices"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/isovalent.com/v1alpha1/isovalentclusterwidenetworkpolicies"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/isovalent.com/v1alpha1/isovalentnetworkpolicies"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/apis/networking.k8s.io/v1/networkpolicies"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/healthz"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "GET",
+      "path": "/version"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "method": "PUT",
+      "path": "/apis/cilium.io/v2/ciliumnodes/{name}"
+    },
+    "name": "cilium_k8s_client_rate_limiter_duration_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "name": "cilium_k8s_terminating_endpoints_events_total"
+  },
+  {
+    "labels": {
+      "action": "update",
+      "equal": "false",
+      "scope": "CiliumEndpoint",
+      "valid": "true"
+    },
+    "name": "cilium_kubernetes_events_received_total",
+    "value": 4
+  },
+  {
+    "labels": {
+      "action": "update",
+      "equal": "false",
+      "scope": "CiliumNetworkPolicy",
+      "valid": "true"
+    },
+    "name": "cilium_kubernetes_events_received_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "action": "update",
+      "equal": "false",
+      "scope": "CiliumNode",
+      "valid": "true"
+    },
+    "name": "cilium_kubernetes_events_received_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "action": "update",
+      "equal": "false",
+      "scope": "Endpoint",
+      "valid": "true"
+    },
+    "name": "cilium_kubernetes_events_received_total",
+    "value": 6
+  },
+  {
+    "labels": {
+      "action": "update",
+      "equal": "false",
+      "scope": "Namespace",
+      "valid": "true"
+    },
+    "name": "cilium_kubernetes_events_received_total",
+    "value": 6
+  },
+  {
+    "labels": {
+      "action": "update",
+      "equal": "false",
+      "scope": "Node",
+      "valid": "true"
+    },
+    "name": "cilium_kubernetes_events_received_total",
+    "value": 1857
+  },
+  {
+    "labels": {
+      "action": "update",
+      "equal": "false",
+      "scope": "Service",
+      "valid": "true"
+    },
+    "name": "cilium_kubernetes_events_received_total",
+    "value": 4
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "CiliumEndpoint",
+      "status": "success"
+    },
+    "name": "cilium_kubernetes_events_total",
+    "value": 4
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "CiliumNetworkPolicy",
+      "status": "success"
+    },
+    "name": "cilium_kubernetes_events_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "CiliumNode",
+      "status": "success"
+    },
+    "name": "cilium_kubernetes_events_total",
+    "value": 3
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "Endpoint",
+      "status": "success"
+    },
+    "name": "cilium_kubernetes_events_total",
+    "value": 18
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "Namespace",
+      "status": "success"
+    },
+    "name": "cilium_kubernetes_events_total",
+    "value": 6
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "Node",
+      "status": "success"
+    },
+    "name": "cilium_kubernetes_events_total",
+    "value": 1859
+  },
+  {
+    "labels": {
+      "action": "update",
+      "scope": "Service",
+      "status": "success"
+    },
+    "name": "cilium_kubernetes_events_total",
+    "value": 12
+  },
+  {
+    "name": "cilium_mixed_routing_buffered_endpoints"
+  },
+  {
+    "labels": {
+      "family": "ipv4"
+    },
+    "name": "cilium_nat_endpoint_max_connection"
+  },
+  {
+    "labels": {
+      "family": "ipv6"
+    },
+    "name": "cilium_nat_endpoint_max_connection"
+  },
+  {
+    "labels": {
+      "address_type": "primary",
+      "protocol": "http",
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "type": "endpoint"
+    },
+    "name": "cilium_node_health_connectivity_latency_seconds",
+    "value": 0.007393805309734514
+  },
+  {
+    "labels": {
+      "address_type": "primary",
+      "protocol": "http",
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "type": "node"
+    },
+    "name": "cilium_node_health_connectivity_latency_seconds",
+    "value": 0.0037944915254237294
+  },
+  {
+    "labels": {
+      "address_type": "primary",
+      "protocol": "icmp",
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "type": "endpoint"
+    },
+    "name": "cilium_node_health_connectivity_latency_seconds",
+    "value": 0.002058684210526316
+  },
+  {
+    "labels": {
+      "address_type": "primary",
+      "protocol": "icmp",
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "type": "node"
+    },
+    "name": "cilium_node_health_connectivity_latency_seconds",
+    "value": 0.0009516176470588236
+  },
+  {
+    "labels": {
+      "address_type": "secondary",
+      "protocol": "http",
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "type": "endpoint"
+    },
+    "name": "cilium_node_health_connectivity_latency_seconds",
+    "value": 0.007772388059701493
+  },
+  {
+    "labels": {
+      "address_type": "secondary",
+      "protocol": "http",
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "type": "node"
+    },
+    "name": "cilium_node_health_connectivity_latency_seconds",
+    "value": 0.0038480769230769237
+  },
+  {
+    "labels": {
+      "address_type": "secondary",
+      "protocol": "icmp",
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "type": "endpoint"
+    },
+    "name": "cilium_node_health_connectivity_latency_seconds",
+    "value": 0.0020225714285714287
+  },
+  {
+    "labels": {
+      "address_type": "secondary",
+      "protocol": "icmp",
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "type": "node"
+    },
+    "name": "cilium_node_health_connectivity_latency_seconds",
+    "value": 0.0009460526315789474
+  },
+  {
+    "labels": {
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "status": "reachable",
+      "type": "endpoint"
+    },
+    "name": "cilium_node_health_connectivity_status",
+    "value": 4
+  },
+  {
+    "labels": {
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "status": "reachable",
+      "type": "node"
+    },
+    "name": "cilium_node_health_connectivity_status",
+    "value": 4
+  },
+  {
+    "labels": {
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "status": "unknown",
+      "type": "endpoint"
+    },
+    "name": "cilium_node_health_connectivity_status"
+  },
+  {
+    "labels": {
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "status": "unknown",
+      "type": "node"
+    },
+    "name": "cilium_node_health_connectivity_status"
+  },
+  {
+    "labels": {
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "status": "unreachable",
+      "type": "endpoint"
+    },
+    "name": "cilium_node_health_connectivity_status"
+  },
+  {
+    "labels": {
+      "source_cluster": "kind-kind",
+      "source_node_name": "kind-worker",
+      "status": "unreachable",
+      "type": "node"
+    },
+    "name": "cilium_node_health_connectivity_status"
+  },
+  {
+    "name": "cilium_nodes_all_datapath_validations_total",
+    "value": 1438
+  },
+  {
+    "labels": {
+      "event_type": "add",
+      "source": "custom-resource"
+    },
+    "name": "cilium_nodes_all_events_received_total",
+    "value": 1
+  },
+  {
+    "labels": {
+      "event_type": "add",
+      "source": "local"
+    },
+    "name": "cilium_nodes_all_events_received_total",
+    "value": 1
+  },
+  {
+    "labels": {
+      "event_type": "delete",
+      "source": "restored"
+    },
+    "name": "cilium_nodes_all_events_received_total",
+    "value": 1
+  },
+  {
+    "name": "cilium_nodes_all_num",
+    "value": 1
+  },
+  {
+    "name": "cilium_policy",
+    "value": 1
+  },
+  {
+    "labels": {
+      "outcome": "failure"
+    },
+    "name": "cilium_policy_change_total"
+  },
+  {
+    "labels": {
+      "outcome": "success"
+    },
+    "name": "cilium_policy_change_total",
+    "value": 13
+  },
+  {
+    "labels": {
+      "enforcement": "audit-both"
+    },
+    "name": "cilium_policy_endpoint_enforcement_status"
+  },
+  {
+    "labels": {
+      "enforcement": "audit-egress"
+    },
+    "name": "cilium_policy_endpoint_enforcement_status"
+  },
+  {
+    "labels": {
+      "enforcement": "audit-ingress"
+    },
+    "name": "cilium_policy_endpoint_enforcement_status"
+  },
+  {
+    "labels": {
+      "enforcement": "both"
+    },
+    "name": "cilium_policy_endpoint_enforcement_status"
+  },
+  {
+    "labels": {
+      "enforcement": "egress"
+    },
+    "name": "cilium_policy_endpoint_enforcement_status",
+    "value": 1
+  },
+  {
+    "labels": {
+      "enforcement": "ingress"
+    },
+    "name": "cilium_policy_endpoint_enforcement_status"
+  },
+  {
+    "labels": {
+      "enforcement": "none"
+    },
+    "name": "cilium_policy_endpoint_enforcement_status",
+    "value": 2
+  },
+  {
+    "labels": {
+      "source": "api"
+    },
+    "name": "cilium_policy_implementation_delay"
+  },
+  {
+    "labels": {
+      "source": "custom-resource"
+    },
+    "name": "cilium_policy_implementation_delay",
+    "value": 0.0205
+  },
+  {
+    "labels": {
+      "source": "k8s"
+    },
+    "name": "cilium_policy_implementation_delay"
+  },
+  {
+    "labels": {
+      "scope": "global"
+    },
+    "name": "cilium_policy_incremental_update_duration",
+    "value": 0.00082
+  },
+  {
+    "labels": {
+      "scope": "local"
+    },
+    "name": "cilium_policy_incremental_update_duration",
+    "value": 0.00845714285714286
+  },
+  {
+    "labels": {
+      "proxy_type": "envoy",
+      "rule": "denied"
+    },
+    "name": "cilium_policy_l7_total"
+  },
+  {
+    "labels": {
+      "proxy_type": "envoy",
+      "rule": "forwarded"
+    },
+    "name": "cilium_policy_l7_total"
+  },
+  {
+    "labels": {
+      "proxy_type": "envoy",
+      "rule": "parse_errors"
+    },
+    "name": "cilium_policy_l7_total"
+  },
+  {
+    "labels": {
+      "proxy_type": "envoy",
+      "rule": "received"
+    },
+    "name": "cilium_policy_l7_total"
+  },
+  {
+    "labels": {
+      "proxy_type": "fqdn",
+      "rule": "denied"
+    },
+    "name": "cilium_policy_l7_total"
+  },
+  {
+    "labels": {
+      "proxy_type": "fqdn",
+      "rule": "forwarded"
+    },
+    "name": "cilium_policy_l7_total",
+    "value": 92
+  },
+  {
+    "labels": {
+      "proxy_type": "fqdn",
+      "rule": "parse_errors"
+    },
+    "name": "cilium_policy_l7_total"
+  },
+  {
+    "labels": {
+      "proxy_type": "fqdn",
+      "rule": "received"
+    },
+    "name": "cilium_policy_l7_total",
+    "value": 92
+  },
+  {
+    "name": "cilium_policy_max_revision",
+    "value": 3
+  },
+  {
+    "labels": {
+      "class": "cluster"
+    },
+    "name": "cilium_policy_selector_match_count_max"
+  },
+  {
+    "labels": {
+      "class": "fqdn"
+    },
+    "name": "cilium_policy_selector_match_count_max",
+    "value": 1
+  },
+  {
+    "labels": {
+      "class": "other"
+    },
+    "name": "cilium_policy_selector_match_count_max",
+    "value": 14
+  },
+  {
+    "labels": {
+      "class": "world"
+    },
+    "name": "cilium_policy_selector_match_count_max"
+  },
+  {
+    "name": "cilium_process_cpu_seconds_total",
+    "value": 2037.6
+  },
+  {
+    "name": "cilium_process_max_fds",
+    "value": 1048576
+  },
+  {
+    "name": "cilium_process_network_receive_bytes_total",
+    "value": 869995777
+  },
+  {
+    "name": "cilium_process_network_transmit_bytes_total",
+    "value": 312572296
+  },
+  {
+    "name": "cilium_process_open_fds",
+    "value": 121
+  },
+  {
+    "name": "cilium_process_resident_memory_bytes",
+    "value": 170844160
+  },
+  {
+    "name": "cilium_process_start_time_seconds",
+    "value": 1749833794.75
+  },
+  {
+    "name": "cilium_process_virtual_memory_bytes",
+    "value": 1497157632
+  },
+  {
+    "name": "cilium_process_virtual_memory_max_bytes",
+    "value": 18446744073709552000
+  },
+  {
+    "labels": {
+      "protocol_l7": "dns"
+    },
+    "name": "cilium_proxy_redirects",
+    "value": 3
+  },
+  {
+    "labels": {
+      "error": "allow",
+      "protocol_l7": "dns",
+      "scope": "dataplaneTime"
+    },
+    "name": "cilium_proxy_upstream_reply_seconds",
+    "value": 0.007000000000000001
+  },
+  {
+    "labels": {
+      "error": "allow",
+      "protocol_l7": "dns",
+      "scope": "policyCheckTime"
+    },
+    "name": "cilium_proxy_upstream_reply_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "error": "allow",
+      "protocol_l7": "dns",
+      "scope": "policyGenerationTime"
+    },
+    "name": "cilium_proxy_upstream_reply_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "error": "allow",
+      "protocol_l7": "dns",
+      "scope": "processingTime"
+    },
+    "name": "cilium_proxy_upstream_reply_seconds",
+    "value": 0.007000000000000001
+  },
+  {
+    "labels": {
+      "error": "allow",
+      "protocol_l7": "dns",
+      "scope": "semaphoreTime"
+    },
+    "name": "cilium_proxy_upstream_reply_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "error": "allow",
+      "protocol_l7": "dns",
+      "scope": "totalTime"
+    },
+    "name": "cilium_proxy_upstream_reply_seconds",
+    "value": 0.007000000000000001
+  },
+  {
+    "labels": {
+      "error": "allow",
+      "protocol_l7": "dns",
+      "scope": "upstreamTime"
+    },
+    "name": "cilium_proxy_upstream_reply_seconds",
+    "value": 0.0045000000000000005
+  },
+  {
+    "labels": {
+      "subsystem": "cilium-health"
+    },
+    "name": "cilium_subprocess_start_total",
+    "value": 1
+  },
+  {
+    "name": "cilium_unreachable_health_endpoints"
+  },
+  {
+    "name": "cilium_unreachable_nodes"
+  },
+  {
+    "labels": {
+      "arch": "linux/arm64",
+      "revision": "ca94ebc4c6",
+      "version": "1.18.0-dev"
+    },
+    "name": "cilium_version"
+  },
+  {
+    "name": "go_gc_duration_seconds"
+  },
+  {
+    "name": "go_gc_gogc_percent",
+    "value": 100
+  },
+  {
+    "name": "go_gc_gomemlimit_bytes",
+    "value": 12514512896
+  },
+  {
+    "name": "go_goroutines",
+    "value": 484
+  },
+  {
+    "labels": {
+      "version": "go1.24.3"
+    },
+    "name": "go_info",
+    "value": 1
+  },
+  {
+    "name": "go_memstats_alloc_bytes",
+    "value": 68409992
+  },
+  {
+    "name": "go_memstats_alloc_bytes_total",
+    "value": 12800940344
+  },
+  {
+    "name": "go_memstats_buck_hash_sys_bytes",
+    "value": 2410080
+  },
+  {
+    "name": "go_memstats_frees_total",
+    "value": 133562031
+  },
+  {
+    "name": "go_memstats_gc_sys_bytes",
+    "value": 5270664
+  },
+  {
+    "name": "go_memstats_heap_alloc_bytes",
+    "value": 68409992
+  },
+  {
+    "name": "go_memstats_heap_idle_bytes",
+    "value": 34643968
+  },
+  {
+    "name": "go_memstats_heap_inuse_bytes",
+    "value": 86368256
+  },
+  {
+    "name": "go_memstats_heap_objects",
+    "value": 570448
+  },
+  {
+    "name": "go_memstats_heap_released_bytes",
+    "value": 22462464
+  },
+  {
+    "name": "go_memstats_heap_sys_bytes",
+    "value": 121012224
+  },
+  {
+    "name": "go_memstats_last_gc_time_seconds",
+    "value": 1749881161.4445097
+  },
+  {
+    "name": "go_memstats_mallocs_total",
+    "value": 134132479
+  },
+  {
+    "name": "go_memstats_mcache_inuse_bytes",
+    "value": 7248
+  },
+  {
+    "name": "go_memstats_mcache_sys_bytes",
+    "value": 15704
+  },
+  {
+    "name": "go_memstats_mspan_inuse_bytes",
+    "value": 1274880
+  },
+  {
+    "name": "go_memstats_mspan_sys_bytes",
+    "value": 1876800
+  },
+  {
+    "name": "go_memstats_next_gc_bytes",
+    "value": 107381530
+  },
+  {
+    "name": "go_memstats_other_sys_bytes",
+    "value": 1275337
+  },
+  {
+    "name": "go_memstats_stack_inuse_bytes",
+    "value": 4816896
+  },
+  {
+    "name": "go_memstats_stack_sys_bytes",
+    "value": 4816896
+  },
+  {
+    "name": "go_memstats_sys_bytes",
+    "value": 136677705
+  },
+  {
+    "name": "go_sched_gomaxprocs_threads",
+    "value": 6
+  },
+  {
+    "name": "go_sched_latencies_seconds",
+    "value": 0.00007248347773210816
+  },
+  {
+    "name": "go_threads",
+    "value": 16
+  }
+]
+

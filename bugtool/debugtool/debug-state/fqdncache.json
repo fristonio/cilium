@@ -1,0 +1,23 @@
+[
+  {
+    "endpoint-id": 1032,
+    "expiration-time": "2025-06-14T07:07:19.064Z",
+    "fqdn": "test.example.com.",
+    "ips": [
+      "172.20.10.1"
+    ],
+    "lookup-time": "2025-06-14T02:18:44.057Z",
+    "source": "connection"
+  },
+  {
+    "endpoint-id": 1032,
+    "expiration-time": "2025-06-14T07:07:19.064Z",
+    "fqdn": "test.example.com.",
+    "ips": [
+      "172.20.10.2"
+    ],
+    "lookup-time": "2025-06-14T02:18:44.057Z",
+    "source": "connection"
+  }
+]
+

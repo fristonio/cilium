@@ -1,0 +1,71 @@
+[
+  {
+    "health-endpoint-address": {
+      "ipv4": {
+        "enabled": true,
+        "ip": "10.244.0.213"
+      },
+      "ipv6": {
+        "enabled": true,
+        "ip": "fd00:10:244::75dd"
+      }
+    },
+    "name": "kind-kind/kind-control-plane",
+    "primary-address": {
+      "ipv4": {
+        "alloc-range": "10.244.0.0/24",
+        "enabled": true,
+        "ip": "192.168.208.3"
+      },
+      "ipv6": {
+        "alloc-range": "fd00:10:244::/64",
+        "enabled": true,
+        "ip": "fc00:c111::3"
+      }
+    },
+    "secondary-addresses": [
+      {
+        "ip": "10.244.0.253"
+      },
+      {
+        "ip": "fd00:10:244::dade"
+      }
+    ],
+    "source": "custom-resource"
+  },
+  {
+    "health-endpoint-address": {
+      "ipv4": {
+        "enabled": true,
+        "ip": "10.244.1.131"
+      },
+      "ipv6": {
+        "enabled": true,
+        "ip": "fd00:10:244:1::5b16"
+      }
+    },
+    "name": "kind-kind/kind-worker",
+    "primary-address": {
+      "ipv4": {
+        "alloc-range": "10.244.1.0/24",
+        "enabled": true,
+        "ip": "192.168.208.2"
+      },
+      "ipv6": {
+        "alloc-range": "fd00:10:244:1::/64",
+        "enabled": true,
+        "ip": "fc00:c111::2"
+      }
+    },
+    "secondary-addresses": [
+      {
+        "ip": "10.244.1.141"
+      },
+      {
+        "ip": "fd00:10:244:1::8324"
+      }
+    ],
+    "source": "local"
+  }
+]
+

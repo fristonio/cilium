@@ -1,0 +1,123 @@
+[
+  {
+    "reason": "Interface",
+    "direction": "ingress",
+    "packets": 681494,
+    "bytes": 735833042,
+    "line": 1160,
+    "file": "bpf_host.c"
+  },
+  {
+    "reason": "Success",
+    "direction": "egress",
+    "packets": 12289,
+    "bytes": 1007137,
+    "line": 1806,
+    "file": "bpf_host.c"
+  },
+  {
+    "reason": "Success",
+    "direction": "ingress",
+    "packets": 21546,
+    "bytes": 3569872,
+    "line": 2030,
+    "file": "bpf_lxc.c"
+  },
+  {
+    "reason": "Success",
+    "direction": "egress",
+    "packets": 4525,
+    "bytes": 422559,
+    "line": 790,
+    "file": "bpf_lxc.c"
+  },
+  {
+    "reason": "Success",
+    "direction": "ingress",
+    "packets": 21502,
+    "bytes": 3675823,
+    "line": 122,
+    "file": "local_delivery.h"
+  },
+  {
+    "reason": "Interface",
+    "direction": "ingress",
+    "packets": 19730,
+    "bytes": 1665629,
+    "line": 751,
+    "file": "bpf_overlay.c"
+  },
+  {
+    "reason": "Invalid source ip",
+    "direction": "egress",
+    "packets": 84,
+    "bytes": 6280,
+    "line": 875,
+    "file": "bpf_lxc.c"
+  },
+  {
+    "reason": "Success",
+    "direction": "egress",
+    "packets": 5,
+    "bytes": 781,
+    "line": 122,
+    "file": "local_delivery.h"
+  },
+  {
+    "reason": "Interface",
+    "direction": "ingress",
+    "packets": 23,
+    "bytes": 966,
+    "line": 1079,
+    "file": "bpf_host.c"
+  },
+  {
+    "reason": "Success",
+    "direction": "egress",
+    "packets": 19168,
+    "bytes": 1570184,
+    "line": 1344,
+    "file": "bpf_lxc.c"
+  },
+  {
+    "reason": "Success",
+    "direction": "ingress",
+    "packets": 10502,
+    "bytes": 1000412,
+    "line": 1684,
+    "file": "bpf_lxc.c"
+  },
+  {
+    "reason": "Interface",
+    "direction": "ingress",
+    "packets": 25743,
+    "bytes": 2376994,
+    "line": 1117,
+    "file": "bpf_host.c"
+  },
+  {
+    "reason": "Stale or unroutable IP",
+    "direction": "ingress",
+    "packets": 6,
+    "bytes": 660,
+    "line": 409,
+    "file": "bpf_host.c"
+  },
+  {
+    "reason": "Unknown L3 target address",
+    "direction": "egress",
+    "packets": 3,
+    "bytes": 258,
+    "line": 398,
+    "file": "icmp6.h"
+  },
+  {
+    "reason": "Success",
+    "direction": "egress",
+    "packets": 19737,
+    "bytes": 1660393,
+    "line": 35,
+    "file": "encap.h"
+  }
+]
+

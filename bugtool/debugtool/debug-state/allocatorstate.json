@@ -1,0 +1,1 @@
+[{"id":16777222,"labels":{"world-ipv4":{"key":"world-ipv4","source":"reserved"},"*.example.com":{"key":"*.example.com","source":"fqdn"},"*":{"key":"*","source":"fqdn"}}}]

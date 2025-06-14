@@ -1,0 +1,1732 @@
+[
+  {
+    "cache": [
+      {
+        "key": "0.0.0.0:9964/TCP (1)",
+        "value": "3 0[0] (8) [0x8 0x0]"
+      },
+      {
+        "key": "10.96.0.1:443/TCP (0)",
+        "value": "0 1[0] (5) [0x0 0x0]"
+      },
+      {
+        "key": "0.0.0.0:9964/TCP (0)",
+        "value": "0 1[0] (8) [0x8 0x0]"
+      },
+      {
+        "key": "192.168.208.2:9963/TCP (0)",
+        "value": "0 1[0] (13) [0x48 0x0]"
+      },
+      {
+        "key": "0.0.0.0:9963/TCP (1)",
+        "value": "5 0[0] (12) [0x8 0x0]"
+      },
+      {
+        "key": "192.168.208.2:9967/TCP (1)",
+        "value": "17 0[0] (25) [0x48 0x0]"
+      },
+      {
+        "key": "0.0.0.0:9962/TCP (0)",
+        "value": "0 1[0] (20) [0x8 0x0]"
+      },
+      {
+        "key": "10.96.0.10:53/UDP (2)",
+        "value": "27 0[0] (3) [0x0 0x0]"
+      },
+      {
+        "key": "192.168.208.2:9962/TCP (1)",
+        "value": "9 0[0] (21) [0x48 0x0]"
+      },
+      {
+        "key": "192.168.208.2:4244/TCP (1)",
+        "value": "7 0[0] (17) [0x48 0x0]"
+      },
+      {
+        "key": "0.0.0.0:9962/TCP (1)",
+        "value": "9 0[0] (20) [0x8 0x0]"
+      },
+      {
+        "key": "10.96.0.10:53/TCP (1)",
+        "value": "24 0[0] (2) [0x0 0x0]"
+      },
+      {
+        "key": "192.168.208.2:9964/TCP (0)",
+        "value": "0 1[0] (9) [0x48 0x0]"
+      },
+      {
+        "key": "0.0.0.0:9963/TCP (0)",
+        "value": "0 1[0] (12) [0x8 0x0]"
+      },
+      {
+        "key": "192.168.208.2:4244/TCP (0)",
+        "value": "0 1[0] (17) [0x48 0x0]"
+      },
+      {
+        "key": "0.0.0.0:4244/TCP (1)",
+        "value": "7 0[0] (16) [0x8 0x0]"
+      },
+      {
+        "key": "10.96.0.10:53/TCP (2)",
+        "value": "25 0[0] (2) [0x0 0x0]"
+      },
+      {
+        "key": "192.168.208.2:9967/TCP (0)",
+        "value": "0 1[0] (25) [0x48 0x0]"
+      },
+      {
+        "key": "10.96.225.127:443/TCP (1)",
+        "value": "7 0[0] (1) [0x0 0x10]"
+      },
+      {
+        "key": "10.96.0.10:9153/TCP (1)",
+        "value": "28 0[0] (4) [0x0 0x0]"
+      },
+      {
+        "key": "10.96.0.10:9153/TCP (0)",
+        "value": "0 2[0] (4) [0x0 0x0]"
+      },
+      {
+        "key": "0.0.0.0:4244/TCP (0)",
+        "value": "0 1[0] (16) [0x8 0x0]"
+      },
+      {
+        "key": "192.168.208.2:9964/TCP (1)",
+        "value": "3 0[0] (9) [0x48 0x0]"
+      },
+      {
+        "key": "192.168.208.2:9962/TCP (0)",
+        "value": "0 1[0] (21) [0x48 0x0]"
+      },
+      {
+        "key": "10.96.0.10:53/UDP (0)",
+        "value": "0 2[0] (3) [0x0 0x0]"
+      },
+      {
+        "key": "0.0.0.0:9967/TCP (1)",
+        "value": "17 0[0] (24) [0x8 0x0]"
+      },
+      {
+        "key": "10.96.0.10:9153/TCP (2)",
+        "value": "29 0[0] (4) [0x0 0x0]"
+      },
+      {
+        "key": "10.96.0.10:53/UDP (1)",
+        "value": "26 0[0] (3) [0x0 0x0]"
+      },
+      {
+        "key": "10.96.0.1:443/TCP (1)",
+        "value": "1 0[0] (5) [0x0 0x0]"
+      },
+      {
+        "key": "192.168.208.2:9963/TCP (1)",
+        "value": "5 0[0] (13) [0x48 0x0]"
+      },
+      {
+        "key": "10.96.0.10:53/TCP (0)",
+        "value": "0 2[0] (2) [0x0 0x0]"
+      },
+      {
+        "key": "10.96.225.127:443/TCP (0)",
+        "value": "0 1[0] (1) [0x0 0x10]"
+      },
+      {
+        "key": "0.0.0.0:9967/TCP (0)",
+        "value": "0 1[0] (24) [0x8 0x0]"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb4_services_v2"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb4_reverse_sk"
+  },
+  {
+    "cache": [
+      {
+        "key": "19",
+        "value": "[fc00:c111::2]:9962"
+      },
+      {
+        "key": "23",
+        "value": "[fc00:c111::2]:9967"
+      },
+      {
+        "key": "14",
+        "value": "[::]:4244"
+      },
+      {
+        "key": "10",
+        "value": "[::]:9963"
+      },
+      {
+        "key": "22",
+        "value": "[::]:9967"
+      },
+      {
+        "key": "7",
+        "value": "[fc00:c111::2]:9964"
+      },
+      {
+        "key": "15",
+        "value": "[fc00:c111::2]:4244"
+      },
+      {
+        "key": "11",
+        "value": "[fc00:c111::2]:9963"
+      },
+      {
+        "key": "18",
+        "value": "[::]:9962"
+      },
+      {
+        "key": "6",
+        "value": "[::]:9964"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb6_reverse_nat"
+  },
+  {
+    "cache": [
+      {
+        "key": "UTimeOffset",
+        "value": "3416952478515626"
+      },
+      {
+        "key": "AgentLiveness",
+        "value": "401580154787399"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      },
+      {
+        "key": "Unknown",
+        "value": "0"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_runtime_config"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb4_affinity"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb6_affinity"
+  },
+  {
+    "cache": [
+      {
+        "key": "Ingress: 0 ANY",
+        "value": "0 0"
+      },
+      {
+        "key": "Egress: 0 ANY",
+        "value": "0 0"
+      },
+      {
+        "key": "Ingress: 1 ANY",
+        "value": "0 0"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_policy_v2_01276"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_ratelimit"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb4_maglev"
+  },
+  {
+    "cache": [
+      {
+        "key": "[::]:9963/TCP (1)",
+        "value": "4 0[0] (10) [0x8 0x0]"
+      },
+      {
+        "key": "[fc00:c111::2]:9963/TCP (1)",
+        "value": "4 0[0] (11) [0x48 0x0]"
+      },
+      {
+        "key": "[fc00:c111::2]:9963/TCP (0)",
+        "value": "0 1[0] (11) [0x48 0x0]"
+      },
+      {
+        "key": "[fc00:c111::2]:9964/TCP (0)",
+        "value": "0 1[0] (7) [0x48 0x0]"
+      },
+      {
+        "key": "[::]:9962/TCP (0)",
+        "value": "0 1[0] (18) [0x8 0x0]"
+      },
+      {
+        "key": "[fc00:c111::2]:4244/TCP (0)",
+        "value": "0 1[0] (15) [0x48 0x0]"
+      },
+      {
+        "key": "[fc00:c111::2]:9962/TCP (0)",
+        "value": "0 1[0] (19) [0x48 0x0]"
+      },
+      {
+        "key": "[::]:9964/TCP (0)",
+        "value": "0 1[0] (6) [0x8 0x0]"
+      },
+      {
+        "key": "[::]:9967/TCP (0)",
+        "value": "0 1[0] (22) [0x8 0x0]"
+      },
+      {
+        "key": "[::]:9964/TCP (1)",
+        "value": "2 0[0] (6) [0x8 0x0]"
+      },
+      {
+        "key": "[fc00:c111::2]:4244/TCP (1)",
+        "value": "6 0[0] (15) [0x48 0x0]"
+      },
+      {
+        "key": "[fc00:c111::2]:9967/TCP (1)",
+        "value": "16 0[0] (23) [0x48 0x0]"
+      },
+      {
+        "key": "[::]:4244/TCP (0)",
+        "value": "0 1[0] (14) [0x8 0x0]"
+      },
+      {
+        "key": "[fc00:c111::2]:9964/TCP (1)",
+        "value": "2 0[0] (7) [0x48 0x0]"
+      },
+      {
+        "key": "[::]:4244/TCP (1)",
+        "value": "6 0[0] (14) [0x8 0x0]"
+      },
+      {
+        "key": "[fc00:c111::2]:9962/TCP (1)",
+        "value": "8 0[0] (19) [0x48 0x0]"
+      },
+      {
+        "key": "[::]:9962/TCP (1)",
+        "value": "8 0[0] (18) [0x8 0x0]"
+      },
+      {
+        "key": "[::]:9963/TCP (0)",
+        "value": "0 1[0] (10) [0x8 0x0]"
+      },
+      {
+        "key": "[::]:9967/TCP (1)",
+        "value": "16 0[0] (22) [0x8 0x0]"
+      },
+      {
+        "key": "[fc00:c111::2]:9967/TCP (0)",
+        "value": "0 1[0] (23) [0x48 0x0]"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb6_services_v2"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb6_source_range"
+  },
+  {
+    "cache": [
+      {
+        "desired-action": "sync",
+        "key": "10.244.0.213/32",
+        "value": "identity=4 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244:1::5b16/128",
+        "value": "identity=4 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "10.244.0.253/32",
+        "value": "identity=6 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "10.244.1.163/32",
+        "value": "identity=3222 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244:1::142/128",
+        "value": "identity=3222 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "10.244.0.202/32",
+        "value": "identity=3590 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "0.0.0.0/0",
+        "value": "identity=9 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fc00:c111::3/128",
+        "value": "identity=6 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "192.168.208.3/32",
+        "value": "identity=7 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244::75dd/128",
+        "value": "identity=4 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "10.244.0.218/32",
+        "value": "identity=3590 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244::b3a1/128",
+        "value": "identity=3590 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244::7c84/128",
+        "value": "identity=36139 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "192.168.208.2/32",
+        "value": "identity=1 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fc00:c111::2/128",
+        "value": "identity=1 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "172.20.10.1/32",
+        "value": "identity=16777222 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "10.244.0.0/24",
+        "value": "identity=9 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244::/64",
+        "value": "identity=10 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "10.244.0.214/32",
+        "value": "identity=36139 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244:1::8324/128",
+        "value": "identity=1 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "172.20.10.2/32",
+        "value": "identity=16777222 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "10.244.1.141/32",
+        "value": "identity=1 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "10.244.1.131/32",
+        "value": "identity=4 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "::/0",
+        "value": "identity=10 encryptkey=0 tunnelendpoint=0.0.0.0 flags=<none>"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244::a1e3/128",
+        "value": "identity=3590 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      },
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244::dade/128",
+        "value": "identity=6 encryptkey=0 tunnelendpoint=192.168.208.3 flags=hastunnel"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_ipcache_v2"
+  },
+  {
+    "cache": [
+      {
+        "key": "3",
+        "value": "10.96.0.10:53"
+      },
+      {
+        "key": "5",
+        "value": "10.96.0.1:443"
+      },
+      {
+        "key": "8",
+        "value": "0.0.0.0:9964"
+      },
+      {
+        "key": "12",
+        "value": "0.0.0.0:9963"
+      },
+      {
+        "key": "2",
+        "value": "10.96.0.10:53"
+      },
+      {
+        "key": "24",
+        "value": "0.0.0.0:9967"
+      },
+      {
+        "key": "4",
+        "value": "10.96.0.10:9153"
+      },
+      {
+        "key": "16",
+        "value": "0.0.0.0:4244"
+      },
+      {
+        "key": "13",
+        "value": "192.168.208.2:9963"
+      },
+      {
+        "key": "21",
+        "value": "192.168.208.2:9962"
+      },
+      {
+        "key": "25",
+        "value": "192.168.208.2:9967"
+      },
+      {
+        "key": "17",
+        "value": "192.168.208.2:4244"
+      },
+      {
+        "key": "20",
+        "value": "0.0.0.0:9962"
+      },
+      {
+        "key": "1",
+        "value": "10.96.225.127:443"
+      },
+      {
+        "key": "9",
+        "value": "192.168.208.2:9964"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb4_reverse_nat"
+  },
+  {
+    "cache": [
+      {
+        "key": "2",
+        "value": "TCP://fc00:c111::2"
+      },
+      {
+        "key": "16",
+        "value": "TCP://fc00:c111::2"
+      },
+      {
+        "key": "6",
+        "value": "TCP://fc00:c111::2"
+      },
+      {
+        "key": "8",
+        "value": "TCP://fc00:c111::2"
+      },
+      {
+        "key": "4",
+        "value": "TCP://fc00:c111::2"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb6_backends_v3"
+  },
+  {
+    "cache": [
+      {
+        "key": "Ingress: 0 ANY",
+        "value": "0 0"
+      },
+      {
+        "key": "Egress: 0 ANY",
+        "value": "0 0"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_policy_v2_00468"
+  },
+  {
+    "cache": [
+      {
+        "key": "Ingress: 0 ANY",
+        "value": "0 0"
+      },
+      {
+        "key": "Egress: 0 53/TCP",
+        "value": "10001 24"
+      },
+      {
+        "key": "Egress: 0 53/UDP",
+        "value": "10001 24"
+      },
+      {
+        "key": "Egress: 0 53/SCTP",
+        "value": "10001 24"
+      },
+      {
+        "key": "Ingress: 1 ANY",
+        "value": "0 0"
+      },
+      {
+        "key": "Egress: 16777222 ANY",
+        "value": "0 0"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_policy_v2_01032"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb6_maglev"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_ratelimit_metrics"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb_affinity_match"
+  },
+  {
+    "cache": [
+      {
+        "key": "1",
+        "value": "TCP://192.168.208.3"
+      },
+      {
+        "key": "26",
+        "value": "UDP://10.244.0.202"
+      },
+      {
+        "key": "24",
+        "value": "TCP://10.244.0.202"
+      },
+      {
+        "key": "27",
+        "value": "UDP://10.244.0.218"
+      },
+      {
+        "key": "17",
+        "value": "TCP://192.168.208.2"
+      },
+      {
+        "key": "9",
+        "value": "TCP://192.168.208.2"
+      },
+      {
+        "key": "3",
+        "value": "TCP://192.168.208.2"
+      },
+      {
+        "key": "25",
+        "value": "TCP://10.244.0.218"
+      },
+      {
+        "key": "7",
+        "value": "TCP://192.168.208.2"
+      },
+      {
+        "key": "5",
+        "value": "TCP://192.168.208.2"
+      },
+      {
+        "key": "28",
+        "value": "TCP://10.244.0.202"
+      },
+      {
+        "key": "29",
+        "value": "TCP://10.244.0.218"
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb4_backends_v3"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb4_source_range"
+  },
+  {
+    "cache": [],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lb6_reverse_sk"
+  },
+  {
+    "cache": [
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244:1::5b16:0",
+        "value": "id=1276  sec_id=4     flags=0x0000 ifindex=16  mac=D6:CC:CE:4F:E3:0F nodemac=06:C9:1B:9B:F8:14 parent_ifindex=0  "
+      },
+      {
+        "desired-action": "sync",
+        "key": "10.244.1.131:0",
+        "value": "id=1276  sec_id=4     flags=0x0000 ifindex=16  mac=D6:CC:CE:4F:E3:0F nodemac=06:C9:1B:9B:F8:14 parent_ifindex=0  "
+      },
+      {
+        "desired-action": "sync",
+        "key": "fd00:10:244:1::142:0",
+        "value": "id=1032  sec_id=3222  flags=0x0000 ifindex=8   mac=7E:CA:5D:59:B3:3E nodemac=CA:0E:6C:12:C2:FF parent_ifindex=0  "
+      },
+      {
+        "desired-action": "sync",
+        "key": "10.244.1.163:0",
+        "value": "id=1032  sec_id=3222  flags=0x0000 ifindex=8   mac=7E:CA:5D:59:B3:3E nodemac=CA:0E:6C:12:C2:FF parent_ifindex=0  "
+      }
+    ],
+    "path": "/sys/fs/bpf/tc/globals/cilium_lxc"
+  },
+  {
+    "cache": null,
+    "path": "/sys/fs/bpf/tc/globals/cilium_l2_responder_v4"
+  },
+  {
+    "cache": null,
+    "path": "/sys/fs/bpf/tc/globals/cilium_node_map_v2"
+  },
+  {
+    "cache": null,
+    "path": "/sys/fs/bpf/tc/globals/cilium_policystats"
+  },
+  {
+    "cache": null,
+    "path": "/sys/fs/bpf/tc/globals/cilium_auth_map"
+  },
+  {
+    "cache": null,
+    "path": "/sys/fs/bpf/tc/globals/cilium_metrics"
+  },
+  {
+    "cache": null,
+    "path": "/sys/fs/bpf/tc/globals/cilium_skip_lb4"
+  },
+  {
+    "cache": null,
+    "path": "/sys/fs/bpf/tc/globals/cilium_skip_lb6"
+  }
+]
