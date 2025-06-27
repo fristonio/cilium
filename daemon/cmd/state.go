@@ -25,6 +25,7 @@ import (
 	"github.com/cilium/cilium/pkg/maps/lxcmap"
 	nodeTypes "github.com/cilium/cilium/pkg/node/types"
 	"github.com/cilium/cilium/pkg/option"
+	"github.com/cilium/cilium/pkg/time"
 )
 
 func (d *Daemon) WaitForEndpointRestore(ctx context.Context) error {
@@ -273,6 +274,9 @@ func (d *Daemon) regenerateRestoredEndpoints(state *endpointRestoreState, endpoi
 		"Regenerating restored endpoints",
 		logfields.Restored, len(state.restored),
 	)
+
+	d.logger.Info("Waiting for 10 Seconds on endpoint restore logic")
+	time.Sleep(10 * time.Second)
 
 	// Before regenerating, check whether the CT map has properties that
 	// match this Cilium userspace instance. If not, it must be removed

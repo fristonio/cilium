@@ -7,6 +7,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"sync"
 
 	"github.com/cilium/hive/cell"
 	"github.com/cilium/hive/job"
@@ -70,6 +71,7 @@ import (
 	policyDirectory "github.com/cilium/cilium/pkg/policy/directory"
 	policyK8s "github.com/cilium/cilium/pkg/policy/k8s"
 	"github.com/cilium/cilium/pkg/pprof"
+	"github.com/cilium/cilium/pkg/promise"
 	"github.com/cilium/cilium/pkg/proxy"
 	"github.com/cilium/cilium/pkg/recorder"
 	shell "github.com/cilium/cilium/pkg/shell/server"
@@ -209,6 +211,7 @@ var (
 
 		// daemonCell wraps the legacy daemon initialization and provides Promise[*Daemon].
 		daemonCell,
+		cell.Invoke(startAPIServer),
 
 		// Maglev table computtations
 		maglev.Cell,
@@ -364,6 +367,39 @@ func configureAPIServer(cfg *option.DaemonConfig, s *server.Server, db *statedb.
 	mux.Handle("/", s.GetHandler())
 	mux.Handle("/statedb/", http.StripPrefix("/statedb", db.HTTPHandler()))
 	s.SetHandler(mux)
+}
+
+func startAPIServer(logger *slog.Logger, lifecycle cell.Lifecycle, server *server.Server, daemonPromise promise.Promise[*Daemon]) {
+	var wg sync.WaitGroup
+	ctx, cancelServerCtx := context.WithCancel(context.Background())
+
+	lifecycle.Append(cell.Hook{
+		OnStart: func(cell.HookContext) (err error) {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+
+				logger.Info("Waiting for daemon promise")
+				if _, err := daemonPromise.Await(ctx); err != nil {
+					logger.Error("Failed to wait for Daemon promise to resolve", logfields.Error, err)
+					return
+				}
+
+				logger.Info("Daemon promise resolved, starting API server")
+				err := server.Start(ctx)
+				if err != nil {
+					logger.Error("Failed to start server", logfields.Error, err)
+				}
+			}()
+
+			return nil
+		},
+		OnStop: func(cell.HookContext) (err error) {
+			cancelServerCtx()
+			wg.Wait()
+			return server.Stop(ctx)
+		},
+	})
 }
 
 var pprofConfig = pprof.Config{

@@ -188,7 +188,6 @@ func newAPI(p apiParams) *restapi.CiliumAPIAPI {
 type serverParams struct {
 	cell.In
 
-	Lifecycle  cell.Lifecycle
 	Shutdowner hive.Shutdowner
 	Logger     *slog.Logger
 	Spec       *Spec
@@ -199,7 +198,6 @@ func newForCell(p serverParams) (*Server, error) {
 	s := NewServer(p.API)
 	s.shutdowner = p.Shutdowner
 	s.logger = p.Logger
-	p.Lifecycle.Append(s)
 	return s, nil
 }
 
