@@ -4,6 +4,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -134,4 +135,46 @@ func NewPathSet(spec *loads.Document) PathSet {
 func AllowedFlagsToDeniedPaths(spec *loads.Document, allowed []string) (PathSet, error) {
 	paths := parseSpecPaths(spec.Spec().Paths)
 	return generateDeniedAPIEndpoints(paths, allowed)
+}
+
+type PathGroups map[string][]Endpoint
+
+func (pg PathGroups) String() string {
+	data, _ := json.Marshal(pg)
+	return string(data)
+}
+
+func ParseAPIGroups(specDoc *loads.Document) PathGroups {
+	results := make(PathGroups)
+
+	for path, item := range specDoc.Spec().Paths.Paths {
+		allOps := map[string]*spec.Operation{
+			"DELETE": item.Delete,
+			"GET":    item.Get,
+			"PATCH":  item.Patch,
+			"POST":   item.Post,
+			"PUT":    item.Put,
+		}
+
+		for method, op := range allOps {
+			if op != nil {
+				opTag := ""
+				if len(op.Tags) > 0 {
+					opTag = op.Tags[0]
+				}
+
+				if _, ok := results[opTag]; !ok {
+					results[opTag] = make([]Endpoint, 0, 1)
+				}
+
+				results[opTag] = append(results[opTag], Endpoint{
+					Method:      method,
+					Path:        path,
+					Description: op.Description,
+				})
+			}
+		}
+	}
+
+	return PathGroups(results)
 }

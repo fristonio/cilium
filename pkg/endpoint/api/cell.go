@@ -4,22 +4,32 @@
 package api
 
 import (
+	"context"
 	"log/slog"
+	"net/http"
 
 	"github.com/cilium/hive/cell"
 
+	"github.com/cilium/cilium/api/v1/server"
 	endpointapi "github.com/cilium/cilium/api/v1/server/restapi/endpoint"
 	"github.com/cilium/cilium/daemon/cmd/cni"
 	datapath "github.com/cilium/cilium/pkg/datapath/types"
 	endpointcreator "github.com/cilium/cilium/pkg/endpoint/creator"
 	endpointmetadata "github.com/cilium/cilium/pkg/endpoint/metadata"
 	"github.com/cilium/cilium/pkg/endpointmanager"
+	"github.com/cilium/cilium/pkg/endpointstate"
 	"github.com/cilium/cilium/pkg/ipam"
 	k8sClient "github.com/cilium/cilium/pkg/k8s/client"
+	"github.com/cilium/cilium/pkg/logging/logfields"
+	"github.com/cilium/cilium/pkg/promise"
 	"github.com/cilium/cilium/pkg/rate"
+	"github.com/cilium/cilium/pkg/time"
 )
 
-const endpointAPIModuleID = "endpoint-api"
+const (
+	endpointAPIModuleID = "endpoint-api"
+	endpointAPIGroup    = "endpoint"
+)
 
 // Cell provides the Endpoint API.
 var Cell = cell.Module(
@@ -28,6 +38,9 @@ var Cell = cell.Module(
 
 	// Endpoint API handlers
 	cell.Provide(newEndpointAPIHandler),
+
+	// Custom middleware for endpoint APIs.
+	cell.Provide(newEndpointAPIMiddleware),
 
 	// EndpointAPIManager provides functionality to support the API
 	cell.Provide(newEndpointAPIManager),
@@ -174,5 +187,67 @@ func newEndpointAPIHandler(params endpointAPIHandlerParams) endpointAPIHandlerOu
 			apiLimiterSet:      params.APILimiterSet,
 			endpointAPIManager: params.EndpointAPIManager,
 		},
+	}
+}
+
+type endpointAPIMiddlewareParams struct {
+	cell.In
+
+	Logger                       *slog.Logger
+	EndpointStateRestorerPromise promise.Promise[endpointstate.Restorer]
+}
+
+type Middleware struct {
+	logger                       *slog.Logger
+	endpointStateRestorerPromise promise.Promise[endpointstate.Restorer]
+}
+
+func newEndpointAPIMiddleware(params endpointAPIMiddlewareParams) *Middleware {
+	return &Middleware{
+		logger:                       params.Logger,
+		endpointStateRestorerPromise: params.EndpointStateRestorerPromise,
+	}
+}
+
+func (m *Middleware) Configure(Spec *server.Spec, Server *server.Server) {
+	m.logger.Info("Parsed API groups in spec", logfields.Value, Spec.APIGroups.String())
+
+	for _, ep := range Spec.APIGroups[endpointAPIGroup] {
+		if ep.Method == "GET" {
+			continue
+		}
+
+		Server.GetAPI().AddMiddlewareFor(ep.Method, ep.Path, func(next http.Handler) http.Handler {
+			m.logger.Info("Adding middleware for",
+				logfields.Method, ep.Method,
+				logfields.URL, ep.Path)
+
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				m.logger.Info("Processing endpoint API middleware",
+					logfields.Method, r.Method,
+					logfields.URL, r.URL.String())
+
+				ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+				defer cancel()
+
+				// EndpointRestorer promise is resolved once the daemon is started.
+				// Resolved restorer indicates that endpoints restored are exposed to EndpointManager
+				// which in turn means that API requests can now be processed by the endpoint API manager.
+				_, err := m.endpointStateRestorerPromise.Await(ctx)
+				if err != nil {
+					m.logger.Warn("Failed waiting for EndpointState restorer promise to resolve",
+						logfields.Method, r.Method,
+						logfields.URL, r.URL.String(),
+						logfields.Error, err)
+					w.WriteHeader(http.StatusServiceUnavailable)
+					return
+				}
+
+				m.logger.Info("Middleware processing complete",
+					logfields.Method, r.Method,
+					logfields.URL, r.URL.String())
+				next.ServeHTTP(w, r)
+			})
+		})
 	}
 }

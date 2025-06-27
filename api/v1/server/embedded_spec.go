@@ -342,6 +342,9 @@ func init() {
           },
           "429": {
             "description": "Rate-limiting too many requests in the given time frame"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -424,6 +427,9 @@ func init() {
               "$ref": "#/definitions/Error"
             },
             "x-go-name": "Failed"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       },
@@ -464,6 +470,9 @@ func init() {
           },
           "429": {
             "description": "Rate-limiting too many requests in the given time frame"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       },
@@ -508,6 +517,9 @@ func init() {
               "$ref": "#/definitions/Error"
             },
             "x-go-name": "Failed"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -581,6 +593,9 @@ func init() {
               "$ref": "#/definitions/Error"
             },
             "x-go-name": "Failed"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -680,6 +695,9 @@ func init() {
               "$ref": "#/definitions/Error"
             },
             "x-go-name": "UpdateFailed"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -5773,6 +5791,9 @@ func init() {
           },
           "429": {
             "description": "Rate-limiting too many requests in the given time frame"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -5868,6 +5889,9 @@ func init() {
               "$ref": "#/definitions/Error"
             },
             "x-go-name": "Failed"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       },
@@ -5912,6 +5936,9 @@ func init() {
           },
           "429": {
             "description": "Rate-limiting too many requests in the given time frame"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       },
@@ -5965,6 +5992,9 @@ func init() {
               "$ref": "#/definitions/Error"
             },
             "x-go-name": "Failed"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -6046,6 +6076,9 @@ func init() {
               "$ref": "#/definitions/Error"
             },
             "x-go-name": "Failed"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -6157,6 +6190,9 @@ func init() {
               "$ref": "#/definitions/Error"
             },
             "x-go-name": "UpdateFailed"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }

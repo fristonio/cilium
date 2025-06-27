@@ -343,6 +343,10 @@ func (d *Daemon) regenerateRestoredEndpoints(state *endpointRestoreState, endpoi
 			"Successfully restored endpoint. Scheduling regeneration",
 			logfields.EndpointID, ep.ID,
 		)
+
+		// TODO: Should we wait for DeleteQueue to be drained before we start regeneration?
+		// It can happen that the endpoint is actually delete which will only be evaluated
+		// once the daemon promise is resolved.
 		go func(ep *endpoint.Endpoint, epRegenerated chan<- bool) {
 			if err := ep.RegenerateAfterRestore(endpointsRegenerator, d.endpointMetadata.FetchK8sMetadataForEndpoint); err != nil {
 				d.logger.Debug(
