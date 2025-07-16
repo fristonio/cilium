@@ -32,6 +32,9 @@ const (
 	// GopsPortKVStoreMesh is the default value for option.GopsPort in kvstoremesh
 	GopsPortKVStoreMesh = 9894
 
+	// GopsPortHalo is the default value for option.GopsPort in Halo
+	GopsPortHalo = 9895
+
 	// IPv6ClusterAllocCIDR is the default value for option.IPv6ClusterAllocCIDR
 	IPv6ClusterAllocCIDR = IPv6ClusterAllocCIDRBase + "/64"
 
