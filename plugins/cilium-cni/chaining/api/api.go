@@ -12,7 +12,6 @@ import (
 	cniTypesVer "github.com/containernetworking/cni/pkg/types/100"
 
 	"github.com/cilium/cilium/api/v1/models"
-	"github.com/cilium/cilium/pkg/client"
 	"github.com/cilium/cilium/pkg/lock"
 	"github.com/cilium/cilium/plugins/cilium-cni/lib"
 	"github.com/cilium/cilium/plugins/cilium-cni/types"
@@ -42,19 +41,19 @@ type PluginContext struct {
 type ChainingPlugin interface {
 	// Add is called on CNI ADD. It is given the plugin context from the
 	// previous plugin. It must return a CNI result or an error.
-	Add(ctx context.Context, pluginContext PluginContext, client *client.Client) (res *cniTypesVer.Result, err error)
+	Add(ctx context.Context, pluginContext PluginContext, client lib.CiliumCniClient) (res *cniTypesVer.Result, err error)
 
 	// Delete is called on CNI DELETE. It is given the plugin context from
 	// the previous plugin.
-	Delete(ctx context.Context, pluginContext PluginContext, delClient *lib.DeletionFallbackClient) (err error)
+	Delete(ctx context.Context, pluginContext PluginContext, client lib.CiliumCniClient) (err error)
 
 	// Check is called on CNI CHECK. The plugin should verify (to the best of its
 	// ability) that everything is reasonably configured, else return error.
-	Check(ctx context.Context, pluginContext PluginContext, client *client.Client) error
+	Check(ctx context.Context, pluginContext PluginContext, client lib.CiliumCniClient) error
 
 	// Status is called on CNI STATUS. The plugin should return an error
 	// with exit code 50 if the plugin is not ready to service ADD requests.
-	Status(ctx context.Context, pluginContext PluginContext, client *client.Client) error
+	Status(ctx context.Context, pluginContext PluginContext, client lib.CiliumCniClient) error
 }
 
 // Register is called by chaining plugins to register themselves. After

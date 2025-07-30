@@ -35,7 +35,6 @@ import (
 	"github.com/cilium/cilium/pkg/datapath/linux/sysctl"
 	datapathOption "github.com/cilium/cilium/pkg/datapath/option"
 	"github.com/cilium/cilium/pkg/datapath/tables"
-	"github.com/cilium/cilium/pkg/defaults"
 	endpointid "github.com/cilium/cilium/pkg/endpoint/id"
 	ipamOption "github.com/cilium/cilium/pkg/ipam/option"
 	"github.com/cilium/cilium/pkg/logging"
@@ -148,41 +147,6 @@ func getConfigFromCiliumAgent(client *client.Client) (*models.DaemonConfiguratio
 	}
 
 	return configResult.Status, nil
-}
-
-func allocateIPsWithCiliumAgent(logger *slog.Logger, client *client.Client, cniArgs *types.ArgsSpec, ipamPoolName string) (*models.IPAMResponse, func(context.Context), error) {
-	podName := string(cniArgs.K8S_POD_NAMESPACE) + "/" + string(cniArgs.K8S_POD_NAME)
-
-	ipam, err := client.IPAMAllocate("", podName, ipamPoolName, true)
-	if err != nil {
-		return nil, nil, fmt.Errorf("unable to allocate IP via local cilium agent: %w", err)
-	}
-
-	if ipam.Address == nil {
-		return nil, nil, errors.New("invalid IPAM response, missing addressing")
-	}
-
-	releaseFunc := func(context.Context) {
-		if ipam.Address != nil {
-			releaseIP(logger, client, ipam.Address.IPV4, ipam.Address.IPV4PoolName)
-			releaseIP(logger, client, ipam.Address.IPV6, ipam.Address.IPV6PoolName)
-		}
-	}
-
-	return ipam, releaseFunc, nil
-}
-
-func releaseIP(logger *slog.Logger, client *client.Client, ip, pool string) {
-	if ip != "" {
-		if err := client.IPAMReleaseIP(ip, pool); err != nil {
-			logger.Warn(
-				"Unable to release IP",
-				logfields.Error, err,
-				logfields.IPAddr, ip,
-				logfields.PoolName, pool,
-			)
-		}
-	}
 }
 
 func allocateIPsWithDelegatedPlugin(
@@ -539,12 +503,12 @@ func (cmd *Cmd) Add(args *skel.CmdArgs) (err error) {
 	}
 	scopedLogger = buildLogAttrsWithCNIArgs(scopedLogger, cniArgs)
 
-	c, err := client.NewDefaultClientWithTimeout(defaults.ClientConnectTimeout)
+	cniClient, err := lib.NewDefaultCiliumCniClient(scopedLogger)
 	if err != nil {
-		return fmt.Errorf("unable to connect to Cilium agent: %w", client.Hint(err))
+		return err
 	}
 
-	conf, err := getConfigFromCiliumAgent(c)
+	conf, err := cniClient.GetAgentConfig()
 	if err != nil {
 		return err
 	}
@@ -565,7 +529,7 @@ func (cmd *Cmd) Add(args *skel.CmdArgs) (err error) {
 				}
 			)
 
-			res, err = chainAction.Add(context.TODO(), ctx, c)
+			res, err = chainAction.Add(context.TODO(), ctx, cniClient)
 			if err != nil {
 				scopedLogger.Warn("Chained ADD failed", logfields.Error, err)
 				return err
@@ -610,7 +574,8 @@ func (cmd *Cmd) Add(args *skel.CmdArgs) (err error) {
 		if conf.IpamMode == ipamOption.IPAMDelegatedPlugin {
 			ipam, releaseIPsFunc, err = allocateIPsWithDelegatedPlugin(context.TODO(), conf, n, args.StdinData)
 		} else {
-			ipam, releaseIPsFunc, err = allocateIPsWithCiliumAgent(scopedLogger, c, cniArgs, epConf.IPAMPool())
+			podName := string(cniArgs.K8S_POD_NAMESPACE) + "/" + string(cniArgs.K8S_POD_NAME)
+			ipam, releaseIPsFunc, err = cniClient.AllocateIP(podName, epConf.IPAMPool(), true)
 		}
 
 		// release addresses on failure
@@ -790,7 +755,7 @@ func (cmd *Cmd) Add(args *skel.CmdArgs) (err error) {
 		// Specify that endpoint must be regenerated synchronously. See GH-4409.
 		ep.SyncBuildEndpoint = true
 		var newEp *models.Endpoint
-		if newEp, err = c.EndpointCreate(ep); err != nil {
+		if newEp, err = cniClient.CreateEndpoint(ep); err != nil {
 			scopedLogger.Warn(
 				"Unable to create endpoint",
 				logfields.Error, err,
@@ -862,12 +827,9 @@ func (cmd *Cmd) Del(args *skel.CmdArgs) error {
 	if err = cniTypes.LoadArgs(args.Args, cniArgs); err != nil {
 		return fmt.Errorf("unable to extract CNI arguments: %w", err)
 	}
-	scopedLogger = buildLogAttrsWithCNIArgs(scopedLogger, cniArgs)
 
-	c, err := lib.NewDeletionFallbackClient(scopedLogger)
-	if err != nil {
-		return fmt.Errorf("unable to connect to Cilium agent: %w", err)
-	}
+	scopedLogger = buildLogAttrsWithCNIArgs(scopedLogger, cniArgs)
+	cniClient := lib.NewCiliumCniClient(scopedLogger)
 
 	// If this is a chained plugin, then "delegate" to the special chaining mode and be done.
 	// Note: DEL always has PrevResult set, so that doesn't tell us if we're chained. Given
@@ -883,7 +845,7 @@ func (cmd *Cmd) Del(args *skel.CmdArgs) error {
 			}
 		)
 
-		return chainAction.Delete(context.TODO(), ctx, c)
+		return chainAction.Delete(context.TODO(), ctx, cniClient)
 	} else if err != nil {
 		scopedLogger.Error(
 			"Invalid chaining mode",
@@ -893,7 +855,7 @@ func (cmd *Cmd) Del(args *skel.CmdArgs) error {
 	}
 
 	req := &models.EndpointBatchDeleteRequest{ContainerID: args.ContainerID}
-	if err := c.EndpointDeleteMany(req); err != nil {
+	if err := cniClient.DeleteEndpoints(req); err != nil {
 		// EndpointDeleteMany returns an error in the following scenarios:
 		// DeleteEndpointInvalid: Invalid delete parameters, no need to retry
 		// DeleteEndpointNotFound: No need to retry
@@ -978,9 +940,9 @@ func (cmd *Cmd) Check(args *skel.CmdArgs) error {
 		return cniTypes.NewError(cniTypes.ErrInvalidNetworkConfig, "InvalidArgs",
 			fmt.Sprintf("unable to extract CNI arguments: %s", err))
 	}
-	scopedLogger = buildLogAttrsWithCNIArgs(scopedLogger, cniArgs)
 
-	c, err := client.NewDefaultClientWithTimeout(defaults.ClientConnectTimeout)
+	scopedLogger = buildLogAttrsWithCNIArgs(scopedLogger, cniArgs)
+	cniClient, err := lib.NewDefaultCiliumCniClient(scopedLogger)
 	if err != nil {
 		// use ErrTryAgainLater to tell the runtime that this is not a check failure
 		return cniTypes.NewError(cniTypes.ErrTryAgainLater, "DaemonDown",
@@ -1000,7 +962,7 @@ func (cmd *Cmd) Check(args *skel.CmdArgs) error {
 		)
 
 		// err is nil on success
-		err := chainAction.Check(context.TODO(), ctx, c)
+		err := chainAction.Check(context.TODO(), ctx, cniClient)
 		scopedLogger.Debug(
 			"Chained CHECK returned",
 			logfields.Error, err,
@@ -1030,7 +992,7 @@ func (cmd *Cmd) Check(args *skel.CmdArgs) error {
 		"Asking agent for healthz",
 		logfields.EndpointID, eID,
 	)
-	epHealth, err := c.EndpointHealthGet(eID)
+	epHealth, err := cniClient.GetEndpointHealth(eID)
 	if err != nil {
 		return cniTypes.NewError(types.CniErrHealthzGet, "HealthzFailed",
 			fmt.Sprintf("failed to retrieve container health: %s", err))
@@ -1092,12 +1054,12 @@ func (cmd *Cmd) Status(args *skel.CmdArgs) error {
 		return cniTypes.NewError(cniTypes.ErrInvalidNetworkConfig, "InvalidArgs",
 			fmt.Sprintf("unable to extract CNI arguments: %s", err))
 	}
-	scopedLogger = buildLogAttrsWithCNIArgs(scopedLogger, cniArgs)
 
-	c, err := client.NewDefaultClientWithTimeout(defaults.ClientConnectTimeout)
+	scopedLogger = buildLogAttrsWithCNIArgs(scopedLogger, cniArgs)
+	cniClient, err := lib.NewDefaultCiliumCniClient(scopedLogger)
 	if err != nil {
 		// use ErrTryAgainLater to tell the runtime that this is not a check failure
-		return cniTypes.NewError(types.CniErrPluginNotAvailable, "DaemonDown",
+		return cniTypes.NewError(cniTypes.ErrTryAgainLater, "DaemonDown",
 			fmt.Sprintf("unable to connect to Cilium agent: %s", client.Hint(err)))
 	}
 
@@ -1113,7 +1075,7 @@ func (cmd *Cmd) Status(args *skel.CmdArgs) error {
 		)
 
 		// err is nil on success
-		err := chainAction.Status(context.TODO(), ctx, c)
+		err := chainAction.Status(context.TODO(), ctx, cniClient)
 		scopedLogger.Debug("Chained STATUS returned",
 			logfields.Error, err,
 			logfields.Name, n.Name,
@@ -1125,7 +1087,7 @@ func (cmd *Cmd) Status(args *skel.CmdArgs) error {
 		return err
 	}
 
-	if _, err := c.Daemon.GetHealthz(nil); err != nil {
+	if _, err := cniClient.IsAgentHealthy(); err != nil {
 		return cniTypes.NewError(types.CniErrPluginNotAvailable, "DaemonHealthzFailed",
 			fmt.Sprintf("Cilium agent healthz check failed: %s", client.Hint(err)))
 	}

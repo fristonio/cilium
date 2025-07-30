@@ -10,25 +10,24 @@ import (
 	cniTypesVer "github.com/containernetworking/cni/pkg/types/100"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cilium/cilium/pkg/client"
 	"github.com/cilium/cilium/plugins/cilium-cni/lib"
 )
 
 type pluginTest struct{}
 
-func (p *pluginTest) Add(ctx context.Context, pluginContext PluginContext, cli *client.Client) (res *cniTypesVer.Result, err error) {
+func (p *pluginTest) Add(ctx context.Context, pluginContext PluginContext, client lib.CiliumCniClient) (res *cniTypesVer.Result, err error) {
 	return nil, nil
 }
 
-func (p *pluginTest) Delete(ctx context.Context, pluginContext PluginContext, delClient *lib.DeletionFallbackClient) (err error) {
+func (p *pluginTest) Delete(ctx context.Context, pluginContext PluginContext, client lib.CiliumCniClient) (err error) {
 	return nil
 }
 
-func (p *pluginTest) Check(ctx context.Context, pluginContext PluginContext, cli *client.Client) error {
+func (p *pluginTest) Check(ctx context.Context, pluginContext PluginContext, client lib.CiliumCniClient) error {
 	return nil
 }
 
-func (p *pluginTest) Status(ctx context.Context, pluginContext PluginContext, cli *client.Client) error {
+func (p *pluginTest) Status(ctx context.Context, pluginContext PluginContext, client lib.CiliumCniClient) error {
 	return nil
 }
 
