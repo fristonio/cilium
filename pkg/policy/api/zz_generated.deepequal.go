@@ -400,6 +400,9 @@ func (in *EndpointSelector) DeepEqual(other *EndpointSelector) bool {
 		}
 	}
 
+	if in.SelectionExpression != other.SelectionExpression {
+		return false
+	}
 	if in.cachedLabelSelectorString != other.cachedLabelSelectorString {
 		return false
 	}
@@ -1419,6 +1422,9 @@ func (in *ServiceSelector) DeepEqual(other *ServiceSelector) bool {
 		}
 	}
 
+	if in.SelectionExpression != other.SelectionExpression {
+		return false
+	}
 	if in.cachedLabelSelectorString != other.cachedLabelSelectorString {
 		return false
 	}

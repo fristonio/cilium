@@ -20,6 +20,9 @@ import (
 	k8sConst "github.com/cilium/cilium/pkg/k8s/apis/cilium.io"
 	slim_metav1 "github.com/cilium/cilium/pkg/k8s/slim/k8s/apis/meta/v1"
 	"github.com/cilium/cilium/pkg/labels"
+	labelsSelector "github.com/cilium/cilium/pkg/labels/selector"
+	"github.com/cilium/cilium/pkg/logging"
+	"github.com/cilium/cilium/pkg/logging/logfields"
 	"github.com/cilium/cilium/pkg/policy/api"
 )
 
@@ -268,10 +271,25 @@ type LabelSelector struct {
 	requirements Requirements
 	class        string
 	namespaces   []string // allowed namespaces, or nil for no namespace requirement
+	// expression is the compiled Calico-compatible SelectionExpression, or nil
+	// if no SelectionExpression was set on the originating EndpointSelector.
+	// +deepequal-gen=false
+	expression *labelsSelector.Selector
 }
 
 func (p *LabelSelector) MarshalJSON() ([]byte, error) {
-	return json.Marshal(p.ls)
+	out := struct {
+		LabelSelector       *slim_metav1.LabelSelector
+		SelectionExpression string `json:"selectionExpression,omitempty"`
+	}{
+		LabelSelector: p.ls,
+	}
+
+	if p.expression != nil {
+		out.SelectionExpression = p.expression.NormalizedString()
+	}
+
+	return json.Marshal(out)
 }
 
 func NewLabelSelector(es api.EndpointSelector) *LabelSelector {
@@ -291,12 +309,29 @@ func NewLabelSelector(es api.EndpointSelector) *LabelSelector {
 		}
 	}
 
+	var expr *labelsSelector.Selector
+	if !es.SelectionExpression.IsZero() {
+		var err error
+		expr, err = labelsSelector.Parse(string(es.SelectionExpression))
+		if err != nil {
+			// The expression should have been validated during Sanitize(). Log
+			// and proceed without the expression so matching falls back to the
+			// k8s LabelSelector only.
+			// slogloggercheck: it's safe to use the default logger here as it has been initialized by the program up to this point.
+			logging.DefaultSlogLogger.Error("Failed to compile SelectionExpression; ignoring expression",
+				logfields.Error, err,
+				"selectionExpression", string(es.SelectionExpression),
+			)
+		}
+	}
+
 	return &LabelSelector{
 		key:          key,
 		ls:           es.LabelSelector,
 		requirements: requirements,
 		class:        class,
 		namespaces:   namespaces,
+		expression:   expr,
 	}
 }
 
@@ -322,16 +357,24 @@ func (p *LabelSelector) String() string {
 }
 
 func (p *LabelSelector) IsWildcard() bool {
-	return len(p.requirements) == 0
+	return len(p.requirements) == 0 && p.expression == nil
 }
 
 func (p *LabelSelector) SelectedNamespaces() []string {
 	return p.namespaces
 }
 
-// matchesLabels returns true if the CachedSelector matches given labels.
+// Matches returns true if the CachedSelector matches given labels.
+// Both the k8s LabelSelector requirements and the SelectionExpression (if any)
+// must be satisfied (AND semantics).
 func (p *LabelSelector) Matches(lbls labels.LabelArray) bool {
-	return MatchesRequirements(p.requirements, lbls)
+	if !MatchesRequirements(p.requirements, lbls) {
+		return false
+	}
+	if p.expression != nil {
+		return p.expression.Matches(lbls)
+	}
+	return true
 }
 
 func (p *LabelSelector) GetFQDNSelector() (*api.FQDNSelector, bool) {
@@ -350,7 +393,13 @@ func (p *LabelSelector) MetricsClass() string {
 // Selector interface are defined for this use below.
 
 func Matches[T labels.LabelMatcher](s *LabelSelector, ls T) bool {
-	return MatchesRequirements(s.requirements, ls)
+	if !MatchesRequirements(s.requirements, ls) {
+		return false
+	}
+	if s.expression != nil {
+		return s.expression.Matches(ls)
+	}
+	return true
 }
 
 // HasKeyPrefix checks if the label selector contains the given key prefix in

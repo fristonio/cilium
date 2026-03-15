@@ -10,11 +10,35 @@ import (
 
 	slim_metav1 "github.com/cilium/cilium/pkg/k8s/slim/k8s/apis/meta/v1"
 	"github.com/cilium/cilium/pkg/labels"
+	"github.com/cilium/cilium/pkg/labels/selector"
 )
+
+// SelectorExpression is a Calico-compatible selector expression string.
+// An empty SelectorExpression matches nothing (i.e. is absent).
+type SelectorExpression string
+
+// IsZero reports whether the expression is empty (absent).
+func (s SelectorExpression) IsZero() bool { return len(s) == 0 }
 
 // EndpointSelector is a wrapper for k8s LabelSelector.
 type EndpointSelector struct {
 	*slim_metav1.LabelSelector `json:",inline"`
+
+	// SelectionExpression is an optional Calico-compatible selector expression.
+	// When set, an endpoint must satisfy both this expression and the
+	// k8s LabelSelector (AND semantics). If only the expression is needed, the
+	// LabelSelector may be left empty (which by itself matches all endpoints).
+	//
+	// The language supports: all(), global(), has(key), key == "v", key != "v",
+	// key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+	// key ends with "s", key contains "sub", and the boolean operators
+	// &&, ||, ! and grouping with parentheses.
+	//
+	// Label keys may optionally include a Cilium source prefix separated by ':'
+	// (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+	//
+	// +kubebuilder:validation:Optional
+	SelectionExpression SelectorExpression `json:"selectionExpression,omitempty"`
 
 	// cachedLabelSelectorString is the cached representation of the
 	// LabelSelector for this EndpointSelector. It is populated when
@@ -27,17 +51,27 @@ type EndpointSelector struct {
 	Generated bool `json:"-"`
 }
 
+// buildSelectorKey constructs the full selector key from the k8s LabelSelector
+// string and the optional SelectionExpression. This is the canonical form stored
+// in cachedLabelSelectorString and returned by SelectorKey.
+func buildSelectorKey(ls *slim_metav1.LabelSelector, expr SelectorExpression) string {
+	base := ls.String()
+	if !expr.IsZero() {
+		return base + " && (" + string(expr) + ")"
+	}
+	return base
+}
+
 func (n EndpointSelector) SelectorKey() string {
-	// Use pre-computed string when available
 	if n.cachedLabelSelectorString != "" {
 		return n.cachedLabelSelectorString
 	}
-	return n.LabelSelector.String()
+	return buildSelectorKey(n.LabelSelector, n.SelectionExpression)
 }
 
 // Used for `omitzero` json tag.
 func (n *EndpointSelector) IsZero() bool {
-	return n.LabelSelector == nil
+	return n.LabelSelector == nil && n.SelectionExpression.IsZero()
 }
 
 // LabelSelectorString returns a user-friendly string representation of
@@ -63,8 +97,16 @@ func (n EndpointSelector) CachedString() string {
 
 // UnmarshalJSON unmarshals the endpoint selector from the byte array.
 func (n *EndpointSelector) UnmarshalJSON(b []byte) error {
+	// Always initialize LabelSelector to distinguish an empty selector
+	// (matches all endpoints) from an absent selector, matching historical
+	// behavior relied on by policyapi.Rule field disambiguation.
 	n.LabelSelector = &slim_metav1.LabelSelector{}
-	return json.Unmarshal(b, n.LabelSelector)
+	// Use a type alias to invoke standard JSON unmarshaling without triggering
+	// this method recursively. The embedded *LabelSelector fields are inlined
+	// at the JSON level (json:",inline"), and SelectionExpression carries its
+	// own tag, so the standard decoder handles everything correctly.
+	type plain EndpointSelector
+	return json.Unmarshal(b, (*plain)(n))
 }
 
 // HasKeyPrefix checks if the endpoint selector contains the given key prefix in
@@ -132,9 +174,11 @@ func NewESFromMatchRequirements(matchLabels map[string]string, reqs []slim_metav
 		MatchLabels:      matchLabels,
 		MatchExpressions: reqs,
 	}
+	// SelectionExpression is always empty for programmatically constructed
+	// selectors, so buildSelectorKey just returns labelSelector.String().
 	return EndpointSelector{
 		LabelSelector:             labelSelector,
-		cachedLabelSelectorString: labelSelector.String(),
+		cachedLabelSelectorString: buildSelectorKey(labelSelector, ""),
 	}
 }
 
@@ -199,7 +243,7 @@ func (n *EndpointSelector) AddMatch(key, value string) {
 		n.MatchLabels = map[string]string{}
 	}
 	n.MatchLabels[key] = value
-	n.cachedLabelSelectorString = n.LabelSelector.String()
+	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression)
 }
 
 // AddMatchExpression adds a match expression to label selector of the endpoint selector.
@@ -209,13 +253,19 @@ func (n *EndpointSelector) AddMatchExpression(key string, op slim_metav1.LabelSe
 		Operator: op,
 		Values:   values,
 	})
-	n.cachedLabelSelectorString = n.LabelSelector.String()
+	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression)
+}
+
+func (n *EndpointSelector) SetSelectionExpression(expr SelectorExpression) {
+	n.SelectionExpression = expr
+	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression)
 }
 
 // IsWildcard returns true if the endpoint selector selects all endpoints.
 func (n *EndpointSelector) IsWildcard() bool {
 	return n.LabelSelector != nil &&
-		len(n.LabelSelector.MatchLabels)+len(n.LabelSelector.MatchExpressions) == 0
+		len(n.LabelSelector.MatchLabels)+len(n.LabelSelector.MatchExpressions) == 0 &&
+		n.SelectionExpression.IsZero()
 }
 
 func (n *EndpointSelector) Sanitize() error {
@@ -224,9 +274,15 @@ func (n *EndpointSelector) Sanitize() error {
 		return fmt.Errorf("invalid label selector: %w", errList.ToAggregate())
 	}
 
+	if !n.SelectionExpression.IsZero() {
+		if _, err := selector.Parse(string(n.SelectionExpression)); err != nil {
+			return fmt.Errorf("invalid selectionExpression: %w", err)
+		}
+	}
+
 	es := NewESFromK8sLabelSelector(labels.LabelSourceAnyKeyPrefix, n.LabelSelector)
-	n.cachedLabelSelectorString = es.cachedLabelSelectorString
 	n.LabelSelector = es.LabelSelector
+	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression)
 
 	return nil
 }

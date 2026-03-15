@@ -302,6 +302,21 @@ spec:
                                   map is equivalent to an element of matchExpressions, whose key field is "key", the
                                   operator is "In", and the values array contains only "value". The requirements are ANDed.
                                 type: object
+                              selectionExpression:
+                                description: |-
+                                  SelectionExpression is an optional Calico-compatible selector expression.
+                                  When set, an endpoint must satisfy both this expression and the
+                                  k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                  LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                  The language supports: all(), global(), has(key), key == "v", key != "v",
+                                  key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                  key ends with "s", key contains "sub", and the boolean operators
+                                  &&, ||, ! and grouping with parentheses.
+
+                                  Label keys may optionally include a Cilium source prefix separated by ':'
+                                  (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                type: string
                             type: object
                             x-kubernetes-map-type: atomic
                           except:
@@ -387,6 +402,21 @@ spec:
                               map is equivalent to an element of matchExpressions, whose key field is "key", the
                               operator is "In", and the values array contains only "value". The requirements are ANDed.
                             type: object
+                          selectionExpression:
+                            description: |-
+                              SelectionExpression is an optional Calico-compatible selector expression.
+                              When set, an endpoint must satisfy both this expression and the
+                              k8s LabelSelector (AND semantics). If only the expression is needed, the
+                              LabelSelector may be left empty (which by itself matches all endpoints).
+
+                              The language supports: all(), global(), has(key), key == "v", key != "v",
+                              key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                              key ends with "s", key contains "sub", and the boolean operators
+                              &&, ||, ! and grouping with parentheses.
+
+                              Label keys may optionally include a Cilium source prefix separated by ':'
+                              (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       type: array
@@ -568,6 +598,21 @@ spec:
                               map is equivalent to an element of matchExpressions, whose key field is "key", the
                               operator is "In", and the values array contains only "value". The requirements are ANDed.
                             type: object
+                          selectionExpression:
+                            description: |-
+                              SelectionExpression is an optional Calico-compatible selector expression.
+                              When set, an endpoint must satisfy both this expression and the
+                              k8s LabelSelector (AND semantics). If only the expression is needed, the
+                              LabelSelector may be left empty (which by itself matches all endpoints).
+
+                              The language supports: all(), global(), has(key), key == "v", key != "v",
+                              key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                              key ends with "s", key contains "sub", and the boolean operators
+                              &&, ||, ! and grouping with parentheses.
+
+                              Label keys may optionally include a Cilium source prefix separated by ':'
+                              (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       type: array
@@ -1167,6 +1212,21 @@ spec:
                                       map is equivalent to an element of matchExpressions, whose key field is "key", the
                                       operator is "In", and the values array contains only "value". The requirements are ANDed.
                                     type: object
+                                  selectionExpression:
+                                    description: |-
+                                      SelectionExpression is an optional Calico-compatible selector expression.
+                                      When set, an endpoint must satisfy both this expression and the
+                                      k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                      LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                      The language supports: all(), global(), has(key), key == "v", key != "v",
+                                      key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                      key ends with "s", key contains "sub", and the boolean operators
+                                      &&, ||, ! and grouping with parentheses.
+
+                                      Label keys may optionally include a Cilium source prefix separated by ':'
+                                      (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                    type: string
                                 type: object
                                 x-kubernetes-map-type: atomic
                             required:
@@ -1379,6 +1439,21 @@ spec:
                                   map is equivalent to an element of matchExpressions, whose key field is "key", the
                                   operator is "In", and the values array contains only "value". The requirements are ANDed.
                                 type: object
+                              selectionExpression:
+                                description: |-
+                                  SelectionExpression is an optional Calico-compatible selector expression.
+                                  When set, an endpoint must satisfy both this expression and the
+                                  k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                  LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                  The language supports: all(), global(), has(key), key == "v", key != "v",
+                                  key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                  key ends with "s", key contains "sub", and the boolean operators
+                                  &&, ||, ! and grouping with parentheses.
+
+                                  Label keys may optionally include a Cilium source prefix separated by ':'
+                                  (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                type: string
                             type: object
                             x-kubernetes-map-type: atomic
                           except:
@@ -1464,6 +1539,21 @@ spec:
                               map is equivalent to an element of matchExpressions, whose key field is "key", the
                               operator is "In", and the values array contains only "value". The requirements are ANDed.
                             type: object
+                          selectionExpression:
+                            description: |-
+                              SelectionExpression is an optional Calico-compatible selector expression.
+                              When set, an endpoint must satisfy both this expression and the
+                              k8s LabelSelector (AND semantics). If only the expression is needed, the
+                              LabelSelector may be left empty (which by itself matches all endpoints).
+
+                              The language supports: all(), global(), has(key), key == "v", key != "v",
+                              key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                              key ends with "s", key contains "sub", and the boolean operators
+                              &&, ||, ! and grouping with parentheses.
+
+                              Label keys may optionally include a Cilium source prefix separated by ':'
+                              (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       type: array
@@ -1586,6 +1676,21 @@ spec:
                               map is equivalent to an element of matchExpressions, whose key field is "key", the
                               operator is "In", and the values array contains only "value". The requirements are ANDed.
                             type: object
+                          selectionExpression:
+                            description: |-
+                              SelectionExpression is an optional Calico-compatible selector expression.
+                              When set, an endpoint must satisfy both this expression and the
+                              k8s LabelSelector (AND semantics). If only the expression is needed, the
+                              LabelSelector may be left empty (which by itself matches all endpoints).
+
+                              The language supports: all(), global(), has(key), key == "v", key != "v",
+                              key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                              key ends with "s", key contains "sub", and the boolean operators
+                              &&, ||, ! and grouping with parentheses.
+
+                              Label keys may optionally include a Cilium source prefix separated by ':'
+                              (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       type: array
@@ -1733,6 +1838,21 @@ spec:
                                       map is equivalent to an element of matchExpressions, whose key field is "key", the
                                       operator is "In", and the values array contains only "value". The requirements are ANDed.
                                     type: object
+                                  selectionExpression:
+                                    description: |-
+                                      SelectionExpression is an optional Calico-compatible selector expression.
+                                      When set, an endpoint must satisfy both this expression and the
+                                      k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                      LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                      The language supports: all(), global(), has(key), key == "v", key != "v",
+                                      key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                      key ends with "s", key contains "sub", and the boolean operators
+                                      &&, ||, ! and grouping with parentheses.
+
+                                      Label keys may optionally include a Cilium source prefix separated by ':'
+                                      (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                    type: string
                                 type: object
                                 x-kubernetes-map-type: atomic
                             required:
@@ -1827,6 +1947,21 @@ spec:
                       map is equivalent to an element of matchExpressions, whose key field is "key", the
                       operator is "In", and the values array contains only "value". The requirements are ANDed.
                     type: object
+                  selectionExpression:
+                    description: |-
+                      SelectionExpression is an optional Calico-compatible selector expression.
+                      When set, an endpoint must satisfy both this expression and the
+                      k8s LabelSelector (AND semantics). If only the expression is needed, the
+                      LabelSelector may be left empty (which by itself matches all endpoints).
+
+                      The language supports: all(), global(), has(key), key == "v", key != "v",
+                      key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                      key ends with "s", key contains "sub", and the boolean operators
+                      &&, ||, ! and grouping with parentheses.
+
+                      Label keys may optionally include a Cilium source prefix separated by ':'
+                      (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                    type: string
                 type: object
                 x-kubernetes-map-type: atomic
               ingress:
@@ -1985,6 +2120,21 @@ spec:
                                   map is equivalent to an element of matchExpressions, whose key field is "key", the
                                   operator is "In", and the values array contains only "value". The requirements are ANDed.
                                 type: object
+                              selectionExpression:
+                                description: |-
+                                  SelectionExpression is an optional Calico-compatible selector expression.
+                                  When set, an endpoint must satisfy both this expression and the
+                                  k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                  LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                  The language supports: all(), global(), has(key), key == "v", key != "v",
+                                  key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                  key ends with "s", key contains "sub", and the boolean operators
+                                  &&, ||, ! and grouping with parentheses.
+
+                                  Label keys may optionally include a Cilium source prefix separated by ':'
+                                  (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                type: string
                             type: object
                             x-kubernetes-map-type: atomic
                           except:
@@ -2071,6 +2221,21 @@ spec:
                               map is equivalent to an element of matchExpressions, whose key field is "key", the
                               operator is "In", and the values array contains only "value". The requirements are ANDed.
                             type: object
+                          selectionExpression:
+                            description: |-
+                              SelectionExpression is an optional Calico-compatible selector expression.
+                              When set, an endpoint must satisfy both this expression and the
+                              k8s LabelSelector (AND semantics). If only the expression is needed, the
+                              LabelSelector may be left empty (which by itself matches all endpoints).
+
+                              The language supports: all(), global(), has(key), key == "v", key != "v",
+                              key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                              key ends with "s", key contains "sub", and the boolean operators
+                              &&, ||, ! and grouping with parentheses.
+
+                              Label keys may optionally include a Cilium source prefix separated by ':'
+                              (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       type: array
@@ -2194,6 +2359,21 @@ spec:
                               map is equivalent to an element of matchExpressions, whose key field is "key", the
                               operator is "In", and the values array contains only "value". The requirements are ANDed.
                             type: object
+                          selectionExpression:
+                            description: |-
+                              SelectionExpression is an optional Calico-compatible selector expression.
+                              When set, an endpoint must satisfy both this expression and the
+                              k8s LabelSelector (AND semantics). If only the expression is needed, the
+                              LabelSelector may be left empty (which by itself matches all endpoints).
+
+                              The language supports: all(), global(), has(key), key == "v", key != "v",
+                              key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                              key ends with "s", key contains "sub", and the boolean operators
+                              &&, ||, ! and grouping with parentheses.
+
+                              Label keys may optionally include a Cilium source prefix separated by ':'
+                              (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       type: array
@@ -2917,6 +3097,21 @@ spec:
                                   map is equivalent to an element of matchExpressions, whose key field is "key", the
                                   operator is "In", and the values array contains only "value". The requirements are ANDed.
                                 type: object
+                              selectionExpression:
+                                description: |-
+                                  SelectionExpression is an optional Calico-compatible selector expression.
+                                  When set, an endpoint must satisfy both this expression and the
+                                  k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                  LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                  The language supports: all(), global(), has(key), key == "v", key != "v",
+                                  key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                  key ends with "s", key contains "sub", and the boolean operators
+                                  &&, ||, ! and grouping with parentheses.
+
+                                  Label keys may optionally include a Cilium source prefix separated by ':'
+                                  (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                type: string
                             type: object
                             x-kubernetes-map-type: atomic
                           except:
@@ -3003,6 +3198,21 @@ spec:
                               map is equivalent to an element of matchExpressions, whose key field is "key", the
                               operator is "In", and the values array contains only "value". The requirements are ANDed.
                             type: object
+                          selectionExpression:
+                            description: |-
+                              SelectionExpression is an optional Calico-compatible selector expression.
+                              When set, an endpoint must satisfy both this expression and the
+                              k8s LabelSelector (AND semantics). If only the expression is needed, the
+                              LabelSelector may be left empty (which by itself matches all endpoints).
+
+                              The language supports: all(), global(), has(key), key == "v", key != "v",
+                              key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                              key ends with "s", key contains "sub", and the boolean operators
+                              &&, ||, ! and grouping with parentheses.
+
+                              Label keys may optionally include a Cilium source prefix separated by ':'
+                              (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       type: array
@@ -3126,6 +3336,21 @@ spec:
                               map is equivalent to an element of matchExpressions, whose key field is "key", the
                               operator is "In", and the values array contains only "value". The requirements are ANDed.
                             type: object
+                          selectionExpression:
+                            description: |-
+                              SelectionExpression is an optional Calico-compatible selector expression.
+                              When set, an endpoint must satisfy both this expression and the
+                              k8s LabelSelector (AND semantics). If only the expression is needed, the
+                              LabelSelector may be left empty (which by itself matches all endpoints).
+
+                              The language supports: all(), global(), has(key), key == "v", key != "v",
+                              key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                              key ends with "s", key contains "sub", and the boolean operators
+                              &&, ||, ! and grouping with parentheses.
+
+                              Label keys may optionally include a Cilium source prefix separated by ':'
+                              (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       type: array
@@ -3342,6 +3567,21 @@ spec:
                       map is equivalent to an element of matchExpressions, whose key field is "key", the
                       operator is "In", and the values array contains only "value". The requirements are ANDed.
                     type: object
+                  selectionExpression:
+                    description: |-
+                      SelectionExpression is an optional Calico-compatible selector expression.
+                      When set, an endpoint must satisfy both this expression and the
+                      k8s LabelSelector (AND semantics). If only the expression is needed, the
+                      LabelSelector may be left empty (which by itself matches all endpoints).
+
+                      The language supports: all(), global(), has(key), key == "v", key != "v",
+                      key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                      key ends with "s", key contains "sub", and the boolean operators
+                      &&, ||, ! and grouping with parentheses.
+
+                      Label keys may optionally include a Cilium source prefix separated by ':'
+                      (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                    type: string
                 type: object
                 x-kubernetes-map-type: atomic
             type: object
@@ -3610,6 +3850,21 @@ spec:
                                     map is equivalent to an element of matchExpressions, whose key field is "key", the
                                     operator is "In", and the values array contains only "value". The requirements are ANDed.
                                   type: object
+                                selectionExpression:
+                                  description: |-
+                                    SelectionExpression is an optional Calico-compatible selector expression.
+                                    When set, an endpoint must satisfy both this expression and the
+                                    k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                    LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                    The language supports: all(), global(), has(key), key == "v", key != "v",
+                                    key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                    key ends with "s", key contains "sub", and the boolean operators
+                                    &&, ||, ! and grouping with parentheses.
+
+                                    Label keys may optionally include a Cilium source prefix separated by ':'
+                                    (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                  type: string
                               type: object
                               x-kubernetes-map-type: atomic
                             except:
@@ -3695,6 +3950,21 @@ spec:
                                 map is equivalent to an element of matchExpressions, whose key field is "key", the
                                 operator is "In", and the values array contains only "value". The requirements are ANDed.
                               type: object
+                            selectionExpression:
+                              description: |-
+                                SelectionExpression is an optional Calico-compatible selector expression.
+                                When set, an endpoint must satisfy both this expression and the
+                                k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                The language supports: all(), global(), has(key), key == "v", key != "v",
+                                key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                key ends with "s", key contains "sub", and the boolean operators
+                                &&, ||, ! and grouping with parentheses.
+
+                                Label keys may optionally include a Cilium source prefix separated by ':'
+                                (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                              type: string
                           type: object
                           x-kubernetes-map-type: atomic
                         type: array
@@ -3876,6 +4146,21 @@ spec:
                                 map is equivalent to an element of matchExpressions, whose key field is "key", the
                                 operator is "In", and the values array contains only "value". The requirements are ANDed.
                               type: object
+                            selectionExpression:
+                              description: |-
+                                SelectionExpression is an optional Calico-compatible selector expression.
+                                When set, an endpoint must satisfy both this expression and the
+                                k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                The language supports: all(), global(), has(key), key == "v", key != "v",
+                                key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                key ends with "s", key contains "sub", and the boolean operators
+                                &&, ||, ! and grouping with parentheses.
+
+                                Label keys may optionally include a Cilium source prefix separated by ':'
+                                (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                              type: string
                           type: object
                           x-kubernetes-map-type: atomic
                         type: array
@@ -4475,6 +4760,21 @@ spec:
                                         map is equivalent to an element of matchExpressions, whose key field is "key", the
                                         operator is "In", and the values array contains only "value". The requirements are ANDed.
                                       type: object
+                                    selectionExpression:
+                                      description: |-
+                                        SelectionExpression is an optional Calico-compatible selector expression.
+                                        When set, an endpoint must satisfy both this expression and the
+                                        k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                        LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                        The language supports: all(), global(), has(key), key == "v", key != "v",
+                                        key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                        key ends with "s", key contains "sub", and the boolean operators
+                                        &&, ||, ! and grouping with parentheses.
+
+                                        Label keys may optionally include a Cilium source prefix separated by ':'
+                                        (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                      type: string
                                   type: object
                                   x-kubernetes-map-type: atomic
                               required:
@@ -4688,6 +4988,21 @@ spec:
                                     map is equivalent to an element of matchExpressions, whose key field is "key", the
                                     operator is "In", and the values array contains only "value". The requirements are ANDed.
                                   type: object
+                                selectionExpression:
+                                  description: |-
+                                    SelectionExpression is an optional Calico-compatible selector expression.
+                                    When set, an endpoint must satisfy both this expression and the
+                                    k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                    LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                    The language supports: all(), global(), has(key), key == "v", key != "v",
+                                    key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                    key ends with "s", key contains "sub", and the boolean operators
+                                    &&, ||, ! and grouping with parentheses.
+
+                                    Label keys may optionally include a Cilium source prefix separated by ':'
+                                    (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                  type: string
                               type: object
                               x-kubernetes-map-type: atomic
                             except:
@@ -4773,6 +5088,21 @@ spec:
                                 map is equivalent to an element of matchExpressions, whose key field is "key", the
                                 operator is "In", and the values array contains only "value". The requirements are ANDed.
                               type: object
+                            selectionExpression:
+                              description: |-
+                                SelectionExpression is an optional Calico-compatible selector expression.
+                                When set, an endpoint must satisfy both this expression and the
+                                k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                The language supports: all(), global(), has(key), key == "v", key != "v",
+                                key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                key ends with "s", key contains "sub", and the boolean operators
+                                &&, ||, ! and grouping with parentheses.
+
+                                Label keys may optionally include a Cilium source prefix separated by ':'
+                                (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                              type: string
                           type: object
                           x-kubernetes-map-type: atomic
                         type: array
@@ -4895,6 +5225,21 @@ spec:
                                 map is equivalent to an element of matchExpressions, whose key field is "key", the
                                 operator is "In", and the values array contains only "value". The requirements are ANDed.
                               type: object
+                            selectionExpression:
+                              description: |-
+                                SelectionExpression is an optional Calico-compatible selector expression.
+                                When set, an endpoint must satisfy both this expression and the
+                                k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                The language supports: all(), global(), has(key), key == "v", key != "v",
+                                key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                key ends with "s", key contains "sub", and the boolean operators
+                                &&, ||, ! and grouping with parentheses.
+
+                                Label keys may optionally include a Cilium source prefix separated by ':'
+                                (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                              type: string
                           type: object
                           x-kubernetes-map-type: atomic
                         type: array
@@ -5042,6 +5387,21 @@ spec:
                                         map is equivalent to an element of matchExpressions, whose key field is "key", the
                                         operator is "In", and the values array contains only "value". The requirements are ANDed.
                                       type: object
+                                    selectionExpression:
+                                      description: |-
+                                        SelectionExpression is an optional Calico-compatible selector expression.
+                                        When set, an endpoint must satisfy both this expression and the
+                                        k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                        LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                        The language supports: all(), global(), has(key), key == "v", key != "v",
+                                        key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                        key ends with "s", key contains "sub", and the boolean operators
+                                        &&, ||, ! and grouping with parentheses.
+
+                                        Label keys may optionally include a Cilium source prefix separated by ':'
+                                        (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                      type: string
                                   type: object
                                   x-kubernetes-map-type: atomic
                               required:
@@ -5136,6 +5496,21 @@ spec:
                         map is equivalent to an element of matchExpressions, whose key field is "key", the
                         operator is "In", and the values array contains only "value". The requirements are ANDed.
                       type: object
+                    selectionExpression:
+                      description: |-
+                        SelectionExpression is an optional Calico-compatible selector expression.
+                        When set, an endpoint must satisfy both this expression and the
+                        k8s LabelSelector (AND semantics). If only the expression is needed, the
+                        LabelSelector may be left empty (which by itself matches all endpoints).
+
+                        The language supports: all(), global(), has(key), key == "v", key != "v",
+                        key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                        key ends with "s", key contains "sub", and the boolean operators
+                        &&, ||, ! and grouping with parentheses.
+
+                        Label keys may optionally include a Cilium source prefix separated by ':'
+                        (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                      type: string
                   type: object
                   x-kubernetes-map-type: atomic
                 ingress:
@@ -5294,6 +5669,21 @@ spec:
                                     map is equivalent to an element of matchExpressions, whose key field is "key", the
                                     operator is "In", and the values array contains only "value". The requirements are ANDed.
                                   type: object
+                                selectionExpression:
+                                  description: |-
+                                    SelectionExpression is an optional Calico-compatible selector expression.
+                                    When set, an endpoint must satisfy both this expression and the
+                                    k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                    LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                    The language supports: all(), global(), has(key), key == "v", key != "v",
+                                    key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                    key ends with "s", key contains "sub", and the boolean operators
+                                    &&, ||, ! and grouping with parentheses.
+
+                                    Label keys may optionally include a Cilium source prefix separated by ':'
+                                    (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                  type: string
                               type: object
                               x-kubernetes-map-type: atomic
                             except:
@@ -5380,6 +5770,21 @@ spec:
                                 map is equivalent to an element of matchExpressions, whose key field is "key", the
                                 operator is "In", and the values array contains only "value". The requirements are ANDed.
                               type: object
+                            selectionExpression:
+                              description: |-
+                                SelectionExpression is an optional Calico-compatible selector expression.
+                                When set, an endpoint must satisfy both this expression and the
+                                k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                The language supports: all(), global(), has(key), key == "v", key != "v",
+                                key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                key ends with "s", key contains "sub", and the boolean operators
+                                &&, ||, ! and grouping with parentheses.
+
+                                Label keys may optionally include a Cilium source prefix separated by ':'
+                                (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                              type: string
                           type: object
                           x-kubernetes-map-type: atomic
                         type: array
@@ -5503,6 +5908,21 @@ spec:
                                 map is equivalent to an element of matchExpressions, whose key field is "key", the
                                 operator is "In", and the values array contains only "value". The requirements are ANDed.
                               type: object
+                            selectionExpression:
+                              description: |-
+                                SelectionExpression is an optional Calico-compatible selector expression.
+                                When set, an endpoint must satisfy both this expression and the
+                                k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                The language supports: all(), global(), has(key), key == "v", key != "v",
+                                key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                key ends with "s", key contains "sub", and the boolean operators
+                                &&, ||, ! and grouping with parentheses.
+
+                                Label keys may optionally include a Cilium source prefix separated by ':'
+                                (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                              type: string
                           type: object
                           x-kubernetes-map-type: atomic
                         type: array
@@ -6227,6 +6647,21 @@ spec:
                                     map is equivalent to an element of matchExpressions, whose key field is "key", the
                                     operator is "In", and the values array contains only "value". The requirements are ANDed.
                                   type: object
+                                selectionExpression:
+                                  description: |-
+                                    SelectionExpression is an optional Calico-compatible selector expression.
+                                    When set, an endpoint must satisfy both this expression and the
+                                    k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                    LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                    The language supports: all(), global(), has(key), key == "v", key != "v",
+                                    key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                    key ends with "s", key contains "sub", and the boolean operators
+                                    &&, ||, ! and grouping with parentheses.
+
+                                    Label keys may optionally include a Cilium source prefix separated by ':'
+                                    (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                                  type: string
                               type: object
                               x-kubernetes-map-type: atomic
                             except:
@@ -6313,6 +6748,21 @@ spec:
                                 map is equivalent to an element of matchExpressions, whose key field is "key", the
                                 operator is "In", and the values array contains only "value". The requirements are ANDed.
                               type: object
+                            selectionExpression:
+                              description: |-
+                                SelectionExpression is an optional Calico-compatible selector expression.
+                                When set, an endpoint must satisfy both this expression and the
+                                k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                The language supports: all(), global(), has(key), key == "v", key != "v",
+                                key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                key ends with "s", key contains "sub", and the boolean operators
+                                &&, ||, ! and grouping with parentheses.
+
+                                Label keys may optionally include a Cilium source prefix separated by ':'
+                                (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                              type: string
                           type: object
                           x-kubernetes-map-type: atomic
                         type: array
@@ -6436,6 +6886,21 @@ spec:
                                 map is equivalent to an element of matchExpressions, whose key field is "key", the
                                 operator is "In", and the values array contains only "value". The requirements are ANDed.
                               type: object
+                            selectionExpression:
+                              description: |-
+                                SelectionExpression is an optional Calico-compatible selector expression.
+                                When set, an endpoint must satisfy both this expression and the
+                                k8s LabelSelector (AND semantics). If only the expression is needed, the
+                                LabelSelector may be left empty (which by itself matches all endpoints).
+
+                                The language supports: all(), global(), has(key), key == "v", key != "v",
+                                key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                                key ends with "s", key contains "sub", and the boolean operators
+                                &&, ||, ! and grouping with parentheses.
+
+                                Label keys may optionally include a Cilium source prefix separated by ':'
+                                (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                              type: string
                           type: object
                           x-kubernetes-map-type: atomic
                         type: array
@@ -6655,6 +7120,21 @@ spec:
                         map is equivalent to an element of matchExpressions, whose key field is "key", the
                         operator is "In", and the values array contains only "value". The requirements are ANDed.
                       type: object
+                    selectionExpression:
+                      description: |-
+                        SelectionExpression is an optional Calico-compatible selector expression.
+                        When set, an endpoint must satisfy both this expression and the
+                        k8s LabelSelector (AND semantics). If only the expression is needed, the
+                        LabelSelector may be left empty (which by itself matches all endpoints).
+
+                        The language supports: all(), global(), has(key), key == "v", key != "v",
+                        key in {"v1","v2"}, key not in {"v1","v2"}, key starts with "p",
+                        key ends with "s", key contains "sub", and the boolean operators
+                        &&, ||, ! and grouping with parentheses.
+
+                        Label keys may optionally include a Cilium source prefix separated by ':'
+                        (e.g. "k8s:app"). Keys without a source prefix match labels from any source.
+                      type: string
                   type: object
                   x-kubernetes-map-type: atomic
               type: object
