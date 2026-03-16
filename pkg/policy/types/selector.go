@@ -275,18 +275,25 @@ type LabelSelector struct {
 	// if no SelectionExpression was set on the originating EndpointSelector.
 	// +deepequal-gen=false
 	expression *labelsSelector.Selector
+	// celExpression is the compiled CEL SelectionExpressionCEL, or nil if none was set.
+	// +deepequal-gen=false
+	celExpression *labelsSelector.CELSelector
 }
 
 func (p *LabelSelector) MarshalJSON() ([]byte, error) {
 	out := struct {
-		LabelSelector       *slim_metav1.LabelSelector
-		SelectionExpression string `json:"selectionExpression,omitempty"`
+		LabelSelector          *slim_metav1.LabelSelector
+		SelectionExpression    string `json:"selectionExpression,omitempty"`
+		SelectionExpressionCEL string `json:"selectionExpressionCEL,omitempty"`
 	}{
 		LabelSelector: p.ls,
 	}
 
 	if p.expression != nil {
 		out.SelectionExpression = p.expression.NormalizedString()
+	}
+	if p.celExpression != nil {
+		out.SelectionExpressionCEL = p.celExpression.String()
 	}
 
 	return json.Marshal(out)
@@ -325,13 +332,30 @@ func NewLabelSelector(es api.EndpointSelector) *LabelSelector {
 		}
 	}
 
+	var celExpr *labelsSelector.CELSelector
+	if !es.SelectionExpressionCEL.IsZero() {
+		var err error
+		celExpr, err = labelsSelector.ParseCEL(string(es.SelectionExpressionCEL))
+		if err != nil {
+			// The expression should have been validated during Sanitize(). Log
+			// and proceed without the expression so matching falls back to the
+			// k8s LabelSelector only.
+			// slogloggercheck: it's safe to use the default logger here as it has been initialized by the program up to this point.
+			logging.DefaultSlogLogger.Error("Failed to compile SelectionExpressionCEL; ignoring expression",
+				logfields.Error, err,
+				"selectionExpressionCEL", string(es.SelectionExpressionCEL),
+			)
+		}
+	}
+
 	return &LabelSelector{
-		key:          key,
-		ls:           es.LabelSelector,
-		requirements: requirements,
-		class:        class,
-		namespaces:   namespaces,
-		expression:   expr,
+		key:           key,
+		ls:            es.LabelSelector,
+		requirements:  requirements,
+		class:         class,
+		namespaces:    namespaces,
+		expression:    expr,
+		celExpression: celExpr,
 	}
 }
 
@@ -357,7 +381,7 @@ func (p *LabelSelector) String() string {
 }
 
 func (p *LabelSelector) IsWildcard() bool {
-	return len(p.requirements) == 0 && p.expression == nil
+	return len(p.requirements) == 0 && p.expression == nil && p.celExpression == nil
 }
 
 func (p *LabelSelector) SelectedNamespaces() []string {
@@ -365,14 +389,17 @@ func (p *LabelSelector) SelectedNamespaces() []string {
 }
 
 // Matches returns true if the CachedSelector matches given labels.
-// Both the k8s LabelSelector requirements and the SelectionExpression (if any)
-// must be satisfied (AND semantics).
+// The k8s LabelSelector requirements, the SelectionExpression, and the
+// SelectionExpressionCEL (if any) must all be satisfied (AND semantics).
 func (p *LabelSelector) Matches(lbls labels.LabelArray) bool {
 	if !MatchesRequirements(p.requirements, lbls) {
 		return false
 	}
-	if p.expression != nil {
-		return p.expression.Matches(lbls)
+	if p.expression != nil && !p.expression.Matches(lbls) {
+		return false
+	}
+	if p.celExpression != nil && !p.celExpression.Matches(lbls) {
+		return false
 	}
 	return true
 }
@@ -396,8 +423,11 @@ func Matches[T labels.LabelMatcher](s *LabelSelector, ls T) bool {
 	if !MatchesRequirements(s.requirements, ls) {
 		return false
 	}
-	if s.expression != nil {
-		return s.expression.Matches(ls)
+	if s.expression != nil && !s.expression.Matches(ls) {
+		return false
+	}
+	if s.celExpression != nil && !s.celExpression.Matches(ls) {
+		return false
 	}
 	return true
 }

@@ -20,6 +20,14 @@ type SelectorExpression string
 // IsZero reports whether the expression is empty (absent).
 func (s SelectorExpression) IsZero() bool { return len(s) == 0 }
 
+// CELExpression is a CEL (Common Expression Language) boolean expression string
+// used as an additional label match requirement on an EndpointSelector.
+// An empty CELExpression is considered absent.
+type CELExpression string
+
+// IsZero reports whether the CEL expression is empty (absent).
+func (c CELExpression) IsZero() bool { return len(c) == 0 }
+
 // EndpointSelector is a wrapper for k8s LabelSelector.
 type EndpointSelector struct {
 	*slim_metav1.LabelSelector `json:",inline"`
@@ -40,6 +48,22 @@ type EndpointSelector struct {
 	// +kubebuilder:validation:Optional
 	SelectionExpression SelectorExpression `json:"selectionExpression,omitempty"`
 
+	// SelectionExpressionCEL is an optional CEL (Common Expression Language)
+	// boolean expression used as an additional label match requirement.
+	// When set, an endpoint must satisfy this expression AND the k8s LabelSelector
+	// AND any SelectionExpression (all use AND semantics).
+	//
+	// The custom function label(key string) string is available in expressions.
+	// It returns the value of the label for the given key, or causes the expression
+	// to evaluate to false if the label does not exist.
+	// Keys may include a Cilium source prefix (e.g. "k8s:app").
+	// Keys without a source prefix match labels from any source.
+	//
+	// Example: label("k8s:app") == "nginx" && label("k8s:env") == "prod"
+	//
+	// +kubebuilder:validation:Optional
+	SelectionExpressionCEL CELExpression `json:"selectionExpressionCEL,omitempty"`
+
 	// cachedLabelSelectorString is the cached representation of the
 	// LabelSelector for this EndpointSelector. It is populated when
 	// EndpointSelectors are created via `NewESFromMatchRequirements`. It is
@@ -52,12 +76,15 @@ type EndpointSelector struct {
 }
 
 // buildSelectorKey constructs the full selector key from the k8s LabelSelector
-// string and the optional SelectionExpression. This is the canonical form stored
-// in cachedLabelSelectorString and returned by SelectorKey.
-func buildSelectorKey(ls *slim_metav1.LabelSelector, expr SelectorExpression) string {
+// string and the optional SelectionExpression and SelectionExpressionCEL.
+// This is the canonical form stored in cachedLabelSelectorString and returned by SelectorKey.
+func buildSelectorKey(ls *slim_metav1.LabelSelector, expr SelectorExpression, cel CELExpression) string {
 	base := ls.String()
 	if !expr.IsZero() {
-		return base + " && (" + string(expr) + ")"
+		base = base + " && (" + string(expr) + ")"
+	}
+	if !cel.IsZero() {
+		base = base + " && cel:(" + string(cel) + ")"
 	}
 	return base
 }
@@ -66,12 +93,12 @@ func (n EndpointSelector) SelectorKey() string {
 	if n.cachedLabelSelectorString != "" {
 		return n.cachedLabelSelectorString
 	}
-	return buildSelectorKey(n.LabelSelector, n.SelectionExpression)
+	return buildSelectorKey(n.LabelSelector, n.SelectionExpression, n.SelectionExpressionCEL)
 }
 
 // Used for `omitzero` json tag.
 func (n *EndpointSelector) IsZero() bool {
-	return n.LabelSelector == nil && n.SelectionExpression.IsZero()
+	return n.LabelSelector == nil && n.SelectionExpression.IsZero() && n.SelectionExpressionCEL.IsZero()
 }
 
 // LabelSelectorString returns a user-friendly string representation of
@@ -178,7 +205,7 @@ func NewESFromMatchRequirements(matchLabels map[string]string, reqs []slim_metav
 	// selectors, so buildSelectorKey just returns labelSelector.String().
 	return EndpointSelector{
 		LabelSelector:             labelSelector,
-		cachedLabelSelectorString: buildSelectorKey(labelSelector, ""),
+		cachedLabelSelectorString: buildSelectorKey(labelSelector, "", ""),
 	}
 }
 
@@ -243,7 +270,7 @@ func (n *EndpointSelector) AddMatch(key, value string) {
 		n.MatchLabels = map[string]string{}
 	}
 	n.MatchLabels[key] = value
-	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression)
+	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression, n.SelectionExpressionCEL)
 }
 
 // AddMatchExpression adds a match expression to label selector of the endpoint selector.
@@ -253,19 +280,25 @@ func (n *EndpointSelector) AddMatchExpression(key string, op slim_metav1.LabelSe
 		Operator: op,
 		Values:   values,
 	})
-	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression)
+	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression, n.SelectionExpressionCEL)
 }
 
 func (n *EndpointSelector) SetSelectionExpression(expr SelectorExpression) {
 	n.SelectionExpression = expr
-	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression)
+	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression, n.SelectionExpressionCEL)
+}
+
+func (n *EndpointSelector) SetSelectionExpressionCEL(expr CELExpression) {
+	n.SelectionExpressionCEL = expr
+	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression, n.SelectionExpressionCEL)
 }
 
 // IsWildcard returns true if the endpoint selector selects all endpoints.
 func (n *EndpointSelector) IsWildcard() bool {
 	return n.LabelSelector != nil &&
 		len(n.LabelSelector.MatchLabels)+len(n.LabelSelector.MatchExpressions) == 0 &&
-		n.SelectionExpression.IsZero()
+		n.SelectionExpression.IsZero() &&
+		n.SelectionExpressionCEL.IsZero()
 }
 
 func (n *EndpointSelector) Sanitize() error {
@@ -280,9 +313,15 @@ func (n *EndpointSelector) Sanitize() error {
 		}
 	}
 
+	if !n.SelectionExpressionCEL.IsZero() {
+		if _, err := selector.ParseCEL(string(n.SelectionExpressionCEL)); err != nil {
+			return fmt.Errorf("invalid selectionExpressionCEL: %w", err)
+		}
+	}
+
 	es := NewESFromK8sLabelSelector(labels.LabelSourceAnyKeyPrefix, n.LabelSelector)
 	n.LabelSelector = es.LabelSelector
-	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression)
+	n.cachedLabelSelectorString = buildSelectorKey(n.LabelSelector, n.SelectionExpression, n.SelectionExpressionCEL)
 
 	return nil
 }
