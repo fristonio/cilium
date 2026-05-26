@@ -30,6 +30,7 @@ import (
 	"github.com/cilium/cilium/pkg/bpf/stats"
 	cgroup "github.com/cilium/cilium/pkg/cgroups/manager"
 	"github.com/cilium/cilium/pkg/ciliumenvoyconfig"
+	ciliumcel "github.com/cilium/cilium/pkg/cel"
 	"github.com/cilium/cilium/pkg/clustermesh"
 	cmtypes "github.com/cilium/cilium/pkg/clustermesh/types"
 	"github.com/cilium/cilium/pkg/controller"
@@ -194,6 +195,9 @@ var (
 
 		// Cilium Agent Healthz endpoints (agent, kubeproxy, ...)
 		healthz.Cell,
+
+		// CEL expression compilation and evaluation.
+		ciliumcel.Cell,
 	)
 
 	// ControlPlane implement the per-node control functions. These are pure

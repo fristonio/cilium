@@ -190,7 +190,7 @@ func (r *CiliumNetworkPolicy) Validate() error {
 		if err := r.Spec.Validate(); err != nil {
 			return NewErrParse(fmt.Sprintf("Invalid CiliumNetworkPolicy spec: %s", err))
 		}
-		if r.Spec.NodeSelector.LabelSelector != nil {
+		if !r.Spec.NodeSelector.IsZero() {
 			return NewErrParse("Invalid CiliumNetworkPolicy spec: rule cannot have NodeSelector")
 		}
 	}
@@ -199,7 +199,7 @@ func (r *CiliumNetworkPolicy) Validate() error {
 			if err := rule.Validate(); err != nil {
 				return NewErrParse(fmt.Sprintf("Invalid CiliumNetworkPolicy specs: %s", err))
 			}
-			if rule.NodeSelector.LabelSelector != nil {
+			if !rule.NodeSelector.IsZero() {
 				return NewErrParse("Invalid CiliumNetworkPolicy spec: rule cannot have NodeSelector")
 			}
 		}
