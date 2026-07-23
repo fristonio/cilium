@@ -23,8 +23,16 @@ import (
 	"github.com/cilium/workerpool"
 )
 
-var buildDebugStateCmd = &cobra.Command{
+var rootCmd = &cobra.Command{
 	Use:   "cilium-debugtool",
+	Short: "Cilium Debugging utilties",
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Help()
+	},
+}
+
+var buildDebugStateCmd = &cobra.Command{
+	Use:   "debug-state",
 	Short: "Builds a sql database to debug the state of cilium-agent",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := buildDebugState()
@@ -58,6 +66,9 @@ func init() {
 	}
 	logger := slog.New(devslog.NewHandler(os.Stdout, opts))
 	slog.SetDefault(logger)
+
+	rootCmd.AddCommand(buildDebugStateCmd)
+	rootCmd.AddCommand(logsToJsonCmd)
 
 	buildDebugStateCmd.Flags().StringVar(&ciliumNamespaceName, "cilium-namespace", "kube-system", "Cilium Namespace Name")
 	buildDebugStateCmd.Flags().StringVar(&ciliumPodName, "cilium-pod", "", "Cilium Pod Name")
@@ -114,6 +125,7 @@ func debugLogsCommands() map[string]string {
 
 func collectState(db *sql.DB, firstRun bool) {
 	wp := workerpool.New(runtime.NumCPU())
+	captureTime := time.Now()
 
 	for ctx, command := range debugStateCommands() {
 		err := wp.Submit(ctx, func(_ context.Context) error {
@@ -121,12 +133,13 @@ func collectState(db *sql.DB, firstRun bool) {
 			prompt := getRunCiliumPodCommand(command)
 
 			runTime, err := runCommandAndWriteToFile(prompt, ctx)
+			slog.With("RunTime", runTime).With("Context", ctx).Debug("Command run comlete")
 			if err != nil {
 				slog.With("Context", ctx).With("Command", command).Warn("Failed to process debug state command")
 				return err
 			}
 
-			return loadJSONToDB(db, ctx, runTime, firstRun)
+			return loadJSONToDB(db, ctx, captureTime, firstRun)
 		})
 
 		if err != nil {
@@ -202,7 +215,7 @@ func buildDebugState() error {
 }
 
 func main() {
-	if err := buildDebugStateCmd.Execute(); err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

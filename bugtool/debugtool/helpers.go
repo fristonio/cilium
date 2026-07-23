@@ -30,7 +30,7 @@ func runCommandAndWriteToFile(prompt, fileName string) (time.Time, error) {
 		return t, err
 	}
 
-	return t, writeToJsonFile(fileName, data)
+	return t, writeToJsonFile(getDebugStateFilePath(fileName), data)
 }
 
 func runLogsCommandAndWriteToFile(prompt, fileName string) (time.Time, error) {
@@ -47,7 +47,7 @@ func runLogsCommandAndWriteToFile(prompt, fileName string) (time.Time, error) {
 		return t, err
 	}
 
-	return t, writeToJsonFile(fileName, jsonData)
+	return t, writeToJsonFile(getDebugStateFilePath(fileName), jsonData)
 }
 
 func execCommand(prompt string) ([]byte, error) {
@@ -64,9 +64,7 @@ func execCommand(prompt string) ([]byte, error) {
 	return output, err
 }
 
-func writeToJsonFile(name string, data []byte) error {
-	filePath := getDebugStateFilePath(name)
-
+func writeToJsonFile(filePath string, data []byte) error {
 	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
 	if err != nil {
 		slog.With("Error", err).With("File", filePath).Error("Failed to open file")
@@ -83,6 +81,17 @@ func writeToJsonFile(name string, data []byte) error {
 	return nil
 }
 
+func convertAndWriteLogsToJsonFile(filePath string, data []byte) error {
+	parsedData := parseLogData(data)
+	jsonData, err := json.Marshal(parsedData)
+	if err != nil {
+		slog.With("Error", err).Error("Failed to marshal parsed log JSON data")
+		return err
+	}
+
+	return writeToJsonFile(filePath, jsonData)
+}
+
 func loadJSONToDB(db *sql.DB, fileName string, runTime time.Time, createTable bool) error {
 	filePath := getDebugStateFilePath(fileName)
 
@@ -91,7 +100,7 @@ func loadJSONToDB(db *sql.DB, fileName string, runTime time.Time, createTable bo
 		tableCmd = fmt.Sprintf("CREATE OR REPLACE TABLE %s AS", fileName)
 	}
 
-	loadJSONSQL := fmt.Sprintf(`%s SELECT TIMESTAMP '%s' as LogTime, * FROM read_json('%s')`,
+	loadJSONSQL := fmt.Sprintf(`%s SELECT TIMESTAMP '%s' as CaptureTime, * FROM read_json('%s')`,
 		tableCmd, runTime.Format("2006-01-02 15:04:05"), filePath)
 
 	res, err := db.Exec(loadJSONSQL)

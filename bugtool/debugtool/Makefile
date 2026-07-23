@@ -4,6 +4,9 @@
 CURR_DIR := $(shell dirname "$(realpath $(lastword $(MAKEFILE_LIST)))")
 CGO_ENABLED := 1
 
+DESTDIR := ~/.local
+BINDIR := /bin
+
 include $(CURR_DIR)/../../Makefile.defs
 
 TARGET := cilium-debugtool
