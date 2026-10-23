@@ -5,6 +5,7 @@ package cel_test
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -14,6 +15,8 @@ import (
 	"github.com/cilium/cilium/pkg/cel"
 	"github.com/cilium/cilium/pkg/labels"
 )
+
+var benchmarkMatch bool
 
 func TestLabelSelectorEnvironment(t *testing.T) {
 	env, err := cel.NewEnvironment(cel.DefaultConfig, nil)
@@ -114,6 +117,95 @@ func BenchmarkLabelSelectorEvaluation(b *testing.B) {
 				if err != nil {
 					b.Fatal(err)
 				}
+			}
+		})
+	}
+}
+
+func BenchmarkRuntimeCostTracking(b *testing.B) {
+	labelSet := labels.Labels{
+		"app": labels.NewLabel("app", "frontend", labels.LabelSourceK8s),
+	}
+	sourceNames := make([]string, 32)
+	for i := range 31 {
+		key := fmt.Sprintf("key-%02d", i)
+		labelSet[key] = labels.NewLabel(key, "value", labels.LabelSourceK8s)
+		sourceNames[i] = fmt.Sprintf("service-%02d.example.com", i)
+	}
+	sourceNames[31] = "frontend.example.com"
+
+	flow := &flowpb.Flow{
+		L4: &flowpb.Layer4{
+			Protocol: &flowpb.Layer4_TCP{
+				TCP: &flowpb.TCP{DestinationPort: 80},
+			},
+		},
+		SourceNames: sourceNames,
+	}
+
+	tests := []struct {
+		name       string
+		envType    cel.EnvType
+		expression string
+		argument   any
+	}{
+		{
+			name:       "labels/direct lookup",
+			envType:    cel.EnvTypeLabelSelector,
+			expression: `labels["app"].Value == "frontend"`,
+			argument:   labelSet,
+		},
+		{
+			name:       "labels/source-aware lookup",
+			envType:    cel.EnvTypeLabelSelector,
+			expression: `lookup("k8s:app").value().Value == "frontend"`,
+			argument:   labelSet,
+		},
+		{
+			name:       "labels/full comprehension",
+			envType:    cel.EnvTypeLabelSelector,
+			expression: `labels.exists(key, labels[key].Value == "missing")`,
+			argument:   labelSet,
+		},
+		{
+			name:       "flow/scalar",
+			envType:    cel.EnvTypeFlowFilter,
+			expression: `_flow.l4.TCP.destination_port == uint(80)`,
+			argument:   flow,
+		},
+		{
+			name:       "flow/full comprehension",
+			envType:    cel.EnvTypeFlowFilter,
+			expression: `_flow.source_names.exists(name, name == "missing")`,
+			argument:   flow,
+		},
+	}
+
+	for _, tt := range tests {
+		b.Run(tt.name, func(b *testing.B) {
+			for _, runtimeCostLimit := range []bool{false, true} {
+				name := "runtime_cost=disabled"
+				cfg := cel.DefaultConfig
+				if !runtimeCostLimit {
+					cfg.ProgramMaxCost = 0
+				} else {
+					name = "runtime_cost=enabled"
+				}
+				b.Run(name, func(b *testing.B) {
+					env, err := cel.NewEnvironment(cfg, nil)
+					require.NoError(b, err)
+					result := env.Compile(tt.envType, tt.expression)
+					require.NoError(b, result.Error)
+
+					b.ReportAllocs()
+					for b.Loop() {
+						match, err := result.Evaluate(context.Background(), tt.argument)
+						if err != nil {
+							b.Fatal(err)
+						}
+						benchmarkMatch = match
+					}
+				})
 			}
 		})
 	}

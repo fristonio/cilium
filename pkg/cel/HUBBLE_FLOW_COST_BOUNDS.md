@@ -65,6 +65,13 @@ expression if a variable-cost operation still depends on an unknown size.
 Keep runtime cost tracking as protection against incorrect bounds or invariant
 violations.
 
+Runtime tracking has measurable CPU and allocation overhead, especially for
+small expressions and comprehensions. Once the static maximum is finite and
+all contributing bounds are enforced, runtime tracking is redundant for that
+program and can be omitted. Programs with an unknown maximum must retain it or
+fail compilation. Benchmark results and reproduction commands are recorded in
+the package README.
+
 ## Bound soundness
 
 Annotations describe constraints but do not enforce them on Go protobuf

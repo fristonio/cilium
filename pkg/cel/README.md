@@ -25,10 +25,43 @@ pooled single-variable activation. Non-cancelable policy evaluation avoids CEL
 context setup, while Hubble evaluation retains request cancellation. Runtime
 cost tracking remains enabled by default to bound user expressions.
 
+## Runtime cost tracking overhead
+
+`BenchmarkRuntimeCostTracking` compares complete `CompilationResult.Evaluate`
+calls with the runtime cost tracker and limit enabled and disabled. Six runs on
+Linux/arm64 with `GOMAXPROCS=6` produced these medians:
+
+| Expression shape | Disabled | Enabled | CPU increase | Disabled / enabled allocations |
+| --- | ---: | ---: | ---: | ---: |
+| Direct label access | 151 ns | 572 ns | 279% | 4 / 12 |
+| Source-aware `lookup()` | 680 ns | 1.33 us | 95% | 11 / 25 |
+| 32-label full comprehension | 8.70 us | 26.96 us | 210% | 226 / 459 |
+| Scalar Flow field | 183 ns | 764 ns | 318% | 0 / 9 |
+| 32-name Flow comprehension | 3.92 us | 18.46 us | 371% | 100 / 303 |
+
+The cost tracker instruments CEL evaluation nodes and clones tracker state for
+each evaluation. This work dominates the cost of small expressions and adds
+per-iteration work to comprehensions.
+
+Runtime tracking can be omitted for a program when its compile-time maximum is
+finite, is within the runtime budget, and every input bound used by the static
+estimate is enforced. Compile-time estimation happens once, outside the hot
+path. A program with an unknown maximum must retain runtime tracking or be
+rejected during compilation. Label-map cardinality and Flow protobuf field
+bounds are not fully enforced yet, so runtime tracking cannot currently be
+disabled for all programs safely.
+
 Run the relevant benchmarks with:
 
 ```shell
 go test ./pkg/cel ./pkg/policy/types ./pkg/hubble/filters -run '^$' -bench 'CEL|LabelSelectorEvaluation' -benchmem
+```
+
+To reproduce the runtime cost comparison and summarize repeated samples:
+
+```shell
+go test ./pkg/cel -run '^$' -bench '^BenchmarkRuntimeCostTracking$' -benchmem -count=6 > runtime-cost.txt
+benchstat -col /runtime_cost runtime-cost.txt
 ```
 
 See [Hubble Flow CEL cost bounds](HUBBLE_FLOW_COST_BOUNDS.md) for the current
