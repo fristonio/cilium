@@ -30,3 +30,6 @@ Run the relevant benchmarks with:
 ```shell
 go test ./pkg/cel ./pkg/policy/types ./pkg/hubble/filters -run '^$' -bench 'CEL|LabelSelectorEvaluation' -benchmem
 ```
+
+See [Hubble Flow CEL cost bounds](HUBBLE_FLOW_COST_BOUNDS.md) for the current
+compile-time behavior and the plan for descriptor-backed protobuf field bounds.
