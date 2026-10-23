@@ -39,21 +39,21 @@ func (r *Rule) Validate() error {
 		return fmt.Errorf("rule must have at least one of Ingress, IngressDeny, Egress, EgressDeny")
 	}
 
-	if r.EndpointSelector.LabelSelector == nil && r.NodeSelector.LabelSelector == nil {
+	if r.EndpointSelector.IsZero() && r.NodeSelector.IsZero() {
 		return errors.New("rule must have one of EndpointSelector or NodeSelector")
 	}
-	if r.EndpointSelector.LabelSelector != nil && r.NodeSelector.LabelSelector != nil {
+	if !r.EndpointSelector.IsZero() && !r.NodeSelector.IsZero() {
 		return errors.New("rule cannot have both EndpointSelector and NodeSelector")
 	}
 
-	if r.EndpointSelector.LabelSelector != nil {
+	if !r.EndpointSelector.IsZero() {
 		if err := r.EndpointSelector.Validate(); err != nil {
 			return err
 		}
 	}
 
 	var hostPolicy bool
-	if r.NodeSelector.LabelSelector != nil {
+	if !r.NodeSelector.IsZero() {
 		if err := r.NodeSelector.Validate(); err != nil {
 			return err
 		}
@@ -118,11 +118,11 @@ func (r *Rule) Sanitize() {
 		r.EnableDefaultDeny.Ingress = &enableDefaultDenyDefault
 	}
 
-	if r.EndpointSelector.LabelSelector != nil {
+	if !r.EndpointSelector.IsZero() {
 		r.EndpointSelector.Sanitize()
 	}
 
-	if r.NodeSelector.LabelSelector != nil {
+	if !r.NodeSelector.IsZero() {
 		r.NodeSelector.Sanitize()
 	}
 

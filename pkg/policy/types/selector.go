@@ -130,6 +130,7 @@ func (s Selectors) WithRequirements(requirements []slim_metav1.LabelSelectorRequ
 					MatchLabels:      ls.ls.MatchLabels,
 					MatchExpressions: append(slices.Clone(ls.ls.MatchExpressions), requirements...),
 				},
+				MatchCELExpression: api.CELExpression(ls.condition.Expression()),
 			})
 		}
 		res = append(res, sel)
@@ -275,7 +276,7 @@ func (c *selectionCondition) IsWildcard() bool {
 	return c.CELExpression == nil
 }
 
-func (c *selectionCondition) Evaluate(labels labels.LabelMatcher) bool {
+func (c *selectionCondition) Evaluate(labels labels.Labels) bool {
 	if c.CELExpression == nil {
 		return true
 	}
@@ -287,7 +288,17 @@ func (c *selectionCondition) Evaluate(labels labels.LabelMatcher) bool {
 	return res
 }
 
+func (c *selectionCondition) Expression() string {
+	if c.CELExpression == nil {
+		return ""
+	}
+	return c.CELExpression.Expression
+}
+
 func (c *selectionCondition) DeepEqual(in *selectionCondition) bool {
+	if c.CELExpression == nil || in.CELExpression == nil {
+		return c.CELExpression == nil && in.CELExpression == nil
+	}
 	return c.CELExpression.Expression == in.CELExpression.Expression
 }
 
@@ -296,7 +307,7 @@ type LabelSelector struct {
 	key          string
 	ls           *slim_metav1.LabelSelector
 	requirements Requirements
-	// condition is the auxilary condition that must evalaute to true
+	// condition is the auxiliary condition that must evaluate to true
 	// during matching along with the label selector requirements.
 	condition  selectionCondition
 	class      string
@@ -308,7 +319,11 @@ func (p *LabelSelector) MarshalJSON() ([]byte, error) {
 }
 
 func NewLabelSelector(es api.EndpointSelector) *LabelSelector {
-	requirements := LabelSelectorToRequirements(es.LabelSelector)
+	labelSelector := es.LabelSelector
+	if labelSelector == nil {
+		labelSelector = &slim_metav1.LabelSelector{}
+	}
+	requirements := LabelSelectorToRequirements(labelSelector)
 	namespaces, _ := requirements.GetFirstK8sMatch(k8sConst.PodNamespaceLabel)
 	key := es.SelectorKey()
 
@@ -326,7 +341,7 @@ func NewLabelSelector(es api.EndpointSelector) *LabelSelector {
 
 	ls := &LabelSelector{
 		key:          key,
-		ls:           es.LabelSelector,
+		ls:           labelSelector,
 		requirements: requirements,
 		class:        class,
 		namespaces:   namespaces,
@@ -334,10 +349,10 @@ func NewLabelSelector(es api.EndpointSelector) *LabelSelector {
 
 	if !es.MatchCELExpression.IsZero() {
 		res := ciliumcel.Env.Compile(ciliumcel.EnvTypeLabelSelector, string(es.MatchCELExpression))
-		if res.Error == nil {
-			// Its assumed that the CEL Expression has been validated before.
-			ls.condition.CELExpression = &res
-		}
+		// The CEL expression is assumed to have been validated before.
+		// Retaining a compilation error makes evaluation fail closed if callers
+		// construct an unsanitized selector.
+		ls.condition.CELExpression = &res
 	}
 	return ls
 }
@@ -371,7 +386,7 @@ func (p *LabelSelector) SelectedNamespaces() []string {
 	return p.namespaces
 }
 
-// matchesLabels returns true if the CachedSelector matches given labels.
+// Matches reports whether the selector matches the labels.
 func (p *LabelSelector) Matches(lbls labels.Labels) bool {
 	return Matches(p, lbls)
 }
@@ -392,8 +407,14 @@ func (p *LabelSelector) MetricsClass() string {
 // Selector interface are defined for this use below.
 
 func Matches[T labels.LabelMatcher](s *LabelSelector, ls T) bool {
-	return MatchesRequirements(s.requirements, ls) &&
-		s.condition.Evaluate(ls)
+	if !MatchesRequirements(s.requirements, ls) {
+		return false
+	}
+	if s.condition.IsWildcard() {
+		return true
+	}
+	lbls, ok := any(ls).(labels.Labels)
+	return ok && s.condition.Evaluate(lbls)
 }
 
 // HasKeyPrefix checks if the label selector contains the given key prefix in
@@ -469,6 +490,7 @@ func (p *FQDNSelector) MetricsClass() string {
 type CIDRSelector struct {
 	key          string
 	requirements Requirements
+	condition    selectionCondition
 	generated    bool // only needed for current unit tests via Selectors.CIDRRules()
 	encoded      bool // true for CIDRGroupSelector: use key+value encoded matching
 }
@@ -512,11 +534,15 @@ func newCIDRRuleSelector(rule api.CIDRRule) (ps *CIDRSelector) {
 	case rule.CIDRGroupRef != "":
 		lbl := api.LabelForCIDRGroupRef(string(rule.CIDRGroupRef))
 		ps = newCIDRSelectorFromLabel(key, lbl, rule.ExceptCIDRs)
-	case rule.CIDRGroupSelector.LabelSelector != nil:
+	case !rule.CIDRGroupSelector.IsZero():
 		es := rule.CIDRGroupSelector
 		requirements := LabelSelectorToRequirements(es.LabelSelector)
 		ps = newCIDRSelectorFromRequirements(key, requirements, rule.ExceptCIDRs)
 		ps.encoded = true
+		if !es.MatchCELExpression.IsZero() {
+			result := ciliumcel.Env.Compile(ciliumcel.EnvTypeLabelSelector, string(es.MatchCELExpression))
+			ps.condition.CELExpression = &result
+		}
 	default: // rule.Cidr != ""
 		ps = NewCIDRSelector(key, rule.Cidr, rule.ExceptCIDRs)
 	}
@@ -567,7 +593,7 @@ func (p *CIDRSelector) Matches(lbls labels.Labels) bool {
 	}
 
 	if p.encoded {
-		return matchesEncodedRequirements(p.requirements, lbls)
+		return matchesEncodedRequirements(p.requirements, lbls) && p.condition.Evaluate(lbls)
 	}
 
 	for i := range p.requirements {

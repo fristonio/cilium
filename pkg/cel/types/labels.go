@@ -4,96 +4,125 @@
 package types
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 
+	celtypes "cel.dev/cel-go/common/types"
+	"cel.dev/cel-go/common/types/ref"
+	"cel.dev/cel-go/common/types/traits"
+
 	"github.com/cilium/cilium/pkg/labels"
-	"github.com/google/cel-go/cel"
-	"github.com/google/cel-go/common/types"
-	"github.com/google/cel-go/common/types/ref"
 )
 
-var (
-	// LabelMatcherType is the opaque CEL type used to represent labels.LabelMatcher.
-	// OpaqueType signals to the type-checker that this is an external type with no
-	// field-accessible structure; it can only be passed as a function argument.
-	LabelMatcherType = cel.OpaqueType("cilium.LabelMatcher")
+// NativeLabelType describes labels.Label to CEL.
+var NativeLabelType = mustNativeLabelType()
 
-	// LabelType is the opaque CEL type used to represent labels.Label
-	LabelType = cel.OpaqueType("cilium.Label")
-)
-
-// LabelMatcher provides a CEL representation of labels.LabelMatcher and implements ref.Val.
-type LabelMatcher struct {
-	labels.LabelMatcher
-}
-
-func NewLabelMatcher(m labels.LabelMatcher) LabelMatcher {
-	return LabelMatcher{LabelMatcher: m}
-}
-
-func (LabelMatcher) ConvertToNative(_ reflect.Type) (any, error) {
-	return nil, errors.New("type conversion not supported for cilium.LabelMatcher")
-}
-
-func (LabelMatcher) ConvertToType(_ ref.Type) ref.Val {
-	return types.NewErr("type conversion not supported for cilium.LabelMatcher")
-}
-
-func (v LabelMatcher) Equal(other ref.Val) ref.Val {
-	if o, ok := other.(LabelMatcher); ok {
-		return types.Bool(v.LabelMatcher == o.LabelMatcher)
+func mustNativeLabelType() *celtypes.NativeType {
+	t, err := celtypes.NewNativeType(reflect.TypeFor[labels.Label]())
+	if err != nil {
+		panic(err)
 	}
-	return types.ValOrErr(other, "no such overload")
+	return t
 }
 
-func (LabelMatcher) Type() ref.Type {
-	return LabelMatcherType
+// LabelMap is a zero-copy CEL view backed by labels.Labels.
+type LabelMap struct {
+	labels.Labels
 }
 
-func (v LabelMatcher) Value() any {
-	return v.LabelMatcher
+func NewLabelMap(lbls labels.Labels) LabelMap {
+	return LabelMap{Labels: lbls}
 }
 
-// Label provides a CEL representation of labels.Label and implements ref.Val.
-type Label struct {
-	labels.Label
-}
-
-func (l Label) ConvertToNative(typeDesc reflect.Type) (any, error) {
-	if reflect.TypeFor[labels.Label]().AssignableTo(typeDesc) {
-		return l.Label, nil
+func (m LabelMap) ConvertToNative(typeDesc reflect.Type) (any, error) {
+	if reflect.TypeFor[labels.Labels]().AssignableTo(typeDesc) {
+		return m.Labels, nil
 	}
-	if reflect.TypeFor[string]().AssignableTo(typeDesc) {
-		return l.Label.String(), nil
+	return nil, fmt.Errorf("type conversion error from labels to %v", typeDesc)
+}
+
+func (m LabelMap) ConvertToType(typeVal ref.Type) ref.Val {
+	if typeVal == celtypes.MapType {
+		return m
 	}
-	return nil, fmt.Errorf("type conversion error from 'Label' to '%v'", typeDesc)
-}
-
-func (l Label) ConvertToType(typeVal ref.Type) ref.Val {
-	switch typeVal {
-	case LabelType:
-		return l
-	case types.TypeType:
-		return LabelType
-	case types.StringType:
-		return types.String(l.Label.String())
+	if typeVal == celtypes.TypeType {
+		return celtypes.MapType
 	}
-	return types.NewErr("type conversion error from '%s' to '%s'", LabelType, typeVal)
+	return celtypes.NewErr("type conversion error from labels to %s", typeVal)
 }
 
-func (l Label) Equal(other ref.Val) ref.Val {
-	if o, ok := other.(Label); ok {
-		return types.Bool(l.Label.DeepEqual(&o.Label))
+func (m LabelMap) Equal(other ref.Val) ref.Val {
+	o, ok := other.(traits.Mapper)
+	if !ok || m.Size() != o.Size() {
+		return celtypes.False
 	}
-	return types.ValOrErr(other, "no such overload")
+	for key := range m.Labels {
+		value, _ := m.Find(celtypes.String(key))
+		otherValue, found := o.Find(celtypes.String(key))
+		if !found || value.Equal(otherValue) != celtypes.True {
+			return celtypes.False
+		}
+	}
+	return celtypes.True
 }
 
-func (v Label) Type() ref.Type {
-	return LabelType
+func (LabelMap) Type() ref.Type  { return celtypes.MapType }
+func (m LabelMap) Value() any    { return m.Labels }
+func (m LabelMap) Size() ref.Val { return celtypes.Int(len(m.Labels)) }
+
+func (m LabelMap) Find(key ref.Val) (ref.Val, bool) {
+	k, ok := key.Value().(string)
+	if !ok {
+		return celtypes.NewErr("labels map key must be string, got %T", key.Value()), false
+	}
+	lbl, found := m.Labels[k]
+	if !found {
+		return nil, false
+	}
+	return NativeLabelType.Adapt(celtypes.DefaultTypeAdapter, lbl), true
 }
 
-func (v Label) Value() any {
-	return v.Label
+func (m LabelMap) Get(index ref.Val) ref.Val {
+	value, found := m.Find(index)
+	if !found {
+		return celtypes.NewErr("no such key: %v", index)
+	}
+	return value
+}
+
+func (m LabelMap) Contains(value ref.Val) ref.Val {
+	_, found := m.Find(value)
+	return celtypes.Bool(found)
+}
+
+func (m LabelMap) Iterator() traits.Iterator {
+	keys := make([]string, 0, len(m.Labels))
+	for key := range m.Labels {
+		keys = append(keys, key)
+	}
+	return &labelMapIterator{keys: keys}
+}
+
+type labelMapIterator struct {
+	keys  []string
+	index int
+}
+
+func (*labelMapIterator) ConvertToNative(reflect.Type) (any, error) {
+	return nil, fmt.Errorf("iterator conversion is not supported")
+}
+func (i *labelMapIterator) ConvertToType(ref.Type) ref.Val {
+	return celtypes.NewErr("no such overload")
+}
+func (i *labelMapIterator) Equal(ref.Val) ref.Val { return celtypes.NewErr("no such overload") }
+func (*labelMapIterator) Type() ref.Type          { return celtypes.IteratorType }
+func (*labelMapIterator) Value() any              { return nil }
+func (i *labelMapIterator) HasNext() ref.Val      { return celtypes.Bool(i.index < len(i.keys)) }
+func (i *labelMapIterator) Next() ref.Val {
+	if i.index >= len(i.keys) {
+		return celtypes.NewErr("iterator exhausted")
+	}
+	key := i.keys[i.index]
+	i.index++
+	return celtypes.String(key)
 }

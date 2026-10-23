@@ -10,6 +10,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	ciliumcel "github.com/cilium/cilium/pkg/cel"
 	v1 "github.com/cilium/cilium/pkg/k8s/slim/k8s/apis/meta/v1"
 	"github.com/cilium/cilium/pkg/labels"
 	"github.com/cilium/cilium/pkg/option"
@@ -69,6 +70,11 @@ func TestCIDRRuleToCIDRSelectors(t *testing.T) {
 			out = append(out, ps)
 		}
 		return out
+	}
+	condition := func(expression string) selectionCondition {
+		result := ciliumcel.Env.Compile(ciliumcel.EnvTypeLabelSelector, expression)
+		require.NoError(t, result.Error)
+		return selectionCondition{CELExpression: &result}
 	}
 
 	tt := []struct {
@@ -170,6 +176,22 @@ func TestCIDRRuleToCIDRSelectors(t *testing.T) {
 			enableIPv4: true, enableIPv6: true,
 			matchesLabels:    []string{"cidrgroup:foo=bar;cidrgroup:foo+bar;reserved:world-ipv4"},
 			notMatchesLabels: []string{"cidr:1.1.1.1/32;reserved:world-ipv4", "cidr:192.168.1.1/32;reserved:world-ipv4", "cidrgroup:foo=baz;cidrgroup:foo+baz;reserved:world-ipv4"},
+		},
+		{
+			name: "cidr group CEL",
+			rule: api.CIDRRule{CIDRGroupSelector: api.EndpointSelector{
+				LabelSelector:      &v1.LabelSelector{},
+				MatchCELExpression: `labels["foo"].Value == "bar" && lookup("cidrgroup:env").value().Value == "prod"`,
+			}},
+			expected: Selectors{&CIDRSelector{
+				key:          `&LabelSelector{MatchLabels:map[string]string{},MatchExpressions:[]LabelSelectorRequirement{},} && CEL{labels["foo"].Value == "bar" && lookup("cidrgroup:env").value().Value == "prod"}`,
+				requirements: Requirements{},
+				condition:    condition(`labels["foo"].Value == "bar" && lookup("cidrgroup:env").value().Value == "prod"`),
+				encoded:      true,
+			}},
+			enableIPv4: true, enableIPv6: true,
+			matchesLabels:    []string{"cidrgroup:env=prod;cidrgroup:env+prod;cidrgroup:foo=bar;cidrgroup:foo+bar;reserved:world-ipv4"},
+			notMatchesLabels: []string{"cidrgroup:env=dev;cidrgroup:env+dev;cidrgroup:foo=bar;cidrgroup:foo+bar;reserved:world-ipv4"},
 		},
 		{
 			name: "world v4 ss",
@@ -406,7 +428,7 @@ func TestCIDRRuleToCIDRSelectors(t *testing.T) {
 			}
 
 			if test.rule.CIDRGroupSelector.LabelSelector != nil {
-				test.rule.CIDRGroupSelector = api.NewESFromK8sLabelSelector(labels.LabelSourceCIDRGroupKeyPrefix, test.rule.CIDRGroupSelector.LabelSelector)
+				test.rule.CIDRGroupSelector = api.NewEndpointSelector(labels.LabelSourceCIDRGroupKeyPrefix, &test.rule.CIDRGroupSelector)
 			}
 			result := ToSelectors(test.rule)
 			require.Equal(t, test.expected, result, test.name)
@@ -427,6 +449,38 @@ func TestCIDRRuleToCIDRSelectors(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestLabelSelectorCEL(t *testing.T) {
+	selector := NewLabelSelector(api.EndpointSelector{
+		MatchCELExpression: `labels["app"].Value == "frontend" && lookup("k8s:env").value().Value == "prod"`,
+	})
+
+	require.True(t, selector.Matches(labels.Labels{
+		"app": labels.NewLabel("app", "frontend", labels.LabelSourceK8s),
+		"env": labels.NewLabel("env", "prod", labels.LabelSourceK8s),
+	}))
+	require.False(t, selector.Matches(labels.Labels{
+		"app": labels.NewLabel("app", "backend", labels.LabelSourceK8s),
+		"env": labels.NewLabel("env", "prod", labels.LabelSourceK8s),
+	}))
+
+	withRequirements := Selectors{selector}.WithRequirements([]v1.LabelSelectorRequirement{{
+		Key: "tier", Operator: v1.LabelSelectorOpExists,
+	}})
+	require.True(t, withRequirements.Matches(labels.Labels{
+		"app":  labels.NewLabel("app", "frontend", labels.LabelSourceK8s),
+		"env":  labels.NewLabel("env", "prod", labels.LabelSourceK8s),
+		"tier": labels.NewLabel("tier", "web", labels.LabelSourceK8s),
+	}))
+	require.False(t, withRequirements.Matches(labels.Labels{
+		"app":  labels.NewLabel("app", "backend", labels.LabelSourceK8s),
+		"env":  labels.NewLabel("env", "prod", labels.LabelSourceK8s),
+		"tier": labels.NewLabel("tier", "web", labels.LabelSourceK8s),
+	}))
+
+	invalid := NewLabelSelector(api.EndpointSelector{MatchCELExpression: `unknown`})
+	require.False(t, invalid.Matches(labels.Labels{}))
 }
 
 func benchmarkMatchesSetup(match string, count int) (*LabelSelector, labels.LabelArray) {
@@ -476,4 +530,26 @@ func BenchmarkMatchesInvalid1000Parallel(b *testing.B) {
 			MatchesRequirements(ls.requirements, match)
 		}
 	})
+}
+
+func BenchmarkMatchesCEL(b *testing.B) {
+	lbls := make(labels.Labels, 32)
+	for i := range 32 {
+		key := fmt.Sprintf("label-%d", i)
+		lbls[key] = labels.NewLabel(key, "value", labels.LabelSourceK8s)
+	}
+
+	for _, expression := range []api.CELExpression{
+		`labels["label-16"].Value == "value"`,
+		`lookup("k8s:label-16").value().Value == "value"`,
+		`labels.exists(key, key == "label-16")`,
+	} {
+		selector := NewLabelSelector(api.EndpointSelector{MatchCELExpression: expression})
+		b.Run(string(expression), func(b *testing.B) {
+			b.ReportAllocs()
+			for b.Loop() {
+				selector.Matches(lbls)
+			}
+		})
+	}
 }

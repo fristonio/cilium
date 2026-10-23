@@ -186,7 +186,7 @@ func icmpRules(icmpRules api.ICMPRules) api.PortRules {
 
 // getSelector returns either the endpoint selector, which is the target of a policy rule and true if the endpoint represents a node.
 func getSelector(rule *api.Rule) (api.EndpointSelector, bool) {
-	if es := rule.NodeSelector; es.LabelSelector != nil {
+	if es := rule.NodeSelector; !es.IsZero() {
 		return es, true
 	}
 	return rule.EndpointSelector, false

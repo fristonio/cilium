@@ -1176,6 +1176,22 @@ func TestServiceSelectorMatches(t *testing.T) {
 				}, "other"),
 			},
 		},
+		{
+			name: "CEL expression",
+			sel: &api.K8sServiceSelectorNamespace{
+				Selector: api.ServiceSelector{
+					LabelSelector:      &slim_metav1.LabelSelector{},
+					MatchCELExpression: `labels["app"].Value == "bar" && lookup("k8s:env").hasValue()`,
+				},
+			},
+			matches: []serviceDetailer{
+				testSvc(map[string]string{"app": "bar", "env": "prod"}, "k8s"),
+			},
+			notMatches: []serviceDetailer{
+				testSvc(map[string]string{"app": "baz", "env": "prod"}, "k8s"),
+				testSvc(map[string]string{"app": "bar", "env": "prod"}, "other"),
+			},
+		},
 	}
 
 	for _, tt := range tests {

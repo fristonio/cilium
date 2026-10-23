@@ -5,18 +5,20 @@ package cel
 
 import (
 	"fmt"
-	"sync"
+	"math"
+	"slices"
 	"time"
 
-	"github.com/google/cel-go/cel"
+	"cel.dev/cel-go/cel"
 	"k8s.io/utils/keymutex"
 	"k8s.io/utils/lru"
 
 	"github.com/cilium/cilium/pkg/cel/library"
 	"github.com/cilium/cilium/pkg/metrics"
+	"github.com/cilium/cilium/pkg/metrics/metric"
 )
 
-// Compiler compiles CEL expressions against the label matcher environment.
+// Compiler compiles CEL expressions for one environment type.
 // A single Compiler (and its underlying cel.Env) is safe for concurrent use.
 type Compiler struct {
 	cfg     Config
@@ -27,16 +29,22 @@ type Compiler struct {
 
 	compileMutex keymutex.KeyMutex
 
-	cache      *lru.Cache
-	cacheMutex sync.RWMutex
+	cache *lru.Cache
+
+	evaluationSuccess metric.Observer
+	evaluationFailure metric.Observer
 }
 
 // NewCompiler creates a Compiler for the given environment type.
 // Metrics may be nil to disable metric recording.
-func NewCompiler(envType EnvType, cfg Config, metrics *Metrics, opts ...cel.EnvOption) (*Compiler, error) {
+func NewCompiler(envType EnvType, cfg Config, celMetrics *Metrics, opts ...cel.EnvOption) (*Compiler, error) {
 	// Construct base environment
 	// TODO: Only need to do once for Base environment.
-	baseEnv, err := cel.NewEnv(baseCELEnvOpts...)
+	baseOpts := baseCELEnvOpts
+	if cfg.ExpressionMaxSize > 0 {
+		baseOpts = append(slices.Clone(baseOpts), cel.ParserExpressionSizeLimit(cfg.ExpressionMaxSize))
+	}
+	baseEnv, err := cel.NewEnv(baseOpts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create base CEL environment: %w", err)
 	}
@@ -51,27 +59,35 @@ func NewCompiler(envType EnvType, cfg Config, metrics *Metrics, opts ...cel.EnvO
 	if cfg.CompilerCacheEnabled() {
 		compilerCache = lru.New(cfg.CompilerCacheMaxEntries)
 	}
-	return &Compiler{
+	compiler := &Compiler{
 		cfg:          cfg,
-		metrics:      metrics,
+		metrics:      celMetrics,
 		envType:      envType,
 		env:          env,
 		compileMutex: keymutex.NewHashed(0),
 		cache:        compilerCache,
-	}, nil
+	}
+	if celMetrics != nil {
+		compiler.evaluationSuccess = celMetrics.EvaluationDuration.WithLabelValues(string(envType), metrics.LabelValueOutcomeSuccess)
+		compiler.evaluationFailure = celMetrics.EvaluationDuration.WithLabelValues(string(envType), metrics.LabelValueOutcomeFail)
+	}
+	return compiler, nil
 }
 
 // Compile parses, type-checks, and plans a CEL expression.
 // The expression must evaluate to a boolean type.
 func (c *Compiler) Compile(expression string) CompilationResult {
+	if cached := c.getFromCache(expression); cached != nil {
+		return *cached
+	}
+
 	// Compiling a CEL expression is expensive enough that it is cheaper
 	// to lock a mutex than doing it several times in parallel.
 	c.compileMutex.LockKey(expression)
 	//nolint:errcheck // Only returns an error for unknown keys, which isn't the case here.
 	defer c.compileMutex.UnlockKey(expression)
 
-	cached := c.getFromCache(expression)
-	if cached != nil {
+	if cached := c.getFromCache(expression); cached != nil {
 		return *cached
 	}
 
@@ -82,9 +98,7 @@ func (c *Compiler) Compile(expression string) CompilationResult {
 			WithLabelValues(string(c.envType), metrics.Error2Outcome(result.Error)).
 			Observe(time.Since(start).Seconds())
 	}
-	if result.Error == nil {
-		c.addToCache(expression, &result)
-	}
+	c.addToCache(expression, &result)
 	return result
 }
 
@@ -104,28 +118,29 @@ func (c *Compiler) compile(expression string) (result CompilationResult) {
 		return
 	}
 
-	if _, err := cel.AstToCheckedExpr(ast); err != nil {
-		result.Error = fmt.Errorf("unexpected AST check error: %w", err)
-		return
-	}
-
 	costEst, err := c.env.EstimateCost(ast, library.CostEstimator{})
 	if err != nil {
 		result.Error = fmt.Errorf("cost estimation: %w", err)
 		return
 	}
 
-	if c.cfg.ExpressionMaxCost > 0 && costEst.Max > c.cfg.ExpressionMaxCost {
-		result.Error = fmt.Errorf("expression max cost %d exceeds limit %d", costEst.Max, c.cfg.ExpressionMaxCost)
-		return
+	if c.cfg.ExpressionMaxCost > 0 {
+		switch {
+		case costEst.Max != math.MaxUint64 && costEst.Max > c.cfg.ExpressionMaxCost:
+			result.Error = fmt.Errorf("expression max cost %d exceeds limit %d", costEst.Max, c.cfg.ExpressionMaxCost)
+			return
+		case costEst.Max == math.MaxUint64 && costEst.Min > c.cfg.ExpressionMaxCost:
+			result.Error = fmt.Errorf("expression min cost %d exceeds limit %d", costEst.Min, c.cfg.ExpressionMaxCost)
+			return
+		}
 	}
 
-	progOpts := []cel.ProgramOption{
-		cel.CostTracking(library.CostEstimator{}),
-		cel.EvalOptions(cel.OptOptimize),
-	}
+	progOpts := []cel.ProgramOption{cel.EvalOptions(cel.OptOptimize)}
 	if c.cfg.ProgramMaxCost > 0 {
-		progOpts = append(progOpts, cel.CostLimit(c.cfg.ProgramMaxCost))
+		progOpts = append(progOpts,
+			cel.CostTracking(library.CostEstimator{}),
+			cel.CostLimit(c.cfg.ProgramMaxCost),
+		)
 	}
 	if c.cfg.ProgramInterruptCheckFrequency > 0 {
 		progOpts = append(progOpts, cel.InterruptCheckFrequency(c.cfg.ProgramInterruptCheckFrequency))
@@ -138,7 +153,8 @@ func (c *Compiler) compile(expression string) (result CompilationResult) {
 
 	result.Program = prog
 	result.OutputType = outputType
-	result.metrics = c.metrics
+	result.evaluationSuccess = c.evaluationSuccess
+	result.evaluationFailure = c.evaluationFailure
 
 	return
 }
@@ -148,8 +164,6 @@ func (c *Compiler) addToCache(expression string, expr *CompilationResult) {
 		return
 	}
 
-	c.cacheMutex.Lock()
-	defer c.cacheMutex.Unlock()
 	c.cache.Add(expression, expr)
 }
 
@@ -158,8 +172,6 @@ func (c *Compiler) getFromCache(expression string) *CompilationResult {
 		return nil
 	}
 
-	c.cacheMutex.RLock()
-	defer c.cacheMutex.RUnlock()
 	expr, found := c.cache.Get(expression)
 	if !found {
 		return nil

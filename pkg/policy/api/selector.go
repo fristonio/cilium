@@ -13,8 +13,8 @@ import (
 	"github.com/cilium/cilium/pkg/labels"
 )
 
-// CELExpression is a CEL (Common Expression Language) boolean expression string.
-// An empty CELExpression is considered as no-op requirement.
+// CELExpression is a CEL boolean expression. An empty expression adds no
+// requirement.
 type CELExpression string
 
 // IsZero reports whether the CEL expression is empty.
@@ -29,41 +29,10 @@ func (c CELExpression) SelectorKey() string {
 type EndpointSelector struct {
 	*slim_metav1.LabelSelector `json:",inline"`
 
-	// MatchCELExpression is an optional, serialized, boolean CEL expression
-	// that provides additional label match conditions for this selector.
-	// When set, an endpoint must satisfy this expression **AND** the
-	// k8s LabelSelector constraints.
-	// The environment for CEL expression provides a 'label(<key>)' macro
-	// to lookup value of key(with source prefix) against the Label being
-	// evaluated for selection.
-	// The return type of this macro is the label value wrapped in an optional type:
-	// https://pkg.go.dev/github.com/google/cel-go/cel#OptionalTypes
-	//
-	// Example Usage:
-	//
-	// * Check if a key exist in the input Labels:
-	// 		* label("k8s:app").hasValue()
-	// 		* label("any:missing") == optional.none()
-	// * Get value of a known existing key:
-	// 		* label("k8s:app").value()
-	// 		* Note: Unwrapping a non existing key through `value()` will cause evaluation error.
-	// * Get value of an unknown key:
-	// 		* label("k8s:app").orValue("")
-	// * Compare value of an unknown key:
-	// 		* label("k8s:app") == optional.of("myapp")
-	// * Set membership for a label value:
-	// 		* label("k8s:env").value() in ["prod", "staging", "dev"]
-	// * Common string operations on label values:
-	// 		* label("k8s:env").orValue("").startsWith("prod")
-	// 		* label("k8s:env").orValue("").endsWith("-us-east")
-	// 		* label("k8s:env").orValue("").contains("db-staging")
-	// * Boolean composition:
-	// 		* label("k8s:env").value() == "dev" || label("k8s:env").value() == "staging"
-	// 		* label("k8s:env") == optional.of("prod") && label("k8s:app") == optional.of("myapp")
-	// 		* label("k8s:env") != optional.of("prod")
-	// * Iterators:
-	// 		* ["k8s:app", "k8s:env"].all(k, label(k).hasValue())
-	// 		* ["k8s:app", "k8s:env"].map(k, label(k).orValue("")) == ["myapp", "prod"]
+	// MatchCELExpression is an optional boolean CEL expression
+	// combined with the Kubernetes label selector using AND. labels maps each
+	// label's Key, without its source prefix, to a label with Key, Source, and
+	// Value fields. lookup("<source>:<key>") returns an optional label.
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxLength=4096
@@ -78,10 +47,17 @@ type EndpointSelector struct {
 }
 
 func (n EndpointSelector) buildSelectorKey() string {
-	if n.MatchCELExpression.IsZero() {
-		return n.LabelSelector.String()
+	labelSelectorKey := ""
+	if n.LabelSelector != nil {
+		labelSelectorKey = n.LabelSelector.String()
 	}
-	return fmt.Sprintf("%s && %s", n.LabelSelector.String(), n.MatchCELExpression.SelectorKey())
+	if n.MatchCELExpression.IsZero() {
+		return labelSelectorKey
+	}
+	if labelSelectorKey == "" {
+		return n.MatchCELExpression.SelectorKey()
+	}
+	return fmt.Sprintf("%s && %s", labelSelectorKey, n.MatchCELExpression.SelectorKey())
 }
 
 func (n EndpointSelector) SelectorKey() string {
@@ -103,8 +79,7 @@ func (n EndpointSelector) String() string {
 	return string(j)
 }
 
-// CachedString returns the cached string representation of the LabelSelector
-// for this EndpointSelector.
+// CachedString returns the cached selector key.
 func (n EndpointSelector) CachedString() string {
 	return n.cachedSelectorKey
 }

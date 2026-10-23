@@ -34,6 +34,9 @@ func (in *CIDRSelector) DeepEqual(other *CIDRSelector) bool {
 			}
 		}
 	}
+	if !in.condition.DeepEqual(&other.condition) {
+		return false
+	}
 
 	if in.generated != other.generated {
 		return false

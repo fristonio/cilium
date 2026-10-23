@@ -9,12 +9,14 @@ import (
 	"sync"
 	"time"
 
+	"cel.dev/cel-go/cel"
+	"cel.dev/cel-go/common/types/ref"
+	"cel.dev/cel-go/interpreter"
 	flowpb "github.com/cilium/cilium/api/v1/flow"
 	"github.com/cilium/cilium/pkg/cel/library"
-	ciliumTypes "github.com/cilium/cilium/pkg/cel/types"
+	ciliumceltypes "github.com/cilium/cilium/pkg/cel/types"
 	"github.com/cilium/cilium/pkg/labels"
-	"github.com/cilium/cilium/pkg/metrics"
-	"github.com/google/cel-go/cel"
+	"github.com/cilium/cilium/pkg/metrics/metric"
 )
 
 // EnvType represents the kind of CEL environment, which determines the
@@ -35,7 +37,7 @@ var (
 	celEnvironments = map[EnvType][]cel.EnvOption{
 		EnvTypeLabelSelector: {
 			cel.OptionalTypes(),
-			library.LabelMatcher(),
+			library.Labels(),
 		},
 		EnvTypeFlowFilter: {
 			library.FlowFilter(),
@@ -48,15 +50,9 @@ var (
 )
 
 func init() {
-	// Initialize the environment with empty config to provide bare CEL
-	// environments. The global environment should be reinitialized once
-	// we construct Environment with user config and metrics.
-	env, err := NewEnvironment(Config{
-		CompilerCacheMaxEntries:        0,
-		ExpressionMaxCost:              0,
-		ProgramMaxCost:                 0,
-		ProgramInterruptCheckFrequency: 0,
-	}, nil)
+	// Provide a usable environment before Hive replaces it with the configured
+	// environment and metrics.
+	env, err := NewEnvironment(DefaultConfig, nil)
 	if err != nil {
 		panic(fmt.Sprintf("Unable to create CEL environment: %s", err))
 	}
@@ -78,7 +74,7 @@ func NewEnvironment(cfg Config, metrics *Metrics) (Environment, error) {
 	for kind, opts := range celEnvironments {
 		compiler, err := NewCompiler(kind, cfg, metrics, opts...)
 		if err != nil {
-			return nil, fmt.Errorf("failed to initialize complier for env %s: %w", kind, err)
+			return nil, fmt.Errorf("failed to initialize compiler for env %s: %w", kind, err)
 		}
 
 		env[kind] = compiler
@@ -106,42 +102,85 @@ type CompilationResult struct {
 	OutputType *cel.Type
 	Error      error
 
-	// metrics is set by the Compiler and used to record evaluation timing.
-	// May be nil when the Compiler was created without metrics.
-	metrics *Metrics
+	evaluationSuccess metric.Observer
+	evaluationFailure metric.Observer
 }
 
-// Evaluate evaluates the compiled expression against provided arg and returns whether
+type singleVarActivation struct {
+	name  string
+	value any
+}
+
+var singleVarActivationPool = sync.Pool{New: func() any { return new(singleVarActivation) }}
+
+func (a singleVarActivation) Parent() interpreter.Activation { return nil }
+
+func (a singleVarActivation) ResolveName(name string) (any, bool) {
+	if name != a.name {
+		return nil, false
+	}
+	return a.value, true
+}
+
+// Evaluate evaluates the compiled expression against the provided value and returns whether
 // the expression holds. Returns an error if the expression itself failed to
 // compile or if evaluation produces a non-bool result.
-func (r *CompilationResult) Evaluate(ctx context.Context, arg any) (bool, error) {
+func (r *CompilationResult) Evaluate(ctx context.Context, arg any) (match bool, evalErr error) {
 	if r.Error != nil {
 		return false, r.Error
 	}
 
 	// Derive activation for the CEL program based on the environment type.
-	activation := make(map[string]any)
+	activation := singleVarActivationPool.Get().(*singleVarActivation)
+	defer func() {
+		activation.name = ""
+		activation.value = nil
+		singleVarActivationPool.Put(activation)
+	}()
 	if arg != nil {
 		switch r.EnvType {
 		case EnvTypeLabelSelector:
-			lm, ok := arg.(labels.LabelMatcher)
+			lbls, ok := arg.(labels.Labels)
 			if !ok {
-				return false, fmt.Errorf("expected argument of type LabelMatcher got %T", arg)
+				return false, fmt.Errorf("expected argument of type labels.Labels, got %T", arg)
 			}
-			activation[library.LabelMatcherVar] = ciliumTypes.NewLabelMatcher(lm)
+			activation.name = library.LabelsVarName
+			activation.value = ciliumceltypes.NewLabelMap(lbls)
 		case EnvTypeFlowFilter:
 			flow, ok := arg.(*flowpb.Flow)
 			if !ok {
-				return false, fmt.Errorf("expected argument of type Flow got %T", arg)
+				return false, fmt.Errorf("expected argument of type *flowpb.Flow, got %T", arg)
 			}
-			activation[library.FlowVarName] = flow
+			activation.name = library.FlowVarName
+			activation.value = flow
 		default:
 			return false, fmt.Errorf("invalid environment %s", r.EnvType)
 		}
 	}
 
-	start := time.Now()
-	out, _, err := r.Program.ContextEval(ctx, activation)
+	if ctx == nil {
+		return false, fmt.Errorf("context must not be nil")
+	}
+
+	var start time.Time
+	if r.evaluationSuccess != nil {
+		start = time.Now()
+		defer func() {
+			observer := r.evaluationSuccess
+			if evalErr != nil {
+				observer = r.evaluationFailure
+			}
+			observer.Observe(time.Since(start).Seconds())
+		}()
+	}
+
+	var out ref.Val
+	var err error
+	if ctx.Done() == nil {
+		out, _, err = r.Program.Eval(activation)
+	} else {
+		out, _, err = r.Program.ContextEval(ctx, activation)
+	}
 	if err != nil {
 		return false, fmt.Errorf("CEL evaluation error: %w", err)
 	}
@@ -150,10 +189,5 @@ func (r *CompilationResult) Evaluate(ctx context.Context, arg any) (bool, error)
 		return false, fmt.Errorf("expression returned %T, expected bool", out.Value())
 	}
 
-	if r.metrics != nil {
-		r.metrics.EvaluationDuration.
-			WithLabelValues(string(r.EnvType), metrics.Error2Outcome(err)).
-			Observe(time.Since(start).Seconds())
-	}
 	return b, nil
 }

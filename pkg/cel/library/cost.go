@@ -4,71 +4,111 @@
 package library
 
 import (
-	"github.com/google/cel-go/checker"
-	"github.com/google/cel-go/common/types/ref"
+	"math"
+	"strings"
+	"unicode/utf8"
+
+	"cel.dev/cel-go/checker"
+	"cel.dev/cel-go/common/ast"
+	"cel.dev/cel-go/common/types/ref"
+
+	"github.com/cilium/cilium/pkg/labels"
 )
 
-// k8s label values are bounded by 63 characters (RFC 1035 / k8s validation).
-// Providing ResultSize prevents CEL from using math.MaxUint64 as the default
-// string length bound when computing downstream costs (e.g. == comparisons).
-const maxLabelValueLen = 63
+const (
+	maxLabelKeyLen   = 317
+	maxLabelValueLen = 63
+	// directory is the longest identity label source.
+	maxLabelSourceLen = uint64(len(labels.LabelSourceDirectory))
+)
 
-// CostEstimator provides static (compile-time) and runtime cost estimates for
-// the cilium's CEL library functions.
-//
-// It implements both checker.CostEstimator (for env.EstimateCost) and
-// interpreter.ActualCostEstimator (for cel.CostTracking). For any function not
-// belonging to this library the methods return nil, delegating cost accounting
-// to CEL's built-in model which covers all standard library functions.
-//
-// The static estimates must bound the actual runtime costs (CEL requirement):
-//
-//	__label_make__                  static 1, runtime 1  (struct construction)
-//	__label_matcher_lookup_label__  static 1, runtime 1  (single map/array access)
-//	__label_matcher_lookup_key__    static 1–2, runtime 2 (string parse + access)
+// CostEstimator supplies bounds for values and functions provided by Cilium's
+// CEL libraries. When enabled, runtime cost tracking remains authoritative.
 type CostEstimator struct{}
 
-// EstimateSize returns nil for all nodes, deferring to CEL's built-in size model.
-func (CostEstimator) EstimateSize(_ checker.AstNode) *checker.SizeEstimate {
-	return nil
-}
+func (CostEstimator) EstimateSize(element checker.AstNode) *checker.SizeEstimate {
+	path := element.Path()
+	if len(path) == 0 {
+		return nil
+	}
 
-// EstimateCallCost returns compile-time cost bounds for library overloads.
-func (CostEstimator) EstimateCallCost(_, overloadID string, _ *checker.AstNode, _ []checker.AstNode) *checker.CallEstimate {
-	switch overloadID {
-	case LabelMatcherLookupLabelFuncName:
-		// Pre-parsed label lookup: single map/array access.
-		return &checker.CallEstimate{
-			CostEstimate: checker.CostEstimate{Min: 1, Max: 1},
-			ResultSize:   &checker.SizeEstimate{Min: 0, Max: maxLabelValueLen},
+	if path[0] != LabelsVarName {
+		expr := element.Expr()
+		if expr.Kind() != ast.SelectKind || !containsLabelLookup(expr.AsSelect().Operand()) {
+			return nil
 		}
-	case LabelMatcherLookupKeyFuncName:
-		// Runtime-parse lookup: parse label string then access.
-		return &checker.CallEstimate{
-			CostEstimate: checker.CostEstimate{Min: 1, Max: 2},
-			ResultSize:   &checker.SizeEstimate{Min: 0, Max: maxLabelValueLen},
-		}
-	case LabelMakeFuncName:
-		// Label construction from pre-split string constants.
-		return &checker.CallEstimate{
-			CostEstimate: checker.CostEstimate{Min: 1, Max: 1},
-		}
+	}
+
+	switch path[len(path)-1] {
+	case "@keys":
+		return &checker.SizeEstimate{Min: 0, Max: maxLabelKeyLen}
+	case "Key":
+		return &checker.SizeEstimate{Min: 0, Max: maxLabelKeyLen}
+	case "Value":
+		return &checker.SizeEstimate{Min: 0, Max: maxLabelValueLen}
+	case "Source":
+		return &checker.SizeEstimate{Min: 0, Max: maxLabelSourceLen}
 	}
 	return nil
 }
 
-// CallCost returns the actual runtime cost for label matcher overloads.
-func (CostEstimator) CallCost(_, overloadID string, _ []ref.Val, _ ref.Val) *uint64 {
-	var cost uint64
-	switch overloadID {
-	case LabelMatcherLookupLabelFuncName:
-		cost = 1
-	case LabelMatcherLookupKeyFuncName:
-		cost = 2
-	case LabelMakeFuncName:
-		cost = 1
-	default:
+func containsLabelLookup(expr ast.Expr) bool {
+	switch expr.Kind() {
+	case ast.CallKind:
+		call := expr.AsCall()
+		if call.FunctionName() == LabelsLookupFuncName {
+			return true
+		}
+		if call.IsMemberFunction() && containsLabelLookup(call.Target()) {
+			return true
+		}
+		for _, arg := range call.Args() {
+			if containsLabelLookup(arg) {
+				return true
+			}
+		}
+	case ast.SelectKind:
+		return containsLabelLookup(expr.AsSelect().Operand())
+	}
+	return false
+}
+
+func (CostEstimator) EstimateCallCost(_, overloadID string, _ *checker.AstNode, args []checker.AstNode) *checker.CallEstimate {
+	if overloadID != LabelsLookupFuncName {
 		return nil
+	}
+	// A present result also materializes the native label value.
+	cost := checker.CostEstimate{Min: 2, Max: math.MaxUint64}
+	if len(args) > 1 && args[1].Expr().Kind() == ast.LiteralKind {
+		if key, ok := args[1].Expr().AsLiteral().Value().(string); ok {
+			keyCost := uint64(utf8.RuneCountInString(key))
+			cost.Min += keyCost
+			parsed := labels.ParseSelectLabel(key)
+			if parsed.Source != labels.LabelSourceCIDR {
+				cost.Max = cost.Min + 1
+			}
+		}
+	}
+	return &checker.CallEstimate{
+		// Dynamic and CIDR lookups may scan a map whose cardinality is unbounded.
+		CostEstimate: cost,
+	}
+}
+
+func (CostEstimator) CallCost(_, overloadID string, args []ref.Val, _ ref.Val) *uint64 {
+	if overloadID != LabelsLookupFuncName {
+		return nil
+	}
+	cost := uint64(2)
+	if len(args) > 1 {
+		if key, ok := args[1].Value().(string); ok {
+			cost += uint64(utf8.RuneCountInString(key))
+			if strings.HasPrefix(key, labels.LabelSourceCIDR+labels.SourceDelimiter) && len(args) > 0 {
+				if labelMap, ok := args[0].Value().(labels.Labels); ok {
+					cost += uint64(len(labelMap))
+				}
+			}
+		}
 	}
 	return &cost
 }

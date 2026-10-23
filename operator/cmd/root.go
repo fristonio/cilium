@@ -56,6 +56,7 @@ import (
 	"github.com/cilium/cilium/operator/pkg/ztunnel"
 	"github.com/cilium/cilium/operator/unmanagedpods"
 	operatorWatchers "github.com/cilium/cilium/operator/watchers"
+	ciliumcel "github.com/cilium/cilium/pkg/cel"
 	clustercfgcell "github.com/cilium/cilium/pkg/clustermesh/clustercfg/cell"
 	"github.com/cilium/cilium/pkg/clustermesh/endpointslicesync"
 	"github.com/cilium/cilium/pkg/clustermesh/mcsapi"
@@ -131,6 +132,9 @@ var (
 
 		// Provides the modular metrics registry, metric HTTP server and legacy metrics cell.
 		operatorMetrics.Cell,
+
+		// CEL expression compilation and evaluation.
+		ciliumcel.Cell,
 
 		// Shell for inspecting the operator. Listens on the 'shell.sock' UNIX socket.
 		shell.ServerCell(defaults.ShellSockPath),

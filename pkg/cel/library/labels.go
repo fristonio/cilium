@@ -4,162 +4,123 @@
 package library
 
 import (
-	"github.com/google/cel-go/cel"
-	"github.com/google/cel-go/common/ast"
-	celTypes "github.com/google/cel-go/common/types"
-	"github.com/google/cel-go/common/types/ref"
+	"net/netip"
+	"strings"
 
-	"github.com/cilium/cilium/pkg/cel/types"
+	"cel.dev/cel-go/cel"
+	"cel.dev/cel-go/common/ast"
+	celtypes "cel.dev/cel-go/common/types"
+	"cel.dev/cel-go/common/types/ref"
+
+	ciliumceltypes "github.com/cilium/cilium/pkg/cel/types"
 	"github.com/cilium/cilium/pkg/labels"
 )
 
 const (
-	LabelMatcherVar      string = "@label_matcher"
-	LabelLookupMacroName string = "label"
+	LabelsVarName   = "labels"
+	LookupMacroName = "lookup"
 
-	LabelMatcherLookupFuncName      string = "__label_matcher_lookup__"
-	LabelMatcherLookupKeyFuncName   string = "__label_matcher_lookup_key__"
-	LabelMatcherLookupLabelFuncName string = "__label_matcher_lookup_label__"
-
-	LabelMakeFuncName string = "__label_make__"
+	LabelsLookupFuncName = "__labels_lookup__"
 )
 
-func LabelMatcher() cel.EnvOption {
-	return cel.Lib(labelMatcherLib)
+var (
+	nativeLabelType = ciliumceltypes.NativeLabelType
+	labelType       = cel.ObjectType(nativeLabelType.TypeName())
+	labelsMapType   = cel.MapType(cel.StringType, labelType)
+)
+
+// Labels returns the CEL environment option for identity label expressions.
+func Labels() cel.EnvOption {
+	return cel.Lib(labelsLib)
 }
 
-var labelMatcherLib = &labelMatcher{}
+var labelsLib = &identityLabels{}
 
-type labelMatcher struct{}
+type identityLabels struct{}
 
-func (*labelMatcher) LibraryName() string {
-	return "cilium.label"
+func (*identityLabels) LibraryName() string {
+	return "cilium.labels"
 }
 
-func (*labelMatcher) CompileOptions() []cel.EnvOption {
+func (*identityLabels) CompileOptions() []cel.EnvOption {
 	return []cel.EnvOption{
-		cel.Variable(LabelMatcherVar, types.LabelMatcherType),
-		// 'label' macro definition that looks up provided label key from label_matcher variable.
-		cel.Macros(
-			cel.GlobalMacro(
-				LabelLookupMacroName,
-				1,
-				labelMacroExpander,
-				cel.MacroDocs(
-					"Looks up a label in the '@label_matcher' variable and returns optional(value).",
-					"Returns optional.none() when the label is absent; optional.of(value) otherwise.",
-				),
-				cel.MacroExamples(
-					`label("<source>:<key>")      // Looks up label value for <key> from @label_matcher variable with <source>`,
-					`label("k8s:app")             // optional.of("myapp") when present`,
-					`label("k8s:missing")         // optional.none()`,
-					`label("k8s:app").hasValue()  // true`,
-					`label("k8s:app").value()     // "myapp"`,
-				),
-			),
-		),
-		// Label matcher lookup internal functions.
-		cel.Function(LabelMatcherLookupFuncName,
+		cel.Types(nativeLabelType),
+		cel.Variable(LabelsVarName, labelsMapType),
+		cel.Macros(cel.GlobalMacro(
+			LookupMacroName,
+			1,
+			lookupMacroExpander,
+			cel.MacroDocs("Looks up a label by source and key and returns an optional label."),
+			cel.MacroExamples(`lookup("k8s:app").value().Value`),
+		)),
+		cel.Function(LabelsLookupFuncName,
 			cel.Overload(
-				LabelMatcherLookupKeyFuncName,
-				[]*cel.Type{types.LabelMatcherType, cel.StringType},
-				cel.OptionalType(cel.StringType),
-				cel.OverloadExamples(),
-				cel.BinaryBinding(lookupLabelString),
-			),
-			cel.Overload(
-				LabelMatcherLookupLabelFuncName,
-				[]*cel.Type{types.LabelMatcherType, types.LabelType},
-				cel.OptionalType(cel.StringType),
-				cel.BinaryBinding(lookupLabelType),
-			),
-		),
-		cel.Function(LabelMakeFuncName,
-			cel.FunctionDocs(
-				"Internal: constructs a cilium.Label from (source, key) string parts.",
-				"Emitted by the label() macro for literal string arguments.",
-				"Never called directly in user expressions.",
-			),
-			cel.Overload(
-				LabelMakeFuncName,
-				[]*cel.Type{cel.StringType, cel.StringType},
-				types.LabelType,
-				cel.BinaryBinding(makeLabel),
+				LabelsLookupFuncName,
+				[]*cel.Type{labelsMapType, cel.StringType},
+				cel.OptionalType(labelType),
+				cel.BinaryBinding(lookupLabel),
 			),
 		),
 	}
 }
 
-// ProgramOptions returns the decorator that folds __label_make__ calls into constants
-// at program creation time, eliminating all runtime overhead for literal label keys.
-func (*labelMatcher) ProgramOptions() []cel.ProgramOption {
-	return []cel.ProgramOption{}
+func (*identityLabels) ProgramOptions() []cel.ProgramOption {
+	return nil
 }
 
-func lookupLabel(lm labels.LabelMatcher, lbl labels.Label) ref.Val {
-	value, exists := lm.LookupLabel(&lbl)
-	if !exists {
-		return celTypes.OptionalNone
-	}
-	return celTypes.OptionalOf(celTypes.String(value))
-}
-
-// lookupLabelString looks up Label from LabelMatcher argument by first parsing the
-// key as select label.
-func lookupLabelString(lm, key ref.Val) ref.Val {
-	matcher, ok := lm.Value().(labels.LabelMatcher)
+func lookupLabel(labelMap, key ref.Val) ref.Val {
+	lbls, ok := labelMap.Value().(labels.Labels)
 	if !ok {
-		return celTypes.NewErr("label() requires a LabelMatcher, got %T", lm.Value())
+		return celtypes.NewErr("lookup() requires identity labels, got %T", labelMap.Value())
 	}
 	labelKey, ok := key.Value().(string)
 	if !ok {
-		return celTypes.NewErr("label() requires a string, got %T", key.Value())
+		return celtypes.NewErr("lookup() requires a string, got %T", key.Value())
 	}
-	lbl := labels.ParseSelectLabel(labelKey)
-	return lookupLabel(matcher, lbl)
+	parsed := labels.ParseSelectLabel(labelKey)
+	lbl, exists := findLabel(lbls, &parsed)
+	if !exists {
+		return celtypes.OptionalNone
+	}
+	return celtypes.OptionalOf(nativeLabelType.Adapt(celtypes.DefaultTypeAdapter, lbl))
 }
 
-func lookupLabelType(lm, key ref.Val) ref.Val {
-	matcher, ok := lm.Value().(labels.LabelMatcher)
-	if !ok {
-		return celTypes.NewErr("label() requires a LabelMatcher, got %T", lm.Value())
+func findLabel(lbls labels.Labels, key *labels.Label) (labels.Label, bool) {
+	if key.Source != labels.LabelSourceCIDR {
+		lbl, ok := lbls[key.Key]
+		return lbl, ok && lbl.HasKey(key)
 	}
-	label, ok := key.(types.Label)
-	if !ok {
-		return celTypes.NewErr("label() requires a LabelType, got %T", key.Value())
-	}
-	return lookupLabel(matcher, label.Label)
-}
-
-// makeLabel constructs CEL Label type from provided source and key.
-func makeLabel(source, key ref.Val) ref.Val {
-	s, ok := source.Value().(string)
-	if !ok {
-		return celTypes.NewErr("source must be a string, got %T", source.Value())
-	}
-	k, ok := key.Value().(string)
-	if !ok {
-		return celTypes.NewErr("key must be a string, got %T", key.Value())
-	}
-	return types.Label{Label: labels.Label{Source: s, Key: k}}
-}
-
-// labelMacroExpander expands 'label' macro in CEL expression.
-// For string literal arguments to macro
-func labelMacroExpander(eh cel.MacroExprFactory, target ast.Expr, args []ast.Expr) (ast.Expr, *cel.Error) {
-	if args[0].Kind() == ast.LiteralKind {
-		if strVal, ok := args[0].AsLiteral().(celTypes.String); ok {
-			lbl := labels.ParseSelectLabel(string(strVal))
-			return eh.NewCall(
-				LabelMatcherLookupFuncName,
-				eh.NewIdent(LabelMatcherVar),
-				eh.NewCall(
-					LabelMakeFuncName,
-					eh.NewLiteral(celTypes.String(lbl.Source)),
-					eh.NewLiteral(celTypes.String(lbl.Key)),
-				),
-			), nil
+	var match labels.Label
+	found := false
+	for _, lbl := range lbls {
+		if lbl.HasKey(key) && (!found || moreSpecificCIDR(lbl, match)) {
+			match = lbl
+			found = true
 		}
 	}
-	return eh.NewCall(LabelMatcherLookupFuncName, eh.NewIdent(LabelMatcherVar), args[0]), nil
+	return match, found
+}
+
+func moreSpecificCIDR(candidate, current labels.Label) bool {
+	candidatePrefix, candidateOK := labelCIDRPrefix(candidate)
+	currentPrefix, currentOK := labelCIDRPrefix(current)
+	if candidateOK && currentOK && candidatePrefix.Bits() != currentPrefix.Bits() {
+		return candidatePrefix.Bits() > currentPrefix.Bits()
+	}
+	if candidateOK && !currentOK {
+		return true
+	}
+	return candidate.Key < current.Key
+}
+
+func labelCIDRPrefix(lbl labels.Label) (netip.Prefix, bool) {
+	if prefix := lbl.GetCIDRPrefix(); prefix != nil {
+		return *prefix, true
+	}
+	prefix, err := netip.ParsePrefix(strings.ReplaceAll(lbl.Key, "-", ":"))
+	return prefix, err == nil
+}
+
+func lookupMacroExpander(eh cel.MacroExprFactory, _ ast.Expr, args []ast.Expr) (ast.Expr, *cel.Error) {
+	return eh.NewCall(LabelsLookupFuncName, eh.NewIdent(LabelsVarName), args[0]), nil
 }

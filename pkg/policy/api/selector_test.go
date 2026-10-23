@@ -266,6 +266,20 @@ func TestEndpointSelectorMarshalling(t *testing.T) {
 			sanitizedOutputJSON: `{"matchLabels":{"k8s:app":"frontend"},"matchExpressions":[{"key":"any:role","operator":"In","values":["database"]}]}`,
 			expectedErr:         false,
 		},
+		{
+			name:      "CEL expression",
+			inputJSON: `{"matchCELExpression":"labels[\"app\"].Value == \"frontend\""}`,
+			expected: EndpointSelector{
+				LabelSelector:      &slim_metav1.LabelSelector{},
+				MatchCELExpression: `labels["app"].Value == "frontend"`,
+			},
+			sanitizedExepected: EndpointSelector{
+				LabelSelector:      &slim_metav1.LabelSelector{},
+				MatchCELExpression: `labels["app"].Value == "frontend"`,
+				cachedSelectorKey:  `&LabelSelector{MatchLabels:map[string]string{},MatchExpressions:[]LabelSelectorRequirement{},} && CEL{labels["app"].Value == "frontend"}`,
+			},
+			sanitizedOutputJSON: `{"matchCELExpression":"labels[\"app\"].Value == \"frontend\""}`,
+		},
 	}
 
 	for _, tt := range tests {

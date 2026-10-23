@@ -361,22 +361,9 @@ func serviceSelectorMatches(sel *api.K8sServiceSelectorNamespace, svc serviceDet
 		return false
 	}
 	ls := policytypes.NewLabelSelector(api.EndpointSelector(sel.Selector))
-	r := policytypes.Matches(ls, labelsMatcher(svc.getLabels()))
+	r := policytypes.Matches(ls, svc.getLabels())
 	return r
 }
-
-type labelsMatcher labels.Labels
-
-// Lookup implements labels.LabelMatcher
-func (l labelsMatcher) LookupLabel(label *labels.Label) (value string, exists bool) {
-	v, ok := l[label.Key]
-	if ok && (label.IsAnySource() || v.Source == label.Source) {
-		return v.Value, true
-	}
-	return "", false
-}
-
-var _ labels.LabelMatcher = labelsMatcher{}
 
 // serviceRefMatches returns true if the ToServices k8sService reference
 // matches the name/namespace of the provided service svc

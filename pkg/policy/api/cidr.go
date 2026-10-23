@@ -70,7 +70,7 @@ func (r CIDRRule) String() string {
 	switch {
 	case r.CIDRGroupRef != "":
 		return r.CIDRGroupRef.SelectorKey() + exceptCIDRs
-	case r.CIDRGroupSelector.LabelSelector != nil:
+	case !r.CIDRGroupSelector.IsZero():
 		return r.CIDRGroupSelector.SelectorKey() + exceptCIDRs
 	default:
 		return r.Cidr.SelectorKey() + exceptCIDRs

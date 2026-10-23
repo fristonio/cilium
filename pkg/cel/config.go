@@ -7,14 +7,18 @@ import "github.com/spf13/pflag"
 
 // Config holds all tunable parameters for the CEL module.
 type Config struct {
+	// ExpressionMaxSize is the maximum CEL expression size in code points.
+	// Set to 0 to disable the limit.
+	ExpressionMaxSize int `mapstructure:"cel-expression-max-size"`
+
 	// CompilerCacheMaxEntries is the maximum number of compiled expressions held in
 	// the LRU cache. Entries are evicted in least-recently-used order once the
-	// limit is reached.
+	// limit is reached. Set to 0 to disable caching.
 	CompilerCacheMaxEntries int `mapstructure:"cel-compiler-cache-max-entries"`
 
 	// ExpressionMaxCost is the maximum static (compile-time) worst-case cost
-	// allowed for a CEL expression. Expressions whose estimated maximum cost
-	// exceeds this value are rejected at compile time. Set to 0 to disable.
+	// allowed for a CEL expression. Finite maximum estimates and minimum
+	// estimates for unbounded expressions are checked. Set to 0 to disable.
 	ExpressionMaxCost uint64 `mapstructure:"cel-expression-max-cost"`
 
 	// ProgramMaxCost is the maximum runtime cost budget for a single
@@ -30,6 +34,7 @@ type Config struct {
 }
 
 var DefaultConfig = Config{
+	ExpressionMaxSize:              4096,
 	CompilerCacheMaxEntries:        128,
 	ExpressionMaxCost:              10000,
 	ProgramMaxCost:                 100000,
@@ -37,10 +42,12 @@ var DefaultConfig = Config{
 }
 
 func (def Config) Flags(flags *pflag.FlagSet) {
+	flags.Int("cel-expression-max-size", def.ExpressionMaxSize,
+		"Maximum CEL expression size in code points (0 = disabled)")
 	flags.Int("cel-compiler-cache-max-entries", def.CompilerCacheMaxEntries,
-		"Maximum entries in CEL expression compiler cache")
+		"Maximum entries in CEL expression compiler cache (0 = disabled)")
 	flags.Uint64("cel-expression-max-cost", def.ExpressionMaxCost,
-		"Maximum compile-time static cost estimate for a CEL expression (0 = disabled)")
+		"Maximum compile-time cost bound for a CEL expression (0 = disabled)")
 	flags.Uint64("cel-program-max-cost", def.ProgramMaxCost,
 		"Maximum runtime cost budget per CEL expression evaluation (0 = disabled)")
 	flags.Uint("cel-program-interrupt-check-frequency", def.ProgramInterruptCheckFrequency,

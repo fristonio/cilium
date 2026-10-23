@@ -4,7 +4,7 @@
 package library
 
 import (
-	"github.com/google/cel-go/cel"
+	"cel.dev/cel-go/cel"
 
 	flowpb "github.com/cilium/cilium/api/v1/flow"
 )
