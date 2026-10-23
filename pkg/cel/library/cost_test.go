@@ -28,8 +28,11 @@ func TestLabelCostEstimation(t *testing.T) {
 		{`lookup("k8s:app").hasValue()`, 11, 12, 11},
 		{`lookup("cidr:10.0.0.0/8").hasValue()`, 19, math.MaxUint64, 20},
 		{`lookup("k8s:app").value().Source == "k8s"`, 13, 14, 14},
-		{`lookup("k8s:app").value().Value.contains("front")`, 12, 20, 14},
+		{`lookup("k8s:app").value().Value.contains("front")`, 12, 1844674407370955277, 14},
+		{`lookup("k8s:app").value().Value.size() > 0`, 13, math.MaxUint64, 15},
 		{`labels["app"].Value == "frontend"`, 4, 4, 4},
+		{`labels["app"].Value.size() > 0`, 4, math.MaxUint64, 5},
+		{`size("frontend") == 8`, 2, 2, 2},
 		{`labels.exists(key, labels[key].Value == "frontend")`, 2, math.MaxUint64, 10},
 		{`labels.exists(key, labels[key].Value.contains("front"))`, 2, math.MaxUint64, 10},
 	}

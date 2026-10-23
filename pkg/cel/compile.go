@@ -126,6 +126,9 @@ func (c *Compiler) compile(expression string) (result CompilationResult) {
 
 	if c.cfg.ExpressionMaxCost > 0 {
 		switch {
+		case c.envType == EnvTypeLabelSelector && costEst.Max == math.MaxUint64:
+			result.Error = fmt.Errorf("label selector expression has unbounded cost; use direct label access or lookup() with a literal non-CIDR key")
+			return
 		case costEst.Max != math.MaxUint64 && costEst.Max > c.cfg.ExpressionMaxCost:
 			result.Error = fmt.Errorf("expression max cost %d exceeds limit %d", costEst.Max, c.cfg.ExpressionMaxCost)
 			return
@@ -136,7 +139,8 @@ func (c *Compiler) compile(expression string) (result CompilationResult) {
 	}
 
 	progOpts := []cel.ProgramOption{cel.EvalOptions(cel.OptOptimize)}
-	if c.cfg.ProgramMaxCost > 0 {
+	useRuntimeCost := c.envType != EnvTypeLabelSelector || c.cfg.ExpressionMaxCost == 0
+	if useRuntimeCost && c.cfg.ProgramMaxCost > 0 {
 		progOpts = append(progOpts,
 			cel.CostTracking(library.CostEstimator{}),
 			cel.CostLimit(c.cfg.ProgramMaxCost),

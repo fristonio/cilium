@@ -9,71 +9,39 @@ import (
 	"unicode/utf8"
 
 	"cel.dev/cel-go/checker"
+	"cel.dev/cel-go/common"
 	"cel.dev/cel-go/common/ast"
+	commoncost "cel.dev/cel-go/common/cost"
+	"cel.dev/cel-go/common/overloads"
 	"cel.dev/cel-go/common/types/ref"
 
 	"github.com/cilium/cilium/pkg/labels"
 )
 
-const (
-	maxLabelKeyLen   = 317
-	maxLabelValueLen = 63
-	// directory is the longest identity label source.
-	maxLabelSourceLen = uint64(len(labels.LabelSourceDirectory))
-)
-
 // CostEstimator supplies bounds for values and functions provided by Cilium's
-// CEL libraries. When enabled, runtime cost tracking remains authoritative.
+// CEL libraries.
 type CostEstimator struct{}
 
-func (CostEstimator) EstimateSize(element checker.AstNode) *checker.SizeEstimate {
-	path := element.Path()
-	if len(path) == 0 {
-		return nil
-	}
+func (CostEstimator) EstimateSize(checker.AstNode) *checker.SizeEstimate { return nil }
 
-	if path[0] != LabelsVarName {
-		expr := element.Expr()
-		if expr.Kind() != ast.SelectKind || !containsLabelLookup(expr.AsSelect().Operand()) {
-			return nil
+func (CostEstimator) EstimateCallCost(_, overloadID string, target *checker.AstNode, args []checker.AstNode) *checker.CallEstimate {
+	if overloadID == overloads.SizeString || overloadID == overloads.SizeStringInst {
+		// cel-go computes string size by counting runes, so its cost depends on
+		// the string length even though the default estimator treats size as O(1).
+		var operand checker.AstNode
+		if target != nil {
+			operand = *target
+		} else if len(args) > 0 {
+			operand = args[0]
 		}
-	}
-
-	switch path[len(path)-1] {
-	case "@keys":
-		return &checker.SizeEstimate{Min: 0, Max: maxLabelKeyLen}
-	case "Key":
-		return &checker.SizeEstimate{Min: 0, Max: maxLabelKeyLen}
-	case "Value":
-		return &checker.SizeEstimate{Min: 0, Max: maxLabelValueLen}
-	case "Source":
-		return &checker.SizeEstimate{Min: 0, Max: maxLabelSourceLen}
-	}
-	return nil
-}
-
-func containsLabelLookup(expr ast.Expr) bool {
-	switch expr.Kind() {
-	case ast.CallKind:
-		call := expr.AsCall()
-		if call.FunctionName() == LabelsLookupFuncName {
-			return true
-		}
-		if call.IsMemberFunction() && containsLabelLookup(call.Target()) {
-			return true
-		}
-		for _, arg := range call.Args() {
-			if containsLabelLookup(arg) {
-				return true
+		if operand != nil {
+			size := operand.ComputedSize()
+			if size == nil || size.Max == math.MaxUint64 {
+				return &checker.CallEstimate{CostEstimate: checker.UnknownCostEstimate()}
 			}
+			return &checker.CallEstimate{CostEstimate: size.MultiplyByCostFactor(common.StringTraversalCostFactor)}
 		}
-	case ast.SelectKind:
-		return containsLabelLookup(expr.AsSelect().Operand())
 	}
-	return false
-}
-
-func (CostEstimator) EstimateCallCost(_, overloadID string, _ *checker.AstNode, args []checker.AstNode) *checker.CallEstimate {
 	if overloadID != LabelsLookupFuncName {
 		return nil
 	}
@@ -96,6 +64,15 @@ func (CostEstimator) EstimateCallCost(_, overloadID string, _ *checker.AstNode, 
 }
 
 func (CostEstimator) CallCost(_, overloadID string, args []ref.Val, _ ref.Val) *uint64 {
+	if (overloadID == overloads.SizeString || overloadID == overloads.SizeStringInst) && len(args) > 0 {
+		if value, ok := args[0].Value().(string); ok {
+			cost := commoncost.SafeMultiplyByFactor(
+				uint64(utf8.RuneCountInString(value)),
+				common.StringTraversalCostFactor,
+			)
+			return &cost
+		}
+	}
 	if overloadID != LabelsLookupFuncName {
 		return nil
 	}

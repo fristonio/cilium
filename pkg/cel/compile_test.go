@@ -33,7 +33,7 @@ func TestLabelSelectorEnvironment(t *testing.T) {
 		{"lookup(\"k8s:app\").value().Value == \"frontend\"", true},
 		{"lookup(\"reserved:app\").hasValue()", false},
 		{"labels[\"env\"].Value == \"prod\"", true},
-		{"labels.exists(key, key.startsWith(\"app\"))", true},
+		{"\"frontend\".size() == 8", true},
 	}
 	for _, tt := range tests {
 		result := env.Compile(cel.EnvTypeLabelSelector, tt.expression)
@@ -45,12 +45,24 @@ func TestLabelSelectorEnvironment(t *testing.T) {
 }
 
 func TestCompilerLimits(t *testing.T) {
-	// Expressions without a finite static bound remain guarded by the runtime
-	// cost limit.
+	// Flow expressions without a finite static bound remain guarded by the
+	// runtime cost limit.
 	env, err := cel.NewEnvironment(cel.DefaultConfig, nil)
 	require.NoError(t, err)
 	result := env.Compile(cel.EnvTypeFlowFilter, `_flow.source_names.exists(name, name.contains("frontend"))`)
 	require.NoError(t, result.Error)
+	result = env.Compile(cel.EnvTypeLabelSelector, `labels.exists(key, key.startsWith("app"))`)
+	require.ErrorContains(t, result.Error, "unbounded cost")
+	result = env.Compile(cel.EnvTypeLabelSelector, `lookup("cidr:10.0.0.0/8").hasValue()`)
+	require.ErrorContains(t, result.Error, "unbounded cost")
+	result = env.Compile(cel.EnvTypeLabelSelector, `labels["app"].Value.contains("front")`)
+	require.ErrorContains(t, result.Error, "exceeds limit")
+	result = env.Compile(cel.EnvTypeLabelSelector, `labels["app"].Value.size() > 0`)
+	require.ErrorContains(t, result.Error, "unbounded cost")
+	result = env.Compile(cel.EnvTypeLabelSelector, `size(lookup("k8s:app").value().Value) > 0`)
+	require.ErrorContains(t, result.Error, "unbounded cost")
+	result = env.Compile(cel.EnvTypeLabelSelector, `string(labels["app"].Value).size() > 0`)
+	require.ErrorContains(t, result.Error, "unbounded cost")
 
 	cfg := cel.DefaultConfig
 	cfg.ExpressionMaxCost = 2
@@ -59,8 +71,22 @@ func TestCompilerLimits(t *testing.T) {
 
 	result = env.Compile(cel.EnvTypeLabelSelector, `labels["app"].Value == "frontend"`)
 	require.ErrorContains(t, result.Error, "exceeds limit")
-	result = env.Compile(cel.EnvTypeLabelSelector, `lookup("cidr:10.0.0.0/8").hasValue() && labels["app"].Value == "frontend"`)
+	result = env.Compile(cel.EnvTypeLabelSelector, `lookup("k8s:app").hasValue() && labels["app"].Value == "frontend"`)
 	require.ErrorContains(t, result.Error, "exceeds limit")
+
+	// Label selectors do not pay the runtime cost-tracking overhead. Their
+	// finite static maximum is enforced when they are compiled.
+	cfg = cel.DefaultConfig
+	cfg.ProgramMaxCost = 1
+	env, err = cel.NewEnvironment(cfg, nil)
+	require.NoError(t, err)
+	result = env.Compile(cel.EnvTypeLabelSelector, `labels["app"].Value == "frontend"`)
+	require.NoError(t, result.Error)
+	matched, err := result.Evaluate(t.Context(), labels.Labels{
+		"app": labels.NewLabel("app", "frontend", labels.LabelSourceK8s),
+	})
+	require.NoError(t, err)
+	require.True(t, matched)
 
 	cfg = cel.DefaultConfig
 	cfg.ExpressionMaxSize = 16
@@ -77,6 +103,11 @@ func TestCompilerLimits(t *testing.T) {
 	result = env.Compile(cel.EnvTypeFlowFilter, `_flow.verdict == Verdict.FORWARDED`)
 	require.NoError(t, result.Error)
 	_, err = result.Evaluate(t.Context(), &flowpb.Flow{Verdict: flowpb.Verdict_FORWARDED})
+	require.ErrorContains(t, err, "cost limit exceeded")
+
+	result = env.Compile(cel.EnvTypeLabelSelector, `labels.exists(key, true)`)
+	require.NoError(t, result.Error)
+	_, err = result.Evaluate(t.Context(), labels.Labels{"app": labels.NewLabel("app", "frontend", labels.LabelSourceK8s)})
 	require.ErrorContains(t, err, "cost limit exceeded")
 }
 
@@ -100,11 +131,6 @@ func BenchmarkLabelSelectorEvaluation(b *testing.B) {
 	}{
 		{name: "without metrics", config: cel.DefaultConfig},
 		{name: "with metrics", metrics: cel.NewCELMetrics(), config: cel.DefaultConfig},
-		{name: "without runtime cost limit", config: func() cel.Config {
-			config := cel.DefaultConfig
-			config.ProgramMaxCost = 0
-			return config
-		}()},
 	} {
 		b.Run(tc.name, func(b *testing.B) {
 			env, err := cel.NewEnvironment(tc.config, tc.metrics)
@@ -186,6 +212,11 @@ func BenchmarkRuntimeCostTracking(b *testing.B) {
 			for _, runtimeCostLimit := range []bool{false, true} {
 				name := "runtime_cost=disabled"
 				cfg := cel.DefaultConfig
+				if tt.envType == cel.EnvTypeLabelSelector {
+					// Disabling static admission makes it possible to measure
+					// runtime tracking on otherwise rejected comprehensions.
+					cfg.ExpressionMaxCost = 0
+				}
 				if !runtimeCostLimit {
 					cfg.ProgramMaxCost = 0
 				} else {

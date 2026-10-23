@@ -542,7 +542,6 @@ func BenchmarkMatchesCEL(b *testing.B) {
 	for _, expression := range []api.CELExpression{
 		`labels["label-16"].Value == "value"`,
 		`lookup("k8s:label-16").value().Value == "value"`,
-		`labels.exists(key, key == "label-16")`,
 	} {
 		selector := NewLabelSelector(api.EndpointSelector{MatchCELExpression: expression})
 		b.Run(string(expression), func(b *testing.B) {

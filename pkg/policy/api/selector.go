@@ -33,6 +33,10 @@ type EndpointSelector struct {
 	// combined with the Kubernetes label selector using AND. labels maps each
 	// label's Key, without its source prefix, to a label with Key, Source, and
 	// Value fields. lookup("<source>:<key>") returns an optional label.
+	// Expressions with unbounded cost, such as label map comprehensions,
+	// dynamic lookup keys, and CIDR lookups, are rejected by default.
+	// String-size-dependent operations such as size(), contains(), and matches()
+	// are also rejected by default.
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:MaxLength=4096

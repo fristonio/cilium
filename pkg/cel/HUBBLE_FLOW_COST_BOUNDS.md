@@ -29,9 +29,9 @@ do not receive effective worst-case compile-time enforcement. Runtime cost
 tracking remains enabled and stops an evaluation that exceeds its runtime
 budget.
 
-The Cilium cost estimator currently supplies identity-label bounds and custom
-`lookup()` costs. It does not supply bounds for fields reachable from
-`flow.Flow`.
+The Cilium cost estimator currently supplies custom identity-label `lookup()`
+costs. It does not assume label string bounds or supply bounds for fields
+reachable from `flow.Flow`.
 
 ## Proposed design
 
@@ -62,15 +62,10 @@ work or allocations to the flow-matching hot path.
 
 When bounded-cost enforcement is enabled for the Flow environment, reject an
 expression if a variable-cost operation still depends on an unknown size.
-Keep runtime cost tracking as protection against incorrect bounds or invariant
-violations.
-
-Runtime tracking has measurable CPU and allocation overhead, especially for
-small expressions and comprehensions. Once the static maximum is finite and
-all contributing bounds are enforced, runtime tracking is redundant for that
-program and can be omitted. Programs with an unknown maximum must retain it or
-fail compilation. Benchmark results and reproduction commands are recorded in
-the package README.
+Until those bounds and their enforcement points exist, Hubble Flow evaluation
+uses runtime cost enforcement. Whether runtime enforcement is still needed
+after static bounds are added should be decided separately. Benchmark results
+and reproduction commands are recorded in the package README.
 
 ## Bound soundness
 
@@ -113,8 +108,7 @@ Compilation errors should identify the unbounded field path.
 ## Implementation and validation plan
 
 1. Inventory every variable-sized field reachable from `flow.Flow` and record
-   its source, bound, and enforcement point. The current schema has 79 such
-   reachable paths when repeated nested occurrences are counted.
+   its source, bound, and enforcement point.
 2. Add annotations and update protobuf generation dependencies.
 3. Enforce any missing bounds at producer or external-ingress boundaries.
 4. Add a descriptor-backed Flow size estimator and compose it with the
