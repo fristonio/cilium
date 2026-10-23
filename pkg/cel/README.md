@@ -11,6 +11,13 @@ Label selectors use compile-time cost enforcement and do not enable cel-go's
 runtime cost tracker when `cel-expression-max-cost` is enabled. The compiler
 accepts an expression only when its static estimate is within that limit.
 
+Policy validation compiles selector expressions before admitting the policy.
+This lets an over-budget expression reject the policy immediately. During
+matching, an evaluation error makes the selector condition return false, so a
+runtime cost-limit error could change the behavior of an already admitted
+policy. Static enforcement keeps cost-limit failures out of policy evaluation,
+in addition to avoiding runtime tracking overhead on the policy hot path.
+
 `labels.Labels` has no cardinality limit. Operations whose cost depends on the
 number of labels therefore have no finite static maximum and are rejected.
 This includes map comprehensions, dynamic `lookup()` keys, and CIDR lookups,
