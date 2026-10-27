@@ -288,8 +288,35 @@ func (e *Endpoint) regeneratePolicy(stats *regenerationStatistics, datapathRegen
 
 	// DistillPolicy converts a SelectorPolicy in to an EndpointPolicy
 	stats.endpointPolicyCalculation.Start()
-	result.endpointPolicy = selectorPolicy.DistillPolicy(e.getLogger(), e, desiredRedirects)
+	endpointPolicy, valid := selectorPolicy.DistillPolicy(e.getLogger(), e, desiredRedirects)
 	stats.endpointPolicyCalculation.End(true)
+
+	if !valid {
+		// selectorPolicy was superseded by a newer computation while we were
+		// registering as one of its users. Our EndpointPolicy would be built
+		// from stale content, so discard everything this invocation did (the
+		// proxy redirects added above) and retry from scratch against a
+		// freshly fetched SelectorPolicy.
+		e.getLogger().Warn(
+			"Selector policy was superseded while distilling, retrying regeneration",
+			logfields.Identity, securityIdentity.ID,
+		)
+		// Revert functions are called with the endpoint mutex held.
+		if err := e.lockAlive(); err != nil {
+			return err
+		}
+		if err := datapathRegenCtxt.revertibles.Revert(); err != nil {
+			e.getLogger().Error(
+				"Reverting endpoint changes after superseded selector policy failed",
+				logfields.Error, err,
+			)
+		}
+		e.unlock()
+		datapathRegenCtxt.revertibles = revert.Revertibles{}
+		return e.regeneratePolicy(stats, datapathRegenCtxt)
+	}
+
+	result.endpointPolicy = endpointPolicy
 
 	return nil
 }

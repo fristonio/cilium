@@ -1605,7 +1605,12 @@ func (l4 *L4Policy) finishDetach(selectorCache *SelectorCache) {
 // insertUser adds a user to the L4Policy so that incremental
 // updates of the L4Policy may be forwarded to the users of it.
 // May not call into SelectorCache, as SelectorCache is locked during this call.
-func (l4 *L4Policy) insertUser(user *EndpointPolicy) {
+//
+// Returns false if the policy was already superseded or detached when the
+// caller tried to register, in which case the caller must not treat 'user' as
+// registered: its content would be stale, and it must retry against a freshly
+// fetched SelectorPolicy instead.
+func (l4 *L4Policy) insertUser(user *EndpointPolicy) bool {
 	l4.mutex.Lock()
 	defer l4.mutex.Unlock()
 
@@ -1617,23 +1622,15 @@ func (l4 *L4Policy) insertUser(user *EndpointPolicy) {
 	// endpoint has started regeneration before the policy was
 	// updated, and that the policy was updated before the said
 	// endpoint reached this point. In this case, we need to
-	// ensure that the endpoint will be regenerated at least once
-	// afterward. This to ensure it doesn't get stuck with a
-	// detached policy.
+	// ensure the caller does not proceed with this now-stale policy.
 	if l4.users != nil {
 		l4.users[user] = struct{}{}
 	}
 	// A hold taken before Supersede keeps 'users' non-nil, so an endpoint can
-	// reach this point holding a policy that a newer one has already replaced.
-	// Its content is stale, so it must be regenerated to pick up the
-	// replacement, the same as when the policy was detached.
-	if l4.users == nil || l4.superseded {
-		go user.PolicyOwner.RegenerateIfAlive(&regeneration.ExternalRegenerationMetadata{
-			Reason:            regeneration.ReasonSelectorPolicyStale,
-			Message:           "selector policy has changed because of another endpoint with the same identity",
-			RegenerationLevel: regeneration.RegenerateWithoutDatapath,
-		})
-	}
+	// reach this point holding a policy that a newer one has already
+	// replaced. Its content is stale, so tell the caller to retry rather than
+	// register it as a user.
+	return l4.users != nil && !l4.superseded
 }
 
 // removeUser removes a user that no longer needs incremental updates

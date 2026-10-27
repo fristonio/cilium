@@ -740,7 +740,7 @@ func TestHoldPreventsDetach(t *testing.T) {
 
 	// DistillPolicy registers a user but leaves the hold for the caller.
 	require.True(t, sp.AddHold())
-	epA := sp.DistillPolicy(logger, a, nil)
+	epA, _ := sp.DistillPolicy(logger, a, nil)
 	require.Equal(t, 1, sp.L4Policy.holdCount)
 	require.Len(t, sp.L4Policy.users, 1)
 	sp.ReleaseHold()
@@ -752,11 +752,38 @@ func TestHoldPreventsDetach(t *testing.T) {
 	require.NotNil(t, sp.L4Policy.users)
 	require.Empty(t, sp.L4Policy.users)
 
-	epB := sp.DistillPolicy(logger, b, nil)
+	epB, _ := sp.DistillPolicy(logger, b, nil)
 	require.NotSame(t, epA, epB)
 	require.Len(t, sp.L4Policy.users, 1)
 	sp.ReleaseHold()
 	require.Equal(t, 0, sp.L4Policy.holdCount)
+}
+
+// insertUser must tell the caller to retry, rather than register a stale user,
+// once the L4Policy has been superseded -- even while a hold taken by an
+// earlier user keeps 'users' non-nil.
+func TestInsertUserRejectsSuperseded(t *testing.T) {
+	logger := hivetest.Logger(t)
+	repo := NewPolicyRepository(logger, cmtypes.DefaultClusterInfo, nil, nil, nil, nil, testpolicy.NewPolicyMetricsNoop())
+	repo.revision.Store(1)
+
+	ep := testutils.NewTestEndpoint(t)
+	id := ep.GetSecurityIdentity()
+
+	repo.mutex.RLock()
+	sp, err := repo.resolvePolicyLocked(id)
+	repo.mutex.RUnlock()
+	require.NoError(t, err)
+
+	require.True(t, sp.L4Policy.insertUser(&EndpointPolicy{PolicyOwner: DummyOwner{logger: logger}}))
+
+	// A hold keeps 'users' non-nil across the supersede.
+	require.True(t, sp.AddHold())
+	sp.L4Policy.supersede(sp.SelectorCache, 0)
+	require.NotNil(t, sp.L4Policy.users)
+
+	require.False(t, sp.L4Policy.insertUser(&EndpointPolicy{PolicyOwner: DummyOwner{logger: logger}}))
+	sp.ReleaseHold()
 }
 
 // AddHold must fail on a superseded policy so a stale endpoint doesn't attach to
@@ -787,6 +814,8 @@ func TestAddHoldRejectsDetached(t *testing.T) {
 
 	// The replacement is still usable.
 	require.True(t, cur.AddHold())
-	require.NotNil(t, cur.DistillPolicy(logger, DummyOwner{logger: logger}, nil))
+	curEP, ok := cur.DistillPolicy(logger, DummyOwner{logger: logger}, nil)
+	require.True(t, ok)
+	require.NotNil(t, curEP)
 	require.Len(t, cur.L4Policy.users, 1)
 }
