@@ -17,6 +17,7 @@ import (
 
 	"github.com/cilium/cilium/api/v1/models"
 	cmtypes "github.com/cilium/cilium/pkg/clustermesh/types"
+	"github.com/cilium/cilium/pkg/endpoint/regeneration"
 	"github.com/cilium/cilium/pkg/identity"
 	"github.com/cilium/cilium/pkg/labels"
 	"github.com/cilium/cilium/pkg/option"
@@ -779,11 +780,63 @@ func TestInsertUserRejectsSuperseded(t *testing.T) {
 
 	// A hold keeps 'users' non-nil across the supersede.
 	require.True(t, sp.AddHold())
-	sp.L4Policy.supersede(sp.SelectorCache, 0)
+	sp.L4Policy.supersede(sp.SelectorCache)
 	require.NotNil(t, sp.L4Policy.users)
 
 	require.False(t, sp.L4Policy.insertUser(&EndpointPolicy{PolicyOwner: DummyOwner{logger: logger}}))
 	sp.ReleaseHold()
+}
+
+// recordingOwner wraps DummyOwner to record whether RegenerateIfAlive was
+// called on it.
+type recordingOwner struct {
+	DummyOwner
+	id          uint64
+	regenerated *bool
+}
+
+func (o recordingOwner) GetID() uint64 { return o.id }
+
+func (o recordingOwner) RegenerateIfAlive(*regeneration.ExternalRegenerationMetadata) <-chan bool {
+	*o.regenerated = true
+	ch := make(chan bool)
+	close(ch)
+	return ch
+}
+
+// supersede must not regenerate any of its users, not even ones other than the
+// endpoint that triggered it: every user runs its own policy reconciler
+// (pkg/endpoint/policy.go's reconcilePolicy) watching the policy-computation
+// table directly, which is this round's fix for the reason=SelectorPolicyStale
+// fan-out (see report.md section 2.1/2.2 for the measured CPU and regeneration
+// count recovered by removing it).
+func TestSupersedeDoesNotRegenerateUsers(t *testing.T) {
+	logger := hivetest.Logger(t)
+	repo := NewPolicyRepository(logger, cmtypes.DefaultClusterInfo, nil, nil, nil, nil, testpolicy.NewPolicyMetricsNoop())
+	repo.revision.Store(1)
+
+	ep := testutils.NewTestEndpoint(t)
+	id := ep.GetSecurityIdentity()
+
+	repo.mutex.RLock()
+	sp, err := repo.resolvePolicyLocked(id)
+	repo.mutex.RUnlock()
+	require.NoError(t, err)
+
+	var firstRegenerated, secondRegenerated bool
+	first := recordingOwner{DummyOwner: DummyOwner{logger: logger}, id: 1, regenerated: &firstRegenerated}
+	second := recordingOwner{DummyOwner: DummyOwner{logger: logger}, id: 2, regenerated: &secondRegenerated}
+
+	_, ok := sp.DistillPolicy(logger, first, nil)
+	require.True(t, ok)
+	_, ok = sp.DistillPolicy(logger, second, nil)
+	require.True(t, ok)
+	require.Len(t, sp.L4Policy.users, 2)
+
+	sp.L4Policy.supersede(sp.SelectorCache)
+
+	require.False(t, firstRegenerated, "the endpoint that triggered the supersede must not be regenerated")
+	require.False(t, secondRegenerated, "no other user must be regenerated either; its reconciler sees the table update on its own")
 }
 
 // AddHold must fail on a superseded policy so a stale endpoint doesn't attach to

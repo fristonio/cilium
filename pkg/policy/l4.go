@@ -20,7 +20,6 @@ import (
 	"k8s.io/utils/ptr"
 
 	"github.com/cilium/cilium/api/v1/models"
-	"github.com/cilium/cilium/pkg/endpoint/regeneration"
 	"github.com/cilium/cilium/pkg/iana"
 	"github.com/cilium/cilium/pkg/identity"
 	"github.com/cilium/cilium/pkg/labels"
@@ -1840,21 +1839,17 @@ func (l4 *L4Policy) detach(selectorCache *SelectorCache) {
 	l4.detachedTime.Store(ptr.To(time.Now()))
 }
 
-// supersede marks the L4Policy as superseded by a newer one and triggers
-// regeneration on existing users so they migrate. The endpoint identified by
-// endpointID is not regenerated, since it initiated the selector policy update.
-// supersede is the only place that sets l4.superseded.
-func (l4 *L4Policy) supersede(selectorCache *SelectorCache, endpointID uint64) {
+// supersede marks the L4Policy as superseded by a newer one. It no longer
+// notifies existing users itself: every endpoint using this policy runs its
+// own policy reconciler (pkg/endpoint/policy.go's reconcilePolicy), watching
+// this identity's entry in the policy-computation table directly. By the
+// time supersede is called, the table has already been updated with the
+// replacement (pkg/policy/compute/compute.go's processRequests commits the
+// new entry before superseding the old policy), so every user's reconciler
+// observes the change on its own without needing to be told synchronously
+// here. supersede is the only place that sets l4.superseded.
+func (l4 *L4Policy) supersede(selectorCache *SelectorCache) {
 	l4.mutex.Lock()
-	for ePolicy := range l4.users {
-		if endpointID != ePolicy.PolicyOwner.GetID() {
-			go ePolicy.PolicyOwner.RegenerateIfAlive(&regeneration.ExternalRegenerationMetadata{
-				Reason:            regeneration.ReasonSelectorPolicyStale,
-				Message:           "selector policy has changed because of another endpoint with the same identity",
-				RegenerationLevel: regeneration.RegenerateWithoutDatapath,
-			})
-		}
-	}
 	l4.superseded = true
 	needsDetach := l4.shouldDetachLocked()
 	l4.mutex.Unlock()
