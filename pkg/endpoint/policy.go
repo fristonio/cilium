@@ -240,7 +240,7 @@ func (e *Endpoint) regeneratePolicy(stats *regenerationStatistics, datapathRegen
 		return newRegenerationError(regenerationFailureReasonPolicyRegenerationError,
 			fmt.Errorf("failed waiting for policy computation result: %w", err))
 	} else if pcr != nil {
-		selectorPolicy = pcr.NewPolicy
+		selectorPolicy = pcr.Policy
 		// The realized revision is how far forward this policy is known to be
 		// correct, which is what waiters (e.g. the policy-revision wait in the
 		// connectivity tests) compare against.
@@ -309,7 +309,7 @@ func (e *Endpoint) waitForPolicyComputationResult(
 		// revision is still the right one to use if no later update selected
 		// this identity.
 		if found && computeResult.CurrentAtRevision >= wantedRevision {
-			if computeResult.NewPolicy.AddHold() {
+			if computeResult.Policy.AddHold() {
 				e.getLogger().Debug(
 					"Retrieved identity policy from statedb",
 					logfields.PolicyRevision, computeResult.Revision,
