@@ -386,6 +386,48 @@ func TestIsPolicyResultCurrent(t *testing.T) {
 	}
 }
 
+func TestDecidePolicyReconcileAction(t *testing.T) {
+	const realized = 10
+
+	cases := []struct {
+		name     string
+		found    bool
+		result   compute.Result
+		expected policyReconcileAction
+	}{
+		{
+			name:     "no table entry yet",
+			found:    false,
+			result:   compute.Result{CurrentAtRevision: realized + 1, Revision: realized + 1},
+			expected: policyReconcileNone,
+		},
+		{
+			name:     "already realized",
+			found:    true,
+			result:   compute.Result{CurrentAtRevision: realized, Revision: realized},
+			expected: policyReconcileNone,
+		},
+		{
+			name:     "carried forward without recomputing",
+			found:    true,
+			result:   compute.Result{CurrentAtRevision: realized + 1, Revision: realized},
+			expected: policyReconcileAdvance,
+		},
+		{
+			name:     "recomputed since last realized",
+			found:    true,
+			result:   compute.Result{CurrentAtRevision: realized + 1, Revision: realized + 1},
+			expected: policyReconcileRegenerate,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			require.Equal(t, tc.expected, decidePolicyReconcileAction(tc.found, tc.result, realized))
+		})
+	}
+}
+
 // A duplicate regeneration trigger is skipped, but the queued regeneration must
 // still wait for the highest revision that was skipped.
 func TestSkippedPolicyRevision(t *testing.T) {

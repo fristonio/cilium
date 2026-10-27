@@ -44,6 +44,7 @@ import (
 var (
 	endpointRegenerationRecoveryControllerGroup = controller.NewGroup("endpoint-regeneration-recovery")
 	syncAddressIdentityMappingControllerGroup   = controller.NewGroup("sync-address-identity-mapping")
+	reconcilePolicyControllerGroup              = controller.NewGroup("endpoint-reconcile-policy")
 
 	errPolicyComputationStaleRevision = errors.New("policy computation result has stale revision")
 	errPolicyComputationNotFound      = errors.New("policy computation result not found in statedb")
@@ -1206,6 +1207,156 @@ func (e *Endpoint) startRegenerationFailureHandler() {
 	})
 }
 
+// policyReconcileAction is the outcome of decidePolicyReconcileAction.
+type policyReconcileAction int
+
+const (
+	// policyReconcileNone means the identity's current table entry has
+	// nothing this endpoint hasn't already realized; wait for the next change.
+	policyReconcileNone policyReconcileAction = iota
+	// policyReconcileAdvance means the entry was carried forward to a newer
+	// revision without being recomputed: advance the realized revision, no
+	// regeneration needed.
+	policyReconcileAdvance
+	// policyReconcileRegenerate means the identity's policy was actually
+	// recomputed since this endpoint last realized it: regenerate.
+	policyReconcileRegenerate
+)
+
+// decidePolicyReconcileAction decides what reconcilePolicy should do with a
+// freshly fetched policy-computation result, given the revision this endpoint
+// has already realized. found is whether the identity has any table entry yet.
+func decidePolicyReconcileAction(found bool, result compute.Result, realizedRevision uint64) policyReconcileAction {
+	if !found || result.CurrentAtRevision <= realizedRevision {
+		return policyReconcileNone
+	}
+	if result.Revision <= realizedRevision {
+		// Carried forward to a newer revision without being recomputed:
+		// nothing for this endpoint to pick up, just advance what it
+		// considers realized.
+		return policyReconcileAdvance
+	}
+	return policyReconcileRegenerate
+}
+
+// startPolicyReconciler starts a per-endpoint background job that watches this
+// endpoint's identity's entry in the policy computation table and reacts to
+// it, instead of relying on being pushed a regeneration from the policy
+// importer/compute cell.
+func (e *Endpoint) startPolicyReconciler() {
+	e.controllers.UpdateController(fmt.Sprintf("endpoint-%s-reconcile-policy", e.StringID()), controller.ControllerParams{
+		Group:   reconcilePolicyControllerGroup,
+		DoFunc:  e.reconcilePolicy,
+		Context: e.aliveCtx,
+	})
+}
+
+// reconcilePolicy is the DoFunc of the controller started by
+// startPolicyReconciler. It runs for the lifetime of the endpoint, selecting
+// on three things:
+//   - the endpoint's context, tied to its lifecycle: exits when the endpoint
+//     is removed.
+//   - identityUpdateTrigger: fired by SetIdentity whenever the endpoint's
+//     identity changes, so the loop re-reads the identity and re-arms its
+//     watch against the new identity's table entry.
+//   - the watch channel for this identity's current entry in the policy
+//     computation table, which fires on every computation and every revision
+//     advance for this identity.
+//
+// Each iteration fetches the identity's current table entry and checks
+// whether it is actionable *before* blocking, so a result that is already
+// stale relative to the endpoint's realized revision is acted on immediately
+// rather than waiting for a future watch event that may never come. After
+// acting (or finding nothing to do), it always blocks for the next signal
+// before re-deciding -- a regeneration that fails without changing the table
+// or the endpoint's realized revision would otherwise be retried in a tight
+// loop; retrying failed regenerations with backoff belongs to
+// startRegenerationFailureHandler, not here.
+func (e *Endpoint) reconcilePolicy(ctx context.Context) error {
+	hr := e.GetReporter("policy-reconciler")
+	for {
+		if err := e.rlockAlive(); err != nil {
+			return controller.NewExitReason("endpoint being deleted")
+		}
+		secID := e.SecurityIdentity
+		realizedRevision := e.policyRevision
+		e.runlock()
+
+		var (
+			result compute.Result
+			watch  <-chan struct{}
+			found  bool
+		)
+		if secID != nil {
+			result, _, watch, found = e.policyFetcher.GetIdentityPolicyByIdentity(secID)
+		}
+
+		switch decidePolicyReconcileAction(found, result, realizedRevision) {
+		case policyReconcileNone:
+			// Nothing to do yet.
+
+		case policyReconcileAdvance:
+			e.getLogger().Debug(
+				"Advancing realized policy revision without regenerating",
+				logfields.Identity, secID.ID,
+				logfields.PolicyRevisionCurrentAt, result.CurrentAtRevision,
+			)
+			e.buildMutex.Lock()
+			if err := e.lockAlive(); err != nil {
+				e.buildMutex.Unlock()
+				return controller.NewExitReason("endpoint being deleted")
+			}
+			e.setPolicyRevision(result.CurrentAtRevision)
+			e.unlock()
+			e.buildMutex.Unlock()
+
+		case policyReconcileRegenerate:
+			e.getLogger().Debug(
+				"Policy was recomputed for this endpoint's identity, regenerating",
+				logfields.Identity, secID.ID,
+				logfields.PolicyRevision, result.Revision,
+				logfields.PolicyRevisionCurrentAt, result.CurrentAtRevision,
+			)
+			// RegenerateIfAlive's channel reads false both when the
+			// regeneration ran and failed, and when it did not run at all
+			// (e.g. coalesced into another already-queued regeneration, or
+			// the endpoint went away); either way there is nothing further
+			// for this loop to do about it here, so both are treated as not
+			// yet reconciled rather than a confirmed success.
+			if success := <-e.RegenerateIfAlive(&regeneration.ExternalRegenerationMetadata{
+				Reason:                  regeneration.ReasonPolicyUpdate,
+				Message:                 "policy rules updated",
+				RegenerationLevel:       regeneration.RegenerateWithoutDatapath,
+				PolicyRevisionToWaitFor: result.CurrentAtRevision,
+			}); success {
+				hr.OK("Endpoint policy reconciled")
+			} else {
+				e.getLogger().Warn(
+					"Failed to regenerate endpoint to realize updated policy",
+					logfields.PolicyRevisionCurrentAt, result.CurrentAtRevision,
+				)
+				hr.Degraded(
+					"Failed to regenerate endpoint to realize updated policy",
+					fmt.Errorf("regeneration for policy revision %d failed", result.CurrentAtRevision),
+				)
+			}
+		}
+
+		// Wait for something to change before re-deciding, regardless of what
+		// this iteration did. This is the only thing that bounds the loop: a
+		// regeneration that keeps failing without changing the table or the
+		// endpoint's realized revision must not be retried in a tight spin --
+		// retrying failed regenerations with backoff is
+		// startRegenerationFailureHandler's job, not this loop's.
+		select {
+		case <-ctx.Done():
+			return controller.NewExitReason("endpoint being deleted")
+		case <-e.identityUpdateTrigger:
+		case <-watch:
+		}
+	}
+}
+
 func (e *Endpoint) notifyEndpointRegeneration(err error) {
 	if !option.Config.DryMode {
 		reprerr := e.monitorAgent.SendEvent(monitorAPI.MessageTypeAgent, monitorAPI.EndpointRegenMessage(e, err))
@@ -1378,6 +1529,14 @@ func (e *Endpoint) SetIdentity(identity *identityPkg.Identity) (identityToReleas
 	e.UpdateLogger(map[string]any{
 		logfields.Identity: identity.String(),
 	})
+
+	// Wake up the policy reconciler so it re-arms its watch against the new
+	// identity's entry in the policy computation table.
+	select {
+	case e.identityUpdateTrigger <- struct{}{}:
+	default:
+	}
+
 	return identityToRelease
 }
 
