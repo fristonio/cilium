@@ -89,6 +89,17 @@ func (ro ruleOrigin) LogString() string {
 	return string(out)
 }
 
+// logList returns the interned, separator-delimited log lines. LogString JSON-marshals
+// them, which allocates on every call; for an equality test the delimited form is exactly
+// equivalent, because newStringList sorts and joins deterministically and both Split and
+// JSON string-array encoding are injective over the same inputs.
+func (ro ruleOrigin) logList() stringList {
+	if unique.Handle[RuleMeta](ro) == (unique.Handle[RuleMeta]{}) {
+		return ""
+	}
+	return ro.Value().log
+}
+
 func (ro ruleOrigin) GetLabelArrayList() labels.LabelArrayList {
 	return labels.LabelArrayListFromString(ro.LabelsString())
 }

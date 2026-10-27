@@ -48,6 +48,25 @@ func TestRuleOrigin(t *testing.T) {
 	require.ElementsMatch(t, []string{"log1", "log2"}, ro.Value().log.List())
 }
 
+// TestRuleOriginLogList verifies that logList() preserves the semantics mapStateEntry.equivalent
+// relies on: two origins with the same log lines but different contributing-rule labels must
+// still compare as the same logList, since equivalent() treats that as "same policy effect,
+// differing only by labels". Two origins with different log lines must not.
+func TestRuleOriginLogList(t *testing.T) {
+	lbls1 := labels.LabelArrayList{labels.NewLabelsFromSortedList("k8s:a=1").LabelArray()}
+	lbls2 := labels.LabelArrayList{labels.NewLabelsFromSortedList("k8s:a=2").LabelArray()}
+
+	a := makeRuleOrigin(lbls1, []string{"log1", "log2"})
+	b := makeRuleOrigin(lbls2, []string{"log1", "log2"})
+	require.NotEqual(t, a.LabelsString(), b.LabelsString())
+	require.Equal(t, a.logList(), b.logList())
+	require.Equal(t, a.LogString(), b.LogString())
+
+	c := makeRuleOrigin(lbls2, []string{"log3"})
+	require.NotEqual(t, a.logList(), c.logList())
+	require.NotEqual(t, a.LogString(), c.LogString())
+}
+
 func TestOriginMerge(t *testing.T) {
 	td := newTestData(t, hivetest.Logger(t))
 
