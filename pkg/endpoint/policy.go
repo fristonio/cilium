@@ -300,9 +300,6 @@ func (e *Endpoint) waitForPolicyComputationResult(
 ) (*compute.Result, error) {
 	wantedRevision := datapathRegenCtxt.policyRevisionToWaitFor
 
-	timeout := time.NewTimer(time.Second)
-	defer timeout.Stop()
-
 	for {
 		computeResult, _, watch, found := e.policyFetcher.GetIdentityPolicyByIdentity(securityIdentity)
 		// CurrentAtRevision, not Revision: a policy computed at an older
@@ -344,7 +341,7 @@ func (e *Endpoint) waitForPolicyComputationResult(
 		select {
 		case <-watch:
 			continue
-		case <-timeout.C:
+		case <-datapathRegenCtxt.completionCtx.Done():
 			if found {
 				return nil, fmt.Errorf("%w: identity=%d got rev=%d currentAt=%d, want rev=%d",
 					errPolicyComputationStaleRevision,
@@ -1057,6 +1054,13 @@ func (e *Endpoint) ComputeInitialPolicy(regenContext *regenerationContext) (erro
 	// buildMutex needed for all policy computation functions below.
 	e.buildMutex.Lock()
 	defer e.buildMutex.Unlock()
+
+	// waitForPolicyComputationResult (via regeneratePolicy below) needs a
+	// completion context. addNewRedirects, also called by regeneratePolicy,
+	// runs with a nil proxy wait group here, same as before this endpoint had
+	// a completion context at all; proxy updates are only tracked once
+	// regenerateBPF calls prepareForProxyUpdates.
+	datapathRegenCtxt.prepare(regenContext.parentContext)
 
 	// Compute Endpoint's policy
 	stats.policyCalculation.Start()

@@ -284,6 +284,36 @@ func (f *supersedeFetcher) GetIdentityPolicyByIdentity(*identity.Identity) (comp
 	return res, 0, watch, true
 }
 
+// notFoundFetcher never has an entry for the requested identity, and never fires
+// its watch channel, so the only way waitForPolicyComputationResult returns is
+// its completion context expiring.
+type notFoundFetcher struct {
+	compute.PolicyRecomputer
+	watch chan struct{}
+}
+
+func (f *notFoundFetcher) GetIdentityPolicyByIdentity(*identity.Identity) (compute.Result, statedb.Revision, <-chan struct{}, bool) {
+	return compute.Result{}, 0, f.watch, false
+}
+
+// waitForPolicyComputationResult must be bounded by the completion context it is
+// given, not by an internal fixed timer: an already-expired context must make it
+// return promptly rather than block on the (never-firing) watch channel.
+func TestWaitForPolicyComputationResultRespectsCallerDeadline(t *testing.T) {
+	fetcher := &notFoundFetcher{watch: make(chan struct{})}
+	ep := Endpoint{policyFetcher: fetcher, SecurityIdentity: &identity.Identity{ID: 1234}}
+	ep.UpdateLogger(nil)
+
+	ctx, cancel := context.WithCancel(t.Context())
+	cancel()
+
+	regenCtxt := &datapathRegenerationContext{policyRevisionToWaitFor: 1}
+	regenCtxt.prepare(ctx)
+
+	_, err := ep.waitForPolicyComputationResult(regenCtxt, ep.SecurityIdentity)
+	require.ErrorIs(t, err, errPolicyComputationNotFound)
+}
+
 type recomputeRecordingFetcher struct {
 	compute.PolicyRecomputer
 	identity *identity.Identity
@@ -322,8 +352,10 @@ func TestWaitSkipsSupersededPolicy(t *testing.T) {
 	ep := Endpoint{policyFetcher: fetcher, SecurityIdentity: f.podID}
 	ep.UpdateLogger(nil)
 
-	res, err := ep.waitForPolicyComputationResult(
-		&datapathRegenerationContext{policyRevisionToWaitFor: rev}, f.podID)
+	regenCtxt := &datapathRegenerationContext{policyRevisionToWaitFor: rev}
+	regenCtxt.prepare(t.Context())
+
+	res, err := ep.waitForPolicyComputationResult(regenCtxt, f.podID)
 	require.NoError(t, err)
 	require.Same(t, live, res.Policy)
 
