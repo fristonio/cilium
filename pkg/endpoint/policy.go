@@ -17,7 +17,6 @@ import (
 
 	"github.com/cilium/ebpf"
 
-	"github.com/cilium/cilium/pkg/container/set"
 	"github.com/cilium/cilium/pkg/controller"
 	endpointid "github.com/cilium/cilium/pkg/endpoint/id"
 	"github.com/cilium/cilium/pkg/endpoint/regeneration"
@@ -855,77 +854,6 @@ func (e *Endpoint) consumeSkippedPolicyRevision(ctx *datapathRegenerationContext
 		ctx.policyRevisionToWaitFor = e.skippedPolicyRevision
 	}
 	e.skippedPolicyRevision = 0
-}
-
-// UpdatePolicy updates the endpoint's policy.
-// If the endpoint's identity is in the set that needs regeneration, it will queue a regeneration
-// and wait for the result. If not, the endpoint's policy revision will be bumped to toRev without
-// a regeneration
-func (e *Endpoint) UpdatePolicy(idsToRegen *set.Set[identityPkg.NumericIdentity], fromRev, toRev uint64) {
-	// no deferred unlocks here, as we must
-	// release locks before regenerating
-
-	e.buildMutex.Lock() // buildMutex is required to update policy revision
-	if err := e.lockAlive(); err != nil {
-		e.buildMutex.Unlock()
-		return
-	}
-
-	unlock := func() {
-		e.unlock()
-		e.buildMutex.Unlock()
-	}
-
-	secID := e.getIdentity()
-	if secID == identityPkg.InvalidIdentity {
-		unlock()
-		return
-	}
-
-	// If this endpoint's security ID has a policy update, we must regenerate.
-	// Otherwise, bump the policy revision directly.
-	if !idsToRegen.Has(secID) {
-		if e.policyRevision == 0 {
-			// Unaffected identities are not normally recomputed at toRev. Schedule
-			// this one before making the upcoming regeneration wait for it.
-			if toRev > e.skippedPolicyRevision {
-				if _, err := e.policyFetcher.RecomputeIdentityPolicy(e.SecurityIdentity, toRev); err != nil {
-					e.getLogger().Warn(
-						"Failed to recompute policy for initializing endpoint",
-						logfields.Error, err,
-						logfields.PolicyRevision, toRev,
-					)
-					unlock()
-					return
-				}
-				e.skippedPolicyRevision = toRev
-			}
-			unlock()
-			return
-		}
-		e.getLogger().Debug(
-			"Policy update is a no-op, bumping policyRevision",
-			logfields.PolicyRevision, toRev,
-		)
-		e.setPolicyRevision(toRev)
-
-		unlock()
-		return
-	}
-
-	// Policy change affected this endpoint's identity; queue regeneration
-	regenMetadata := &regeneration.ExternalRegenerationMetadata{
-		Reason:                  regeneration.ReasonPolicyUpdate,
-		Message:                 "policy rules updated",
-		RegenerationLevel:       regeneration.RegenerateWithoutDatapath,
-		PolicyRevisionToWaitFor: toRev,
-	}
-	regen := e.setRegenerateStateLocked(regenMetadata)
-	unlock()
-
-	if regen {
-		<-e.Regenerate(regenMetadata)
-	}
 }
 
 // RegenerateIfAlive queue a regeneration of this endpoint into the build queue

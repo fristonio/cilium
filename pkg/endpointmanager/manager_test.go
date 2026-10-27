@@ -890,6 +890,45 @@ func TestWaitForEndpointsAtPolicyRev(t *testing.T) {
 				t.Cleanup(ep.Stop)
 			},
 		},
+		{
+			// An endpoint stuck in StateWaitingForIdentity has nothing driving its
+			// policy revision forward, so WaitForEndpointsAtPolicyRev must skip it
+			// rather than block on it until the context expires.
+			name: "Endpoint waiting for identity is skipped",
+			preTestRun: func() {
+				mgr.WaitEndpointRemoved(ep)
+				model := newTestEndpointModel(1, endpoint.StateWaitingForIdentity)
+				ep, err = endpoint.NewEndpointFromChangeModel(makeTestEndpointParams(logger, s), nil, &endpoint.FakeEndpointProxy{}, model, nil)
+				require.NoError(t, err)
+
+				ep.Start(uint16(model.ID))
+				t.Cleanup(ep.Stop)
+				require.NoError(t, mgr.expose(ep))
+			},
+			setupArgs: func() args {
+				ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+				return args{
+					ctx:    ctx,
+					rev:    5,
+					cancel: cancel,
+				}
+			},
+			setupWant: func() want {
+				return want{
+					err:      nil,
+					errCheck: assert.EqualValues,
+				}
+			},
+			postTestRun: func() {
+				mgr.WaitEndpointRemoved(ep)
+				model := newTestEndpointModel(1, endpoint.StateReady)
+				ep, err = endpoint.NewEndpointFromChangeModel(makeTestEndpointParams(logger, s), nil, &endpoint.FakeEndpointProxy{}, model, nil)
+				require.NoError(t, err)
+
+				ep.Start(uint16(model.ID))
+				t.Cleanup(ep.Stop)
+			},
+		},
 	}
 	for _, tt := range tests {
 		tt.preTestRun()

@@ -77,7 +77,7 @@ func newIPCacher(ipc *ipcache.IPCache) IPCacher {
 }
 
 type epmanager interface {
-	UpdatePolicy(idsToRegen *set.Set[identity.NumericIdentity], fromRev, toRev uint64)
+	WaitForEndpointsAtPolicyRev(ctx context.Context, rev uint64) error
 }
 
 func newPolicyImporter(cfg policyImporterParams) PolicyImporter {
@@ -339,7 +339,12 @@ func (i *Importer) processUpdates(ctx context.Context, updates []*policytypes.Po
 	}
 	i.computer.UpdatePolicy(*idsToRegen, advanceFrom, endRevision)
 	if i.epm != nil {
-		i.epm.UpdatePolicy(idsToRegen, startRevision, endRevision)
+		if err := i.epm.WaitForEndpointsAtPolicyRev(ctx, endRevision); err != nil {
+			i.log.Error("Failed to wait for endpoints to realize policy revision",
+				logfields.Error, err,
+				logfields.PolicyRevision, endRevision,
+			)
+		}
 	}
 
 	// Now that the update has rolled out, record ingestion time.
