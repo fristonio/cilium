@@ -48,6 +48,17 @@ func TestRuleOrigin(t *testing.T) {
 	require.ElementsMatch(t, []string{"log1", "log2"}, ro.Value().log.List())
 }
 
+// TestMergeStringListDedups verifies mergeStringList still produces a sorted, duplicate-free
+// union of both inputs now that it builds the union with slices.Sort+Compact instead of a
+// hash set -- the same guarantee, without the map allocation.
+func TestMergeStringListDedups(t *testing.T) {
+	a := newStringList("log2", "log1", "shared")
+	b := newStringList("log3", "shared")
+
+	merged := mergeStringList(a, b)
+	require.Equal(t, []string{"log1", "log2", "log3", "shared"}, merged.List())
+}
+
 // TestRuleOriginLogList verifies that logList() preserves the semantics mapStateEntry.equivalent
 // relies on: two origins with the same log lines but different contributing-rule labels must
 // still compare as the same logList, since equivalent() treats that as "same policy effect,
